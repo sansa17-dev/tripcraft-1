@@ -294,6 +294,7 @@ function App() {
               )}
             </button>
           </div>
+        )}
 
         {/* API Key Notice */}
         {showApiKeyNotice && (
