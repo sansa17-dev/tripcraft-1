@@ -42,22 +42,18 @@ export function AuthModal({ isOpen, onClose, mode, onModeChange }: AuthModalProp
         const { error } = await signUp(email, password);
         if (error) throw error;
 
-        setSuccess('Account created successfully! You can now sign in.');
+        setSuccess('Account created successfully! You are now signed in.');
         setEmail('');
         setPassword('');
         setConfirmPassword('');
-        onModeChange('signin');
+        onClose();
       } else {
         const { error } = await signIn(email, password);
         if (error) throw error;
         onClose();
       }
     } catch (err: any) {
-      if (err.message && err.message.includes('Email not confirmed')) {
-        setError('Please check your email and click the confirmation link before signing in.');
-      } else {
-        setError(err.message || 'An error occurred');
-      }
+      setError(err.message || 'An error occurred');
     } finally {
       setLoading(false);
     }
