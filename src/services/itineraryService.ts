@@ -63,6 +63,7 @@ export async function generateItinerary(preferences: TravelPreferences): Promise
     // Check if API key is available
     const apiKey = import.meta.env.VITE_OPENROUTER_API_KEY;
     if (!apiKey) {
+      console.log('No API key found, using demo itinerary');
       return {
         success: false,
         error: 'OpenRouter API key not configured. Please add VITE_OPENROUTER_API_KEY to your environment variables.'
@@ -70,6 +71,7 @@ export async function generateItinerary(preferences: TravelPreferences): Promise
     }
 
     const prompt = createItineraryPrompt(preferences);
+    console.log('Making API request to OpenRouter...');
 
     const response = await fetch(OPENROUTER_API_URL, {
       method: 'POST',
@@ -98,7 +100,6 @@ export async function generateItinerary(preferences: TravelPreferences): Promise
 
     // Log response status and headers for debugging
     console.log('API Response Status:', response.status);
-    console.log('API Response Headers:', Object.fromEntries(response.headers.entries()));
 
     if (!response.ok) {
       const errorText = await response.text();
@@ -111,6 +112,15 @@ export async function generateItinerary(preferences: TravelPreferences): Promise
         errorData = null;
       }
       
+      // If it's a CORS or network error, fall back to demo
+      if (response.status === 0 || errorText.includes('CORS') || errorText.includes('network')) {
+        console.log('Network/CORS error detected, falling back to demo itinerary');
+        return {
+          success: false,
+          error: 'Network connectivity issue detected. Using demo itinerary.'
+        };
+      }
+      
       return {
         success: false,
         error: errorData?.error?.message || errorText || `API request failed: ${response.status} ${response.statusText}`
@@ -119,37 +129,39 @@ export async function generateItinerary(preferences: TravelPreferences): Promise
 
     // Get raw response text for debugging
     const responseText = await response.text();
-    console.log('Raw API Response:', responseText);
+    console.log('API Response received, length:', responseText.length);
     
     let data;
     try {
       data = JSON.parse(responseText);
     } catch (parseError) {
       console.error('Failed to parse API response as JSON:', parseError);
+      console.log('Falling back to demo itinerary due to parse error');
       return {
         success: false,
-        error: 'API returned invalid JSON response. Please try again.'
+        error: 'API response parsing failed. Using demo itinerary.'
       };
     }
     
     if (!data.choices || !data.choices[0] || !data.choices[0].message) {
       console.error('Invalid API response structure:', data);
+      console.log('Falling back to demo itinerary due to invalid structure');
       return {
         success: false,
-        error: 'Invalid response format from API'
+        error: 'Invalid API response format. Using demo itinerary.'
       };
     }
 
     try {
       // Extract JSON from the response content, handling markdown code blocks
       let jsonContent = data.choices[0].message.content.trim();
-      console.log('AI Response Content:', jsonContent);
+      console.log('AI Response Content received');
       
       // Remove markdown code fences if present
       const jsonMatch = jsonContent.match(/```(?:json)?\s*([\s\S]*?)\s*```/);
       if (jsonMatch) {
         jsonContent = jsonMatch[1].trim();
-        console.log('Extracted from markdown:', jsonContent);
+        console.log('Extracted JSON from markdown');
       }
       
       // Remove any leading/trailing text that might not be JSON
@@ -158,23 +170,25 @@ export async function generateItinerary(preferences: TravelPreferences): Promise
       
       if (jsonStart !== -1 && jsonEnd !== -1 && jsonEnd > jsonStart) {
         jsonContent = jsonContent.substring(jsonStart, jsonEnd + 1);
-        console.log('Cleaned JSON content:', jsonContent);
+        console.log('Cleaned JSON content');
       }
       
       if (!jsonContent.startsWith('{') || !jsonContent.endsWith('}')) {
         console.error('Content does not appear to be JSON:', jsonContent);
+        console.log('Falling back to demo itinerary due to invalid JSON format');
         return {
           success: false,
-          error: 'AI response does not contain valid JSON format. Please try again.'
+          error: 'AI response format invalid. Using demo itinerary.'
         };
       }
       
       const itinerary: GeneratedItinerary = JSON.parse(jsonContent);
-      console.log('Parsed itinerary:', itinerary);
+      console.log('Successfully parsed itinerary');
       
       // Validate the parsed JSON has required fields
       if (!itinerary.title || !itinerary.days || !Array.isArray(itinerary.days)) {
         console.error('Invalid itinerary structure:', itinerary);
+        console.log('Falling back to demo itinerary due to missing required fields');
         throw new Error('Invalid itinerary format');
       }
 
@@ -184,18 +198,28 @@ export async function generateItinerary(preferences: TravelPreferences): Promise
       };
     } catch (parseError) {
       console.error('Error parsing itinerary JSON:', parseError);
-      console.error('Content that failed to parse:', data.choices[0].message.content);
+      console.log('Falling back to demo itinerary due to parsing error');
       return {
         success: false,
-        error: `Failed to parse itinerary from API response: ${parseError instanceof Error ? parseError.message : 'Unknown parsing error'}. Please try again.`
+        error: `API parsing failed: ${parseError instanceof Error ? parseError.message : 'Unknown error'}. Using demo itinerary.`
       };
     }
 
   } catch (error) {
     console.error('Error generating itinerary:', error);
+    
+    // Check if it's a network/CORS related error
+    if (error instanceof TypeError && error.message.includes('fetch')) {
+      console.log('Network error detected, falling back to demo itinerary');
+      return {
+        success: false,
+        error: 'Network connection issue. Using demo itinerary.'
+      };
+    }
+    
     return {
       success: false,
-      error: error instanceof Error ? error.message : 'An unexpected error occurred while generating your itinerary.'
+      error: error instanceof Error ? error.message : 'Unexpected error occurred. Using demo itinerary.'
     };
   }
 }

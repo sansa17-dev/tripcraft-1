@@ -81,13 +81,15 @@ function App() {
 
       if (result.success && result.data) {
         setItinerary(result.data);
+        setCurrentView('results');
       } else {
         // Check if it's an API key issue
-        if (result.error?.includes('API key')) {
+        if (result.error?.includes('API key') || result.error?.includes('demo itinerary') || result.error?.includes('Network') || result.error?.includes('CORS')) {
           setShowApiKeyNotice(true);
           // Generate demo itinerary as fallback
           const demoItinerary = generateDemoItinerary(preferences);
           setItinerary(demoItinerary);
+          setCurrentView('results');
         } else {
           throw new Error(result.error || 'Failed to generate itinerary');
         }
