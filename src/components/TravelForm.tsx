@@ -12,6 +12,7 @@ interface TravelFormProps {
   onPreferencesChange: (preferences: TravelPreferences) => void;
   onSubmit: (e: React.FormEvent) => void;
   isGenerating: boolean;
+  isAuthenticated: boolean;
 }
 
 const INTEREST_OPTIONS = [
@@ -27,7 +28,7 @@ const INTEREST_OPTIONS = [
   'Local Markets & Bazaars'
 ];
 
-export function TravelForm({ preferences, onPreferencesChange, onSubmit, isGenerating }: TravelFormProps) {
+export function TravelForm({ preferences, onPreferencesChange, onSubmit, isGenerating, isAuthenticated }: TravelFormProps) {
   /**
    * Updates a single field in the preferences object
    */
@@ -242,24 +243,33 @@ export function TravelForm({ preferences, onPreferencesChange, onSubmit, isGener
         </div>
 
         {/* Submit Button */}
-        <button
-          type="submit"
-          disabled={isGenerating}
-          className={`w-full py-4 px-6 rounded-lg text-white font-medium transition-all duration-200 shadow-lg hover:shadow-xl ${
-            isGenerating
-              ? 'bg-gray-400 cursor-not-allowed shadow-none'
-              : 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2'
-          }`}
-        >
-          {isGenerating ? (
-            <div className="flex items-center justify-center gap-2">
-              <div className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-              Generating Your Itinerary...
-            </div>
-          ) : (
-            <span className="text-lg">Generate Itinerary</span>
-          )}
-        </button>
+        {isAuthenticated ? (
+          <button
+            type="submit"
+            disabled={isGenerating}
+            className={`w-full py-4 px-6 rounded-lg text-white font-medium transition-all duration-200 shadow-lg hover:shadow-xl ${
+              isGenerating
+                ? 'bg-gray-400 cursor-not-allowed shadow-none'
+                : 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2'
+            }`}
+          >
+            {isGenerating ? (
+              <div className="flex items-center justify-center gap-2">
+                <div className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                Generating Your Itinerary...
+              </div>
+            ) : (
+              <span className="text-lg">Generate Itinerary</span>
+            )}
+          </button>
+        ) : (
+          <button
+            type="submit"
+            className="w-full py-4 px-6 rounded-lg text-white font-medium transition-all duration-200 shadow-lg hover:shadow-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+          >
+            <span className="text-lg">Sign In to Generate Itinerary</span>
+          </button>
+        )}
       </form>
     </div>
   );

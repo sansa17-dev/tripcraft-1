@@ -50,6 +50,14 @@ function App() {
    */
   const handleGenerateItinerary = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Require authentication before generating itinerary
+    if (!user) {
+      setAuthMode('signin');
+      setShowAuthModal(true);
+      return;
+    }
+    
     setError(null);
     setItinerary(null);
     setIsGenerating(true);
@@ -350,6 +358,7 @@ function App() {
                 onPreferencesChange={setPreferences}
                 onSubmit={handleGenerateItinerary}
                 isGenerating={isGenerating}
+                isAuthenticated={!!user}
               />
             </div>
           ) : currentView === 'results' && itinerary ? (
