@@ -53,7 +53,11 @@ export function AuthModal({ isOpen, onClose, mode, onModeChange }: AuthModalProp
         onClose();
       }
     } catch (err: any) {
-      setError(err.message || 'An error occurred');
+      if (err.message && err.message.includes('Email not confirmed')) {
+        setError('Please check your email and click the confirmation link before signing in.');
+      } else {
+        setError(err.message || 'An error occurred');
+      }
     } finally {
       setLoading(false);
     }
