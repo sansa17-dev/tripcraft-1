@@ -53,8 +53,8 @@ export function TravelForm({ preferences, onPreferencesChange, onSubmit, isGener
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-      <h2 className="text-2xl font-semibold text-gray-900 mb-6 flex items-center gap-2">
+    <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-8">
+      <h2 className="text-2xl font-semibold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent mb-6 flex items-center gap-2">
         <MapPin className="h-6 w-6 text-blue-600" />
         Plan Your Trip
       </h2>
@@ -72,7 +72,7 @@ export function TravelForm({ preferences, onPreferencesChange, onSubmit, isGener
             value={preferences.origin}
             onChange={(e) => updateField('origin', e.target.value)}
             placeholder="e.g., Mumbai, Delhi, Bangalore"
-            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
           />
         </div>
 
@@ -88,7 +88,7 @@ export function TravelForm({ preferences, onPreferencesChange, onSubmit, isGener
             value={preferences.destination}
             onChange={(e) => updateField('destination', e.target.value)}
             placeholder="e.g., Goa, Kerala, Rajasthan"
-            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
           />
         </div>
 
@@ -106,7 +106,7 @@ export function TravelForm({ preferences, onPreferencesChange, onSubmit, isGener
               value={preferences.startDate}
               onChange={(e) => updateField('startDate', e.target.value)}
               min={new Date().toISOString().split('T')[0]}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
             />
           </div>
           <div>
@@ -120,7 +120,7 @@ export function TravelForm({ preferences, onPreferencesChange, onSubmit, isGener
               value={preferences.endDate}
               onChange={(e) => updateField('endDate', e.target.value)}
               min={preferences.startDate || new Date().toISOString().split('T')[0]}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
             />
           </div>
         </div>
@@ -137,7 +137,7 @@ export function TravelForm({ preferences, onPreferencesChange, onSubmit, isGener
               required
               value={preferences.budget}
               onChange={(e) => updateField('budget', e.target.value as TravelPreferences['budget'])}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
             >
               <option value="">Select budget range</option>
               <option value="budget">Budget (₹2,000-4,000/day)</option>
@@ -158,7 +158,7 @@ export function TravelForm({ preferences, onPreferencesChange, onSubmit, isGener
               max="20"
               value={preferences.travelers}
               onChange={(e) => updateField('travelers', parseInt(e.target.value))}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
             />
           </div>
         </div>
@@ -173,7 +173,7 @@ export function TravelForm({ preferences, onPreferencesChange, onSubmit, isGener
             id="accommodationType"
             value={preferences.accommodationType}
             onChange={(e) => updateField('accommodationType', e.target.value as TravelPreferences['accommodationType'])}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
           >
             <option value="any">Any type</option>
             <option value="hotel">Hotel</option>
@@ -195,7 +195,7 @@ export function TravelForm({ preferences, onPreferencesChange, onSubmit, isGener
             required
             value={preferences.vacationPace}
             onChange={(e) => updateField('vacationPace', e.target.value as TravelPreferences['vacationPace'])}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
           >
             <option value="">Select holiday pace</option>
             <option value="relaxed">Relaxed - Take it slow, enjoy leisure time</option>
@@ -212,12 +212,12 @@ export function TravelForm({ preferences, onPreferencesChange, onSubmit, isGener
           </label>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
             {INTEREST_OPTIONS.map((interest) => (
-              <label key={interest} className="flex items-center space-x-2 p-2 rounded-md border border-gray-200 hover:bg-gray-50 cursor-pointer">
+              <label key={interest} className="flex items-center space-x-2 p-3 rounded-lg border border-gray-200 hover:bg-blue-50 hover:border-blue-300 cursor-pointer transition-colors">
                 <input
                   type="checkbox"
                   checked={preferences.interests.includes(interest)}
                   onChange={() => toggleInterest(interest)}
-                  className="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                  className="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-colors"
                 />
                 <span className="text-sm text-gray-700">{interest}</span>
               </label>
@@ -237,7 +237,7 @@ export function TravelForm({ preferences, onPreferencesChange, onSubmit, isGener
             value={preferences.additionalNotes || ''}
             onChange={(e) => updateField('additionalNotes', e.target.value)}
             placeholder="Any special requirements, dietary restrictions, accessibility needs, etc."
-            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors resize-none"
           />
         </div>
 
@@ -245,19 +245,19 @@ export function TravelForm({ preferences, onPreferencesChange, onSubmit, isGener
         <button
           type="submit"
           disabled={isGenerating}
-          className={`w-full py-3 px-4 rounded-md text-white font-medium transition-colors ${
+          className={`w-full py-4 px-6 rounded-lg text-white font-medium transition-all duration-200 shadow-lg hover:shadow-xl ${
             isGenerating
-              ? 'bg-gray-400 cursor-not-allowed'
-              : 'bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2'
+              ? 'bg-gray-400 cursor-not-allowed shadow-none'
+              : 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2'
           }`}
         >
           {isGenerating ? (
             <div className="flex items-center justify-center gap-2">
-              <div className="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+              <div className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
               Generating Your Itinerary...
             </div>
           ) : (
-            'Generate Itinerary'
+            <span className="text-lg">Generate Itinerary</span>
           )}
         </button>
       </form>
