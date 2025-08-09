@@ -135,7 +135,7 @@ export function VoiceChatModal({ isOpen, onClose }: VoiceChatModalProps) {
     utterance.rate = 0.9;
     utterance.pitch = 1.0;
     utterance.volume = 0.8;
-    utterance.lang = 'en-IN';
+    utterance.lang = 'en-US';
     
     // Wait for voices to load, then find the best Indian voice
     const voices = synthRef.current.getVoices();
@@ -144,46 +144,48 @@ export function VoiceChatModal({ isOpen, onClose }: VoiceChatModalProps) {
     const findBestVoice = () => {
       const voices = synthRef.current?.getVoices() || [];
       
-      // Priority 1: Indian English voices (female preferred)
-      const indianFemaleVoice = voices.find(voice => 
-        voice.lang.includes('en-IN') && 
-        (voice.name.toLowerCase().includes('female') || 
-         voice.name.toLowerCase().includes('woman') ||
-         voice.name.toLowerCase().includes('veena') ||
-         voice.name.toLowerCase().includes('lekha') ||
-         voice.name.toLowerCase().includes('aditi') ||
-         voice.name.toLowerCase().includes('kavya'))
+      // Priority 1: US English male voices
+      const usMaleVoice = voices.find(voice => 
+        voice.lang.includes('en-US') && 
+        (voice.name.toLowerCase().includes('male') || 
+         voice.name.toLowerCase().includes('man') ||
+         voice.name.toLowerCase().includes('david') ||
+         voice.name.toLowerCase().includes('alex') ||
+         voice.name.toLowerCase().includes('daniel') ||
+         voice.name.toLowerCase().includes('fred') ||
+         voice.name.toLowerCase().includes('tom'))
       );
       
-      if (indianFemaleVoice) return indianFemaleVoice;
+      if (usMaleVoice) return usMaleVoice;
       
-      // Priority 2: Any Indian English voice
-      const indianVoice = voices.find(voice => 
-        voice.lang.includes('en-IN') || 
-        voice.name.toLowerCase().includes('indian')
+      // Priority 2: Any US English voice (prefer male)
+      const usVoice = voices.find(voice => 
+        voice.lang.includes('en-US') && 
+        !voice.name.toLowerCase().includes('female') &&
+        !voice.name.toLowerCase().includes('woman')
       );
       
-      if (indianVoice) return indianVoice;
+      if (usVoice) return usVoice;
       
-      // Priority 3: High-quality female English voices
-      const qualityFemaleVoice = voices.find(voice => 
+      // Priority 3: High-quality male English voices
+      const qualityMaleVoice = voices.find(voice => 
         voice.lang.includes('en') &&
-        (voice.name.toLowerCase().includes('samantha') ||
-         voice.name.toLowerCase().includes('karen') ||
-         voice.name.toLowerCase().includes('moira') ||
-         voice.name.toLowerCase().includes('fiona') ||
-         voice.name.toLowerCase().includes('tessa'))
+        (voice.name.toLowerCase().includes('david') ||
+         voice.name.toLowerCase().includes('alex') ||
+         voice.name.toLowerCase().includes('daniel') ||
+         voice.name.toLowerCase().includes('fred') ||
+         voice.name.toLowerCase().includes('tom'))
       );
       
-      if (qualityFemaleVoice) return qualityFemaleVoice;
+      if (qualityMaleVoice) return qualityMaleVoice;
       
-      // Priority 4: Any female voice
-      const femaleVoice = voices.find(voice => 
-        voice.name.toLowerCase().includes('female') ||
-        voice.name.toLowerCase().includes('woman')
+      // Priority 4: Any male voice
+      const maleVoice = voices.find(voice => 
+        voice.name.toLowerCase().includes('male') ||
+        voice.name.toLowerCase().includes('man')
       );
       
-      return femaleVoice || voices[0];
+      return maleVoice || voices[0];
     };
     
     // Set the best available voice
