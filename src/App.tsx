@@ -188,9 +188,13 @@ function App() {
   /**
    * Handles selecting a saved itinerary
    */
-  const handleSelectSavedItinerary = (savedItinerary: GeneratedItinerary, savedId?: string) => {
-    setItinerary(savedItinerary);
-    setCurrentSavedItineraryId(savedId || null);
+  const handleSelectSavedItinerary = (itinerary: GeneratedItinerary, savedItinerary: SavedItinerary) => {
+    setItinerary(itinerary);
+    setCurrentSavedItineraryId(savedItinerary.id);
+    
+    // Update preferences with the saved itinerary's original preferences
+    setPreferences(savedItinerary.preferences);
+    
     setCurrentView('results');
   };
 

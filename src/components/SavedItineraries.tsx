@@ -10,7 +10,7 @@ import { useAuth } from '../hooks/useAuth';
 import { GeneratedItinerary } from '../types';
 
 interface SavedItinerariesProps {
-  onSelectItinerary: (itinerary: GeneratedItinerary) => void;
+  onSelectItinerary: (itinerary: GeneratedItinerary, savedItinerary: SavedItinerary) => void;
 }
 
 export function SavedItineraries({ onSelectItinerary }: SavedItinerariesProps) {
@@ -76,7 +76,7 @@ export function SavedItineraries({ onSelectItinerary }: SavedItinerariesProps) {
       days: savedItinerary.days,
       tips: savedItinerary.tips,
     };
-    onSelectItinerary(itinerary, savedItinerary.id);
+    onSelectItinerary(itinerary, savedItinerary);
   };
 
   const formatDate = (dateString: string) => {
