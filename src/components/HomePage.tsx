@@ -211,20 +211,80 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
 
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-16">
-              <button
-                onClick={onGetStarted}
-                className="group flex items-center gap-3 px-12 py-5 bg-white text-primary-600 rounded-2xl hover:bg-gray-50 transition-all duration-300 shadow-2xl hover:shadow-3xl font-semibold text-lg hover:scale-105 font-display"
-              >
-                Plan Your Trip
-                <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
-              </button>
+              {/* New Function Buttons */}
+              <div className="flex flex-col lg:flex-row items-center justify-center gap-4 w-full max-w-5xl">
+                {/* Meet Your AI Companion */}
+                <button
+                  onClick={onGetStarted}
+                  className="group relative flex items-center justify-between w-full lg:w-80 px-6 py-4 bg-gradient-to-r from-amber-400 via-orange-500 to-red-500 text-white rounded-2xl hover:from-amber-500 hover:via-orange-600 hover:to-red-600 transition-all duration-300 shadow-xl hover:shadow-2xl hover:scale-105 font-display overflow-hidden"
+                >
+                  {/* Try Free Badge */}
+                  <div className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full shadow-lg">
+                    Try Free
+                  </div>
+                  
+                  <div className="flex items-center gap-3">
+                    <div className="bg-white/20 p-2 rounded-xl">
+                      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2L13.09 8.26L22 9L13.09 9.74L12 16L10.91 9.74L2 9L10.91 8.26L12 2Z"/>
+                      </svg>
+                    </div>
+                    <span className="font-semibold text-lg">Meet Your AI Companion</span>
+                  </div>
+                  
+                  <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform flex-shrink-0" />
+                </button>
+
+                {/* Voice Chat with AI */}
+                <button
+                  onClick={() => {/* Voice chat functionality */}}
+                  className="group relative flex items-center justify-between w-full lg:w-80 px-6 py-4 bg-gradient-to-r from-purple-500 via-purple-600 to-indigo-600 text-white rounded-2xl hover:from-purple-600 hover:via-purple-700 hover:to-indigo-700 transition-all duration-300 shadow-xl hover:shadow-2xl hover:scale-105 font-display overflow-hidden"
+                >
+                  {/* NEW Badge */}
+                  <div className="absolute -top-1 -right-1 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-full shadow-lg">
+                    NEW
+                  </div>
+                  
+                  <div className="flex items-center gap-3">
+                    <div className="bg-white/20 p-2 rounded-xl">
+                      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 1c-4.97 0-9 4.03-9 9v7c0 1.66 1.34 3 3 3h3v-8H5v-2c0-3.87 3.13-7 7-7s7 3.13 7 7v2h-4v8h3c1.66 0 3-1.34 3-3v-7c0-4.97-4.03-9-9-9z"/>
+                      </svg>
+                    </div>
+                    <span className="font-semibold text-lg">Voice Chat with AI</span>
+                  </div>
+                  
+                  <div className="flex items-center gap-1 flex-shrink-0">
+                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M12 2L13.09 8.26L22 9L13.09 9.74L12 16L10.91 9.74L2 9L10.91 8.26L12 2Z"/>
+                    </svg>
+                    <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M12 2L13.09 8.26L22 9L13.09 9.74L12 16L10.91 9.74L2 9L10.91 8.26L12 2Z"/>
+                    </svg>
+                  </div>
+                </button>
+
+                {/* See Live Demo */}
+                <button
+                  onClick={() => {/* Live demo functionality */}}
+                  className="group flex items-center justify-between w-full lg:w-80 px-6 py-4 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white rounded-2xl hover:from-indigo-600 hover:via-purple-600 hover:to-pink-600 transition-all duration-300 shadow-xl hover:shadow-2xl hover:scale-105 font-display"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="bg-white/20 p-2 rounded-xl">
+                      <Play className="w-5 h-5" />
+                    </div>
+                    <span className="font-semibold text-lg">See Live Demo</span>
+                  </div>
+                  
+                  <div className="w-0 h-0 border-l-[8px] border-l-white border-t-[6px] border-t-transparent border-b-[6px] border-b-transparent flex-shrink-0"></div>
+                </button>
+              </div>
               
               <button
                 onClick={() => {/* Demo functionality */}}
                 className="flex items-center gap-2 px-6 py-3 text-white/90 hover:text-white transition-colors font-medium group"
               >
-                <Play className="h-4 w-4 group-hover:scale-110 transition-transform" />
-                Watch Demo
+                <span className="text-sm opacity-75">Scroll down to explore destinations</span>
               </button>
             </div>
 
