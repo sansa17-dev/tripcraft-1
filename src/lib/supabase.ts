@@ -18,6 +18,7 @@ console.log('Supabase config check:', {
 
 if (!supabaseUrl || !supabaseAnonKey || supabaseAnonKey === 'your-supabase-anon-key-here') {
   console.warn('Supabase environment variables not configured properly. Using fallback mode.');
+}
 
 // Only create client if we have valid, non-placeholder credentials
 const supabaseClient = supabaseUrl && supabaseAnonKey && supabaseAnonKey !== 'your-supabase-anon-key-here'
