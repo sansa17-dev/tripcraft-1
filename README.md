@@ -2,7 +2,7 @@
 
 ## 🔒 Secure Architecture
 
-TripCraft uses a secure backend architecture where all sensitive credentials (database keys, AI API keys) are kept server-side only. Users cannot access any sensitive information through the browser.
+TripCraft uses direct Supabase client operations with Row Level Security (RLS) to ensure data protection and user isolation.
 
 ## Quick Start
 
@@ -36,8 +36,7 @@ For secure backend setup, see [BACKEND_SETUP.md](./BACKEND_SETUP.md) for detaile
 
 **Team members only need:**
 - Supabase project URL (`VITE_SUPABASE_URL`)
-- No database credentials required
-- No AI API keys needed
+- Supabase anon key (`VITE_SUPABASE_ANON_KEY`)
 
 ## Features
 
@@ -51,28 +50,24 @@ For secure backend setup, see [BACKEND_SETUP.md](./BACKEND_SETUP.md) for detaile
 ## Tech Stack
 
 - **Frontend**: React + TypeScript + Tailwind CSS
-- **Backend**: Supabase Edge Functions + Database
-- **AI**: OpenRouter API (GPT-4)
+- **Backend**: Supabase Database with RLS
+- **AI**: Demo itinerary generation
 - **Build Tool**: Vite
-- **Security**: Server-side credential management
+- **Security**: Row Level Security (RLS)
 
 ## Environment Variables
 
 **Frontend (.env file):**
-- `VITE_SUPABASE_URL`: Your Supabase project URL (only this is needed)
-
-**Backend (Supabase Edge Functions - auto-configured):**
-- `SUPABASE_URL`: Auto-configured
-- `SUPABASE_SERVICE_ROLE_KEY`: Auto-configured  
-- `OPENROUTER_API_KEY`: Set in Supabase Dashboard
+- `VITE_SUPABASE_URL`: Your Supabase project URL
+- `VITE_SUPABASE_ANON_KEY`: Your Supabase anon key
 
 ## Security Features
 
-- ✅ No database credentials exposed to frontend
-- ✅ No AI API keys visible in browser
-- ✅ All sensitive operations server-side only
 - ✅ Row Level Security (RLS) enforced
 - ✅ User data isolation and protection
+- ✅ Secure client-side operations
+- ✅ Row Level Security (RLS) enforced
+- ✅ Direct Supabase client with proper permissions
 
 ## Contributing
 
