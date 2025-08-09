@@ -163,6 +163,14 @@ export function LocationAutocomplete({
     onChange(e.target.value);
   };
 
+  // Handle input blur to ensure value is retained
+  const handleInputBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    // Ensure the current value is preserved
+    if (e.target.value !== value) {
+      onChange(e.target.value);
+    }
+  };
+
   return (
     <div>
       <label htmlFor={id} className="block text-sm font-medium text-gray-700 mb-2">
@@ -183,6 +191,7 @@ export function LocationAutocomplete({
           required={required}
           value={value}
           onChange={handleInputChange}
+          onBlur={handleInputBlur}
           placeholder={placeholder}
           className="w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
           autoComplete="off"
