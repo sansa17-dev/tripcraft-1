@@ -201,7 +201,7 @@ function App() {
               <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-2.5 rounded-xl shadow-lg">
                 <Plane className="h-6 w-6 text-white" />
               </div>
-              <div>
+              <div className="text-left">
                 <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
                   TripCraft
                 </h1>
