@@ -17,14 +17,76 @@ interface HomePageProps {
 }
 
 const POPULAR_DESTINATIONS = [
-  { name: 'Goa Beaches', emoji: '🏖️', color: 'from-orange-400 to-pink-500' },
-  { name: 'Rajasthan Palaces', emoji: '🏰', color: 'from-purple-400 to-indigo-500' },
-  { name: 'Kerala Backwaters', emoji: '🌴', color: 'from-green-400 to-teal-500' },
-  { name: 'Himachal Mountains', emoji: '🏔️', color: 'from-blue-400 to-cyan-500' },
-  { name: 'Agra Taj Mahal', emoji: '🕌', color: 'from-yellow-400 to-orange-500' },
-  { name: 'Andaman Islands', emoji: '🌊', color: 'from-cyan-400 to-blue-500' },
-  { name: 'Hampi Ruins', emoji: '🏛️', color: 'from-amber-400 to-red-500' },
-  { name: 'Jim Corbett Safari', emoji: '🦌', color: 'from-emerald-400 to-green-500' }
+  { 
+    name: 'Paris Romance', 
+    country: 'France',
+    emoji: '🗼', 
+    color: 'from-pink-400 to-rose-500',
+    image: 'https://images.pexels.com/photos/161853/eiffel-tower-paris-france-tower-161853.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop'
+  },
+  { 
+    name: 'Tokyo Culture', 
+    country: 'Japan',
+    emoji: '🏮', 
+    color: 'from-red-400 to-pink-500',
+    image: 'https://images.pexels.com/photos/2506923/pexels-photo-2506923.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop'
+  },
+  { 
+    name: 'Bali Temples', 
+    country: 'Indonesia',
+    emoji: '🏛️', 
+    color: 'from-green-400 to-teal-500',
+    image: 'https://images.pexels.com/photos/2166553/pexels-photo-2166553.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop'
+  },
+  { 
+    name: 'Swiss Alps', 
+    country: 'Switzerland',
+    emoji: '🏔️', 
+    color: 'from-blue-400 to-cyan-500',
+    image: 'https://images.pexels.com/photos/417074/pexels-photo-417074.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop'
+  },
+  { 
+    name: 'Santorini Views', 
+    country: 'Greece',
+    emoji: '🏖️', 
+    color: 'from-blue-400 to-indigo-500',
+    image: 'https://images.pexels.com/photos/161815/santorini-oia-greece-water-161815.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop'
+  },
+  { 
+    name: 'Dubai Luxury', 
+    country: 'UAE',
+    emoji: '🏙️', 
+    color: 'from-yellow-400 to-orange-500',
+    image: 'https://images.pexels.com/photos/162031/dubai-tower-arab-khalifa-162031.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop'
+  },
+  { 
+    name: 'Maldives Paradise', 
+    country: 'Maldives',
+    emoji: '🌊', 
+    color: 'from-cyan-400 to-blue-500',
+    image: 'https://images.pexels.com/photos/1287460/pexels-photo-1287460.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop'
+  },
+  { 
+    name: 'New York City', 
+    country: 'USA',
+    emoji: '🗽', 
+    color: 'from-gray-400 to-blue-500',
+    image: 'https://images.pexels.com/photos/290386/pexels-photo-290386.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop'
+  },
+  { 
+    name: 'London Heritage', 
+    country: 'UK',
+    emoji: '🏰', 
+    color: 'from-purple-400 to-indigo-500',
+    image: 'https://images.pexels.com/photos/460672/pexels-photo-460672.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop'
+  },
+  { 
+    name: 'Rome History', 
+    country: 'Italy',
+    emoji: '🏛️', 
+    color: 'from-amber-400 to-red-500',
+    image: 'https://images.pexels.com/photos/2064827/pexels-photo-2064827.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop'
+  }
 ];
 
 const SMART_FEATURES = [
@@ -128,7 +190,7 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
               <div className="bg-white/10 backdrop-blur-sm px-6 py-3 rounded-full border border-white/20 shadow-lg">
                 <span className="text-cyan-200 text-sm font-medium flex items-center gap-2">
                   <Sparkles className="h-4 w-4" />
-                  Trending Destinations
+                  Global Destinations
                 </span>
               </div>
             </div>
@@ -138,17 +200,48 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
                 <div className="animate-scroll-destinations flex items-center gap-6 whitespace-nowrap">
                   {/* First Set */}
                   {POPULAR_DESTINATIONS.map((dest, index) => (
-                    <div key={`first-${index}`} className={`flex items-center gap-3 px-6 py-3 bg-gradient-to-r ${dest.color} rounded-full shadow-lg hover:scale-105 transition-transform`}>
-                      <span className="text-2xl">{dest.emoji}</span>
-                      <span className="text-white font-semibold">{dest.name}</span>
+                    <div key={`first-${index}`} className={`relative flex items-center gap-4 px-6 py-3 bg-gradient-to-r ${dest.color} rounded-2xl shadow-lg hover:scale-105 transition-transform overflow-hidden min-w-[280px]`}>
+                      {/* Background Image */}
+                      <div className="absolute inset-0 opacity-20">
+                        <img 
+                          src={dest.image} 
+                          alt={dest.name}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                      
+                      {/* Content */}
+                      <div className="relative z-10 flex items-center gap-3">
+                        <span className="text-2xl">{dest.emoji}</span>
+                        <div className="text-left">
+                          <div className="text-white font-semibold text-sm">{dest.name}</div>
+                          <div className="text-white/80 text-xs">{dest.country}</div>
+                        </div>
+                      </div>
                     </div>
                   ))}
                   
                   {/* Duplicate Set for Seamless Loop */}
                   {POPULAR_DESTINATIONS.map((dest, index) => (
-                    <div key={`second-${index}`} className={`flex items-center gap-3 px-6 py-3 bg-gradient-to-r ${dest.color} rounded-full shadow-lg hover:scale-105 transition-transform`}>
-                      <span className="text-2xl">{dest.emoji}</span>
-                      <span className="text-white font-semibold">{dest.name}</span>
+                    <div key={`second-${index}`} className={`relative flex items-center gap-4 px-6 py-3 bg-gradient-to-r ${dest.color} rounded-2xl shadow-lg hover:scale-105 transition-transform overflow-hidden min-w-[280px]`}>
+                      {/* Background Image */}
+                      <div className="absolute inset-0 opacity-20">
+                        <img 
+                          src={dest.image} 
+                          alt={dest.name}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                      
+                      {/* Content */}
+                      <div className="relative z-10 flex items-center gap-3">
+                        <span className="text-2xl">{dest.emoji}</span>
+                        <div className="text-left">
+                          <div className="text-white font-semibold text-sm">{dest.name}</div>
+                          <div className="text-white/80 text-xs">{dest.country}</div>
+                        </div>
+                      </div>
+                    </div>
                     </div>
                   ))}
                 </div>
