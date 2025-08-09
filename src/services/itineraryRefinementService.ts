@@ -17,6 +17,9 @@ interface RefinementResponse extends ApiResponse {
 function createRefinementPrompt(request: ItineraryRefinementRequest): string {
   const { message, itinerary, preferences } = request;
   
+  // Get interests from persona if available, otherwise use main interests
+  const userInterests = preferences.travelPersona?.interests || preferences.interests || [];
+  
   return `You are an enthusiastic, knowledgeable travel planning expert helping to refine an existing itinerary. You have deep local knowledge, insider tips, and a passion for creating unforgettable travel experiences. The user has a specific request to modify their trip.
 
 CURRENT ITINERARY:
@@ -27,17 +30,17 @@ USER PREFERENCES:
 - Destination: ${preferences.destination}
 - Budget: ${preferences.budget}
 - Travelers: ${preferences.travelers}
-- Interests: ${preferences.interests.join(', ')}
+- Interests: ${userInterests.join(', ')}
 - Accommodation: ${preferences.accommodationType}
 - Pace: ${preferences.vacationPace}
 ${preferences.travelPersona ? `
 TRAVEL PERSONA:
 - Time Preference: ${preferences.travelPersona.timePreference}
 - Social Style: ${preferences.travelPersona.socialStyle}
-- Activity Level: ${preferences.travelPersona.activityLevel}
 - Cultural Interest: ${preferences.travelPersona.culturalInterest}
 - Food Adventure: ${preferences.travelPersona.foodAdventure}
 - Planning Style: ${preferences.travelPersona.planningStyle}
+- Interests: ${preferences.travelPersona.interests?.join(', ') || 'None specified'}
 ` : ''}
 
 USER REQUEST: "${message}"

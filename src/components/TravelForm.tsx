@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { Calendar, Users, Wallet, Heart, Home, FileText } from 'lucide-react';
+import { Calendar, Users, Wallet, Home, FileText } from 'lucide-react';
 import { TravelPreferences, TravelPersona } from '../types';
 import { LocationAutocomplete } from './LocationAutocomplete';
 import { TravelPersonaQuiz } from './TravelPersonaQuiz';
@@ -17,19 +17,6 @@ interface TravelFormProps {
   isGenerating: boolean;
   isAuthenticated: boolean;
 }
-
-const INTEREST_OPTIONS = [
-  'Culture & Heritage',
-  'Food & Dining',
-  'Nature & Outdoors',
-  'Arts & Museums',
-  'Nightlife & Entertainment',
-  'Shopping',
-  'Adventure Sports',
-  'Photography',
-  'Architecture',
-  'Local Markets & Bazaars'
-];
 
 export function TravelForm({ preferences, onPreferencesChange, onSubmit, isGenerating, isAuthenticated }: TravelFormProps) {
   const [showPersonaQuiz, setShowPersonaQuiz] = React.useState(false);
@@ -45,23 +32,13 @@ export function TravelForm({ preferences, onPreferencesChange, onSubmit, isGener
   };
 
   /**
-   * Handles interest selection/deselection
-   */
-  const toggleInterest = (interest: string) => {
-    const currentInterests = preferences.interests || [];
-    const isSelected = currentInterests.includes(interest);
-    
-    const newInterests = isSelected
-      ? currentInterests.filter(i => i !== interest)
-      : [...currentInterests, interest];
-    
-    updateField('interests', newInterests);
-  };
-
-  /**
    * Updates the travel persona
    */
   const updatePersona = (persona: TravelPersona) => {
+    // Extract interests from persona and update main preferences
+    if (persona.interests) {
+      updateField('interests', persona.interests);
+    }
     updateField('travelPersona', persona);
   };
 
@@ -207,27 +184,6 @@ export function TravelForm({ preferences, onPreferencesChange, onSubmit, isGener
           </select>
         </div>
 
-        {/* Interests */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-4 flex items-center gap-2">
-            <Heart className="h-4 w-4" />
-            What interests you? (Select all that apply)
-          </label>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            {INTEREST_OPTIONS.map((interest) => (
-              <label key={interest} className="flex items-center space-x-3 p-4 rounded-xl border border-gray-200 hover:bg-primary-50 hover:border-primary-200 cursor-pointer transition-colors">
-                <input
-                  type="checkbox"
-                  checked={preferences.interests.includes(interest)}
-                  onChange={() => toggleInterest(interest)}
-                  className="rounded border-gray-300 text-primary-600 shadow-sm focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50 transition-colors"
-                />
-                <span className="text-sm text-gray-700">{interest}</span>
-              </label>
-            ))}
-          </div>
-        </div>
-
         {/* Travel Persona Quiz */}
         {isFeatureEnabled('FEATURE_TRAVEL_PERSONA') && (
           <TravelPersonaQuiz
@@ -236,7 +192,8 @@ export function TravelForm({ preferences, onPreferencesChange, onSubmit, isGener
               socialStyle: '',
               culturalInterest: '',
               foodAdventure: '',
-              planningStyle: ''
+              planningStyle: '',
+              interests: preferences.interests || []
             }}
             onPersonaChange={updatePersona}
             isExpanded={showPersonaQuiz}

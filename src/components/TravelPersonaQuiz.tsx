@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { User, Clock, Users, Zap, Globe, Utensils, Calendar } from 'lucide-react';
+import { User, Clock, Users, Zap, Globe, Utensils, Calendar, Heart } from 'lucide-react';
 import { TravelPersona } from '../types';
 
 interface TravelPersonaQuizProps {
@@ -13,6 +13,19 @@ interface TravelPersonaQuizProps {
   isExpanded: boolean;
   onToggleExpanded: () => void;
 }
+
+const INTEREST_OPTIONS = [
+  'Culture & Heritage',
+  'Food & Dining',
+  'Nature & Outdoors',
+  'Arts & Museums',
+  'Nightlife & Entertainment',
+  'Shopping',
+  'Adventure Sports',
+  'Photography',
+  'Architecture',
+  'Local Markets & Bazaars'
+];
 
 const PERSONA_QUESTIONS = [
   {
@@ -64,6 +77,12 @@ const PERSONA_QUESTIONS = [
       { value: 'flexible', label: 'Loose Framework', description: 'Key highlights planned, room for spontaneity' },
       { value: 'spontaneous', label: 'Go with Flow', description: 'Minimal planning, decide day-by-day' }
     ]
+  },
+  {
+    key: 'interests' as keyof TravelPersona,
+    icon: Heart,
+    question: 'What interests you? (Select all that apply)',
+    options: [] // This will be handled differently as it's a multi-select
   }
 ];
 
@@ -72,6 +91,23 @@ export function TravelPersonaQuiz({ persona, onPersonaChange, isExpanded, onTogg
     onPersonaChange({
       ...persona,
       [key]: value
+    });
+  };
+
+  /**
+   * Handles interest selection/deselection
+   */
+  const toggleInterest = (interest: string) => {
+    const currentInterests = persona.interests || [];
+    const isSelected = currentInterests.includes(interest);
+    
+    const newInterests = isSelected
+      ? currentInterests.filter(i => i !== interest)
+      : [...currentInterests, interest];
+    
+    onPersonaChange({
+      ...persona,
+      interests: newInterests
     });
   };
 
@@ -148,42 +184,59 @@ export function TravelPersonaQuiz({ persona, onPersonaChange, isExpanded, onTogg
                   <h4 className="font-medium text-gray-900">{question.question}</h4>
                 </div>
                 
-                <div className="grid grid-cols-1 gap-3">
-                  {question.options.map((option) => (
-                    <label
-                      key={option.value}
-                      className={`flex items-start gap-3 p-4 rounded-xl border cursor-pointer transition-all ${
-                        currentValue === option.value
-                          ? 'border-primary-300 bg-primary-50 shadow-sm'
-                          : 'border-gray-200 bg-white hover:border-primary-200 hover:bg-primary-25'
-                      }`}
-                    >
-                      <input
-                        type="radio"
-                        name={question.key}
-                        value={option.value}
-                        checked={currentValue === option.value && currentValue !== ''}
-                        onChange={(e) => updatePersona(question.key, e.target.value)}
-                        className="mt-1 text-primary-600 border-gray-300 focus:ring-primary-500"
-                      />
-                      <div className="flex-1 min-w-0">
-                        <div className="font-medium text-gray-900 mb-1">{option.label}</div>
-                        <div className="text-sm text-gray-600 leading-relaxed">{option.description}</div>
-                      </div>
-                    </label>
-                  ))}
-                  
-                  {/* Skip option for each question */}
-                  <div className="text-center pt-2">
-                    <button
-                      type="button"
-                      onClick={() => updatePersona(question.key, '')}
-                      className="text-xs text-gray-400 hover:text-gray-600 transition-colors"
-                    >
-                      Skip this question
-                    </button>
+                {/* Handle interests question differently */}
+                {question.key === 'interests' ? (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    {INTEREST_OPTIONS.map((interest) => (
+                      <label key={interest} className="flex items-center space-x-3 p-4 rounded-xl border border-gray-200 hover:bg-primary-50 hover:border-primary-200 cursor-pointer transition-colors">
+                        <input
+                          type="checkbox"
+                          checked={(persona.interests || []).includes(interest)}
+                          onChange={() => toggleInterest(interest)}
+                          className="rounded border-gray-300 text-primary-600 shadow-sm focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50 transition-colors"
+                        />
+                        <span className="text-sm text-gray-700">{interest}</span>
+                      </label>
+                    ))}
                   </div>
-                </div>
+                ) : (
+                  <div className="grid grid-cols-1 gap-3">
+                    {question.options.map((option) => (
+                      <label
+                        key={option.value}
+                        className={`flex items-start gap-3 p-4 rounded-xl border cursor-pointer transition-all ${
+                          currentValue === option.value
+                            ? 'border-primary-300 bg-primary-50 shadow-sm'
+                            : 'border-gray-200 bg-white hover:border-primary-200 hover:bg-primary-25'
+                        }`}
+                      >
+                        <input
+                          type="radio"
+                          name={question.key}
+                          value={option.value}
+                          checked={currentValue === option.value && currentValue !== ''}
+                          onChange={(e) => updatePersona(question.key, e.target.value)}
+                          className="mt-1 text-primary-600 border-gray-300 focus:ring-primary-500"
+                        />
+                        <div className="flex-1 min-w-0">
+                          <div className="font-medium text-gray-900 mb-1">{option.label}</div>
+                          <div className="text-sm text-gray-600 leading-relaxed">{option.description}</div>
+                        </div>
+                      </label>
+                    ))}
+                    
+                    {/* Skip option for each question */}
+                    <div className="text-center pt-2">
+                      <button
+                        type="button"
+                        onClick={() => updatePersona(question.key, '')}
+                        className="text-xs text-gray-400 hover:text-gray-600 transition-colors"
+                      >
+                        Skip this question
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
             );
           })}

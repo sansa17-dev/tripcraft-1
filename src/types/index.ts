@@ -37,6 +37,7 @@ export interface TravelPersona {
   culturalInterest: 'high' | 'moderate' | 'low' | '';
   foodAdventure: 'adventurous' | 'moderate' | 'familiar' | '';
   planningStyle: 'structured' | 'flexible' | 'spontaneous' | '';
+  interests?: string[];
 }
 
 export interface ItineraryDay {

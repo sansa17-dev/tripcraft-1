@@ -13,6 +13,9 @@ const OPENROUTER_API_URL = 'https://openrouter.ai/api/v1/chat/completions';
 function createItineraryPrompt(preferences: TravelPreferences): string {
   const { origin, destination, startDate, endDate, budget, interests, travelers, accommodationType, vacationPace, additionalNotes } = preferences;
   
+  // Get interests from persona if available, otherwise use main interests
+  const userInterests = preferences.travelPersona?.interests || interests || [];
+  
   const duration = Math.ceil((new Date(endDate).getTime() - new Date(startDate).getTime()) / (1000 * 60 * 60 * 24));
   
   return `Create an incredibly detailed and inspiring ${duration}-day travel itinerary for ${destination} from ${startDate} to ${endDate}, traveling from ${origin}.
@@ -24,8 +27,16 @@ Travel Details:
 - Budget: ${budget}
 - Accommodation preference: ${accommodationType}
 - Holiday pace: ${vacationPace}
-- Interests: ${interests.join(', ')}
+- Interests: ${userInterests.join(', ')}
 ${additionalNotes ? `- Additional notes: ${additionalNotes}` : ''}
+${preferences.travelPersona ? `
+TRAVEL PERSONA:
+- Time Preference: ${preferences.travelPersona.timePreference}
+- Social Style: ${preferences.travelPersona.socialStyle}
+- Cultural Interest: ${preferences.travelPersona.culturalInterest}
+- Food Adventure: ${preferences.travelPersona.foodAdventure}
+- Planning Style: ${preferences.travelPersona.planningStyle}
+` : ''}
 
 IMPORTANT INSTRUCTIONS FOR CREATING AN AMAZING TRAVEL EXPERIENCE:
 

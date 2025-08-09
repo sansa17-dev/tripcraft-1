@@ -32,21 +32,27 @@ export async function saveItinerary(
   userId: string
 ): Promise<{ success: boolean; error?: string; data?: SavedItinerary }> {
   try {
+    // Ensure interests from persona are included in main preferences
+    const preferencesToSave = {
+      ...preferences,
+      interests: preferences.travelPersona?.interests || preferences.interests || []
+    };
+
     const { data, error } = await supabase
       .from('itineraries')
       .insert({
         user_id: userId,
         title: itinerary.title,
         destination: itinerary.destination,
-        origin: preferences.origin,
-        start_date: preferences.startDate,
-        end_date: preferences.endDate,
+        origin: preferencesToSave.origin,
+        start_date: preferencesToSave.startDate,
+        end_date: preferencesToSave.endDate,
         duration: itinerary.duration,
         total_budget: itinerary.totalBudget,
         overview: itinerary.overview,
         days: itinerary.days,
         tips: itinerary.tips,
-        preferences: preferences,
+        preferences: preferencesToSave,
       })
       .select()
       .single();
