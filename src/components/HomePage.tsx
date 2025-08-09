@@ -836,10 +836,10 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
           {/* Risk Reversal */}
           <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 max-w-2xl mx-auto">
             <Shield className="h-8 w-8 text-green-400 mx-auto mb-3" />
-            <h3 className="text-white font-semibold mb-2">100% Risk-Free Guarantee</h3>
+            <h3 className="text-white font-semibold mb-2">Your AI Buddy Promise</h3>
             <p className="text-white/80 text-sm">
-              Your AI companion learns your style. Not satisfied? We'll create unlimited 
-              new itineraries until it's perfect. That's our promise.
+              I learn your travel style and get better with every chat. Not happy? 
+              I'll keep creating new plans until you're excited about your trip!
             </p>
           </div>
         </div>
