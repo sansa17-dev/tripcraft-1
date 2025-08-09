@@ -6,21 +6,36 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { 
   Calendar, MapPin, DollarSign, Clock, Utensils, Bed, Lightbulb, 
-  Copy, Check, Edit3, Save, X, Plus, Trash2, GripVertical 
+  Copy, Check, Edit3, Save, X, Plus, Trash2, GripVertical, Share2, Users
 } from 'lucide-react';
 import { GeneratedItinerary, ItineraryDay } from '../types';
+import { updateItinerary } from '../services/itineraryStorageService';
+import { useAuth } from '../hooks/useAuth';
 
 interface EditableItineraryProps {
   itinerary: GeneratedItinerary;
   onSave: (updatedItinerary: GeneratedItinerary) => void;
   isEditing: boolean;
   onToggleEdit: () => void;
+  savedItineraryId?: string;
+  onShare?: () => void;
 }
 
-export function EditableItinerary({ itinerary, onSave, isEditing, onToggleEdit }: EditableItineraryProps) {
+export function EditableItinerary({ 
+  itinerary, 
+  onSave, 
+  isEditing, 
+  onToggleEdit, 
+  savedItineraryId,
+  onShare 
+}: EditableItineraryProps) {
   const [editedItinerary, setEditedItinerary] = useState<GeneratedItinerary>(itinerary);
   const [copiedDays, setCopiedDays] = useState<Set<number>>(new Set());
   const [draggedDay, setDraggedDay] = useState<number | null>(null);
+  const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
+
+  const { user } = useAuth();
 
   // Update edited itinerary when prop changes
   useEffect(() => {
@@ -30,9 +45,78 @@ export function EditableItinerary({ itinerary, onSave, isEditing, onToggleEdit }
   /**
    * Handles saving changes
    */
-  const handleSave = () => {
-    onSave(editedItinerary);
-    onToggleEdit();
+  const handleSave = async () => {
+    setSaving(true);
+    setSaveError(null);
+
+    try {
+      // If this is a saved itinerary, update it in the database
+      if (savedItineraryId && user) {
+        const result = await updateItinerary(savedItineraryId, {
+          title: editedItinerary.title,
+          destination: editedItinerary.destination,
+          duration: editedItinerary.duration,
+          total_budget: editedItinerary.totalBudget,
+          overview: editedItinerary.overview,
+          days: editedItinerary.days,
+          tips: editedItinerary.tips,
+        }, user.id);
+
+        if (!result.success) {
+          throw new Error(result.error || 'Failed to save changes');
+        }
+      }
+
+      // Update local state
+      onSave(editedItinerary);
+      onToggleEdit();
+    } catch (error) {
+      console.error('Error saving itinerary:', error);
+      setSaveError(error instanceof Error ? error.message : 'Failed to save changes');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  /**
+   * Handles real-time collaborative updates
+   */
+  const handleCollaborativeUpdate = (field: keyof GeneratedItinerary, value: any) => {
+    const updatedItinerary = {
+      ...editedItinerary,
+      [field]: value
+    setEditedItinerary(updatedItinerary);
+    
+    // Auto-save for collaborative editing if this is a saved itinerary
+    if (savedItineraryId && user && isEditing) {
+      debouncedSave(updatedItinerary);
+    }
+  };
+
+  // Debounced save for collaborative editing
+  const debouncedSave = useRef<NodeJS.Timeout>();
+  const performDebouncedSave = (updatedItinerary: GeneratedItinerary) => {
+    if (debouncedSave.current) {
+      clearTimeout(debouncedSave.current);
+    }
+    
+    debouncedSave.current = setTimeout(async () => {
+      if (savedItineraryId && user) {
+        try {
+          await updateItinerary(savedItineraryId, {
+            title: updatedItinerary.title,
+            destination: updatedItinerary.destination,
+            duration: updatedItinerary.duration,
+            total_budget: updatedItinerary.totalBudget,
+            overview: updatedItinerary.overview,
+            days: updatedItinerary.days,
+            tips: updatedItinerary.tips,
+          }, user.id);
+        } catch (error) {
+          console.error('Auto-save failed:', error);
+        }
+      }
+    }, 2000); // Auto-save after 2 seconds of inactivity
   };
 
   /**
@@ -47,10 +131,14 @@ export function EditableItinerary({ itinerary, onSave, isEditing, onToggleEdit }
    * Updates itinerary field
    */
   const updateItineraryField = (field: keyof GeneratedItinerary, value: any) => {
-    setEditedItinerary(prev => ({
-      ...prev,
-      [field]: value
-    }));
+    if (savedItineraryId && user && isEditing) {
+      handleCollaborativeUpdate(field, value);
+    } else {
+      setEditedItinerary(prev => ({
+        ...prev,
+        [field]: value
+      }));
+    }
   };
 
   /**
@@ -287,14 +375,42 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
 
         {/* Edit Controls */}
         <div className="absolute top-4 right-4 flex gap-2">
+          {/* Share Button */}
+          {onShare && (
+            <button
+              onClick={onShare}
+              className="flex items-center gap-2 px-4 py-2 bg-white/20 backdrop-blur-sm text-white rounded-lg hover:bg-white/30 transition-colors shadow-lg"
+            >
+              <Share2 className="h-4 w-4" />
+              Share
+            </button>
+          )}
+
           {isEditing ? (
             <>
+              {/* Save Error */}
+              {saveError && (
+                <div className="absolute top-12 right-0 bg-red-50 border border-red-200 rounded-lg p-2 text-red-700 text-sm max-w-xs">
+                  {saveError}
+                </div>
+              )}
+
               <button
                 onClick={handleSave}
+                disabled={saving}
                 className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors shadow-lg"
               >
-                <Save className="h-4 w-4" />
-                Save Changes
+                {saving ? (
+                  <>
+                    <div className="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    Saving...
+                  </>
+                ) : (
+                  <>
+                    <Save className="h-4 w-4" />
+                    Save Changes
+                  </>
+                )}
               </button>
               <button
                 onClick={handleCancel}
@@ -310,8 +426,16 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
               className="flex items-center gap-2 px-4 py-2 bg-white/20 backdrop-blur-sm text-white rounded-lg hover:bg-white/30 transition-colors shadow-lg"
             >
               <Edit3 className="h-4 w-4" />
-              Edit Itinerary
+              {savedItineraryId ? 'Edit & Collaborate' : 'Edit Itinerary'}
             </button>
+          )}
+
+          {/* Collaborative Indicator */}
+          {savedItineraryId && isEditing && (
+            <div className="flex items-center gap-1 px-3 py-2 bg-blue-600/20 backdrop-blur-sm text-white rounded-lg">
+              <Users className="h-4 w-4" />
+              <span className="text-sm">Live</span>
+            </div>
           )}
         </div>
       </div>

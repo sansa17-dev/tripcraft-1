@@ -19,6 +19,7 @@ import { AuthModal } from './components/AuthModal';
 import { SavedItineraries } from './components/SavedItineraries';
 import { HomePage } from './components/HomePage';
 import { LoadingSpinner } from './components/LoadingSpinner';
+import { ShareModal } from './components/ShareModal';
 
 function App() {
   const { user, signOut, loading: authLoading } = useAuth();
@@ -48,6 +49,8 @@ function App() {
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [isEditingItinerary, setIsEditingItinerary] = useState(false);
   const [sharedItineraryId, setSharedItineraryId] = useState<string | null>(null);
+  const [currentSavedItineraryId, setCurrentSavedItineraryId] = useState<string | null>(null);
+  const [showShareModal, setShowShareModal] = useState(false);
 
   /**
    * Handles form submission and itinerary generation
@@ -168,8 +171,9 @@ function App() {
   /**
    * Handles selecting a saved itinerary
    */
-  const handleSelectSavedItinerary = (savedItinerary: GeneratedItinerary) => {
+  const handleSelectSavedItinerary = (savedItinerary: GeneratedItinerary, savedId?: string) => {
     setItinerary(savedItinerary);
+    setCurrentSavedItineraryId(savedId || null);
     setCurrentView('results');
   };
 
@@ -178,7 +182,13 @@ function App() {
    */
   const handleUpdateItinerary = (updatedItinerary: GeneratedItinerary) => {
     setItinerary(updatedItinerary);
-    // If this is a saved itinerary, we could update it in the database here
+  };
+
+  /**
+   * Handles sharing an itinerary
+   */
+  const handleShareItinerary = async () => {
+    setShowShareModal(true);
   };
 
   /**
@@ -425,6 +435,8 @@ function App() {
               onSave={handleUpdateItinerary}
               isEditing={isEditingItinerary}
               onToggleEdit={() => setIsEditingItinerary(!isEditingItinerary)}
+              savedItineraryId={currentSavedItineraryId}
+              onShare={currentSavedItineraryId ? handleShareItinerary : undefined}
             />
           ) : currentView === 'saved' ? (
             /* Saved Itineraries */
@@ -475,8 +487,18 @@ function App() {
         mode={authMode}
         onModeChange={setAuthMode}
       />
+
+      {/* Share Modal */}
+      {currentSavedItineraryId && itinerary && (
+        <ShareModal
+          isOpen={showShareModal}
+          onClose={() => setShowShareModal(false)}
+          itineraryId={currentSavedItineraryId}
+          itineraryTitle={itinerary.title}
+        />
+      )}
     </div>
-  );
+  onSelectItinerary: (itinerary: GeneratedItinerary, savedId?: string) => void;
 }
 
 export default App;

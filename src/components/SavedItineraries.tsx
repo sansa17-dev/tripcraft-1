@@ -76,7 +76,7 @@ export function SavedItineraries({ onSelectItinerary }: SavedItinerariesProps) {
       days: savedItinerary.days,
       tips: savedItinerary.tips,
     };
-    onSelectItinerary(itinerary);
+    onSelectItinerary(itinerary, savedItinerary.id);
   };
 
   const formatDate = (dateString: string) => {
