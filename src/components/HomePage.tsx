@@ -155,7 +155,7 @@ const LiveScrollingLocations = () => {
       </div>
       
       <div className="mt-4 text-center">
-        <button className="text-indigo-600 hover:text-indigo-800 text-sm font-medium flex items-center gap-1 mx-auto group">
+        <button className="text-indigo-700 hover:text-indigo-900 text-base font-semibold flex items-center gap-1 mx-auto group bg-white/50 backdrop-blur-sm px-4 py-2 rounded-lg hover:bg-white/70 transition-all duration-200 shadow-sm hover:shadow-md">
           Explore {currentLocations.theme} Trips
           <ArrowRight className="h-3 w-3 group-hover:translate-x-1 transition-transform" />
         </button>
