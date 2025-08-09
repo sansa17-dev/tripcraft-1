@@ -117,12 +117,16 @@ function App() {
       return;
     }
 
+    // Create robust fallback dates
+    const today = new Date().toISOString().split('T')[0];
+    const weekFromToday = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+
     // Use generatedPreferences if available, otherwise create minimal preferences from itinerary
-    const preferencesToSave = generatedPreferences || {
+    let preferencesToSave = generatedPreferences || {
       origin: 'Unknown',
       destination: itinerary.destination,
-      startDate: new Date().toISOString().split('T')[0], // Today's date as fallback
-      endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 7 days from now
+      startDate: today,
+      endDate: weekFromToday,
       budget: 'mid-range' as const,
       interests: [],
       travelers: 1,
@@ -130,6 +134,14 @@ function App() {
       vacationPace: 'balanced' as const,
       additionalNotes: ''
     };
+
+    // Ensure dates are always valid, even if generatedPreferences has empty strings
+    if (!preferencesToSave.startDate || preferencesToSave.startDate === '') {
+      preferencesToSave.startDate = today;
+    }
+    if (!preferencesToSave.endDate || preferencesToSave.endDate === '') {
+      preferencesToSave.endDate = weekFromToday;
+    }
 
     setSavingItinerary(true);
     setSaveSuccess(false);
