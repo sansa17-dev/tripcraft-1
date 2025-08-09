@@ -13,7 +13,6 @@ import {
 import { InteractiveDemo } from './InteractiveDemo';
 import { VoiceChatModal } from './VoiceChatModal';
 import { ARPreviewModal } from './ARPreviewModal';
-import { ARPreviewModal } from './ARPreviewModal';
 
 interface HomePageProps {
   onGetStarted: () => void;
