@@ -33,27 +33,42 @@ export function AuthModal({ isOpen, onClose, mode, onModeChange }: AuthModalProp
     try {
       if (mode === 'signup') {
         if (password !== confirmPassword) {
-          throw new Error('Passwords do not match');
+          setError('Passwords do not match');
+          return;
         }
         if (password.length < 6) {
-          throw new Error('Password must be at least 6 characters long');
+          setError('Password must be at least 6 characters long');
+          return;
         }
 
         const { error } = await signUp(email, password);
-        if (error) throw error;
+        if (error) {
+          setError(error);
+          return;
+        }
 
         setSuccess('Account created successfully! You are now signed in.');
         setEmail('');
         setPassword('');
         setConfirmPassword('');
-        onClose();
+        setTimeout(() => {
+          onClose();
+        }, 1500);
       } else {
         const { error } = await signIn(email, password);
-        if (error) throw error;
-        onClose();
+        if (error) {
+          setError(error);
+          return;
+        }
+        
+        setSuccess('Signed in successfully!');
+        setTimeout(() => {
+          onClose();
+        }, 1000);
       }
-    } catch (err: any) {
-      setError(err.message || 'An error occurred');
+    } catch (err) {
+      console.error('Auth error:', err);
+      setError(err instanceof Error ? err.message : 'An unexpected error occurred');
     } finally {
       setLoading(false);
     }

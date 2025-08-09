@@ -18,6 +18,9 @@ interface ApiResponse<T = any> {
  */
 async function apiCall<T>(endpoint: string, data: any): Promise<ApiResponse<T>> {
   try {
+    console.log(`Making API call to: ${API_BASE_URL}/${endpoint}`);
+    console.log('Request data:', data);
+    
     const response = await fetch(`${API_BASE_URL}/${endpoint}`, {
       method: 'POST',
       headers: {
@@ -26,9 +29,18 @@ async function apiCall<T>(endpoint: string, data: any): Promise<ApiResponse<T>> 
       body: JSON.stringify(data),
     });
 
+    console.log('Response status:', response.status);
+    
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('API response error:', errorText);
+      throw new Error(`API request failed: ${response.status} ${response.statusText}`);
+    }
     const result = await response.json();
+    console.log('API response:', result);
     return result;
   } catch (error) {
+    console.error('API call error:', error);
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Network error occurred'

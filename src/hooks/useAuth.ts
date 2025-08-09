@@ -38,13 +38,18 @@ export function useAuth(): AuthState & AuthActions {
     try {
       const result = await authApi.signUp(email, password);
       if (result.success && result.data) {
-        setUser(result.data.user);
-        setSession(result.data.session);
+        if (result.data.user) {
+          setUser(result.data.user);
+        }
+        if (result.data.session) {
+          setSession(result.data.session);
+        }
         return { error: null };
       } else {
         return { error: result.error || 'Signup failed' };
       }
     } catch (error) {
+      console.error('Signup error:', error);
       return { error: error instanceof Error ? error.message : 'Signup failed' };
     } finally {
       setLoading(false);
@@ -56,13 +61,18 @@ export function useAuth(): AuthState & AuthActions {
     try {
       const result = await authApi.signIn(email, password);
       if (result.success && result.data) {
-        setUser(result.data.user);
-        setSession(result.data.session);
+        if (result.data.user) {
+          setUser(result.data.user);
+        }
+        if (result.data.session) {
+          setSession(result.data.session);
+        }
         return { error: null };
       } else {
         return { error: result.error || 'Signin failed' };
       }
     } catch (error) {
+      console.error('Signin error:', error);
       return { error: error instanceof Error ? error.message : 'Signin failed' };
     } finally {
       setLoading(false);
@@ -77,6 +87,7 @@ export function useAuth(): AuthState & AuthActions {
       setSession(null);
       return { error: null };
     } catch (error) {
+      console.error('Signout error:', error);
       return { error: error instanceof Error ? error.message : 'Signout failed' };
     } finally {
       setLoading(false);
