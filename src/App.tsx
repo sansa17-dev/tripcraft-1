@@ -19,6 +19,7 @@ import { EditableItinerary } from './components/EditableItinerary';
 import { AuthModal } from './components/AuthModal';
 import { SavedItineraries } from './components/SavedItineraries';
 import { HomePage } from './components/HomePage';
+import { UserProfileModal } from './components/UserProfileModal';
 import { LoadingSpinner } from './components/LoadingSpinner';
 
 function App() {
@@ -49,6 +50,7 @@ function App() {
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [isEditingItinerary, setIsEditingItinerary] = useState(false);
   const [generatedPreferences, setGeneratedPreferences] = useState<TravelPreferences | null>(null);
+  const [showUserProfile, setShowUserProfile] = useState(false);
 
   /**
    * Handles form submission and itinerary generation
@@ -243,6 +245,16 @@ function App() {
               {/* Navigation */}
               {user && (
                 <div className="flex items-center gap-1">
+                  <button
+                    onClick={() => setShowUserProfile(true)}
+                    className={`px-4 py-2.5 rounded-xl text-sm font-medium transition-colors ${
+                      showUserProfile
+                        ? 'bg-white/20 text-white backdrop-blur-sm'
+                        : 'text-white/80 hover:text-white hover:bg-white/10'
+                    }`}
+                  >
+                    Profile
+                  </button>
                   <button
                     onClick={() => setCurrentView('planner')}
                     className={`px-4 py-2.5 rounded-xl text-sm font-medium transition-colors ${
@@ -492,6 +504,12 @@ function App() {
         onClose={() => setShowAuthModal(false)}
         mode={authMode}
         onModeChange={setAuthMode}
+      />
+
+      {/* User Profile Modal */}
+      <UserProfileModal
+        isOpen={showUserProfile}
+        onClose={() => setShowUserProfile(false)}
       />
     </div>
   );

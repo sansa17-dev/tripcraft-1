@@ -112,8 +112,24 @@ export function TravelPersonaQuiz({ persona, onPersonaChange, isExpanded, onTogg
   };
 
   const getCompletionPercentage = () => {
-    const totalQuestions = PERSONA_QUESTIONS.length;
-    const answeredQuestions = PERSONA_QUESTIONS.filter(q => persona[q.key] && persona[q.key] !== '').length;
+    const totalQuestions = PERSONA_QUESTIONS.length; // 6 questions total
+    let answeredQuestions = 0;
+    
+    // Count answered questions (excluding interests which is handled separately)
+    PERSONA_QUESTIONS.forEach(q => {
+      if (q.key === 'interests') {
+        // For interests, count as answered if at least one interest is selected
+        if (persona.interests && persona.interests.length > 0) {
+          answeredQuestions++;
+        }
+      } else {
+        // For other questions, count as answered if not empty
+        if (persona[q.key] && persona[q.key] !== '') {
+          answeredQuestions++;
+        }
+      }
+    });
+    
     return Math.round((answeredQuestions / totalQuestions) * 100);
   };
 

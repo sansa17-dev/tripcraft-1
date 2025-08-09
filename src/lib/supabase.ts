@@ -35,6 +35,44 @@ export type Database = {
           created_at: string;
           updated_at: string;
         };
+      };
+      user_personas: {
+        Row: {
+          id: string;
+          user_id: string;
+          time_preference: string;
+          social_style: string;
+          cultural_interest: string;
+          food_adventure: string;
+          planning_style: string;
+          interests: string[];
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          time_preference?: string;
+          social_style?: string;
+          cultural_interest?: string;
+          food_adventure?: string;
+          planning_style?: string;
+          interests?: string[];
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          user_id?: string;
+          time_preference?: string;
+          social_style?: string;
+          cultural_interest?: string;
+          food_adventure?: string;
+          planning_style?: string;
+          interests?: string[];
+          created_at?: string;
+          updated_at?: string;
+        };
         Insert: {
           id?: string;
           user_id: string;
