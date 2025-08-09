@@ -41,9 +41,10 @@ export function VoiceChatModal({ isOpen, onClose }: VoiceChatModalProps) {
 
     // Initialize speech recognition
     recognitionRef.current = new SpeechRecognition();
-    recognitionRef.current.continuous = false;
-    recognitionRef.current.interimResults = true;
+    recognitionRef.current.continuous = true;
+    recognitionRef.current.interimResults = false;
     recognitionRef.current.lang = 'en-US';
+    recognitionRef.current.maxAlternatives = 1;
 
     recognitionRef.current.onstart = () => {
       setIsListening(true);
@@ -51,12 +52,22 @@ export function VoiceChatModal({ isOpen, onClose }: VoiceChatModalProps) {
     };
 
     recognitionRef.current.onresult = (event: any) => {
-      const current = event.resultIndex;
-      const transcript = event.results[current][0].transcript;
-      setTranscript(transcript);
-
-      if (event.results[current].isFinal) {
-        handleUserSpeech(transcript);
+      let finalTranscript = '';
+      let interimTranscript = '';
+      
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        const transcript = event.results[i][0].transcript;
+        if (event.results[i].isFinal) {
+          finalTranscript += transcript;
+        } else {
+          interimTranscript += transcript;
+        }
+      }
+      
+      setTranscript(interimTranscript || finalTranscript);
+      
+      if (finalTranscript) {
+        handleUserSpeech(finalTranscript);
       }
     };
 
@@ -79,7 +90,7 @@ export function VoiceChatModal({ isOpen, onClose }: VoiceChatModalProps) {
       
       // Speak welcome message
       setTimeout(() => {
-        speakText('Hello! I\'m your AI travel companion. Tell me where you\'d like to go or what kind of trip you\'re planning, and I\'ll help you create the perfect itinerary!');
+        speakText('Namaste! I am your AI travel companion. Please tell me where you would like to go or what kind of trip you are planning, and I will help you create the perfect itinerary!');
       }, 500);
     }
 
@@ -110,6 +121,12 @@ export function VoiceChatModal({ isOpen, onClose }: VoiceChatModalProps) {
     if (recognitionRef.current) {
       recognitionRef.current.stop();
     }
+    
+    // Process any remaining transcript
+    if (transcript.trim()) {
+      handleUserSpeech(transcript.trim());
+      setTranscript('');
+    }
   };
 
   const speakText = (text: string) => {
@@ -119,9 +136,35 @@ export function VoiceChatModal({ isOpen, onClose }: VoiceChatModalProps) {
     synthRef.current.cancel();
 
     const utterance = new SpeechSynthesisUtterance(text);
-    utterance.rate = 0.9;
-    utterance.pitch = 1;
+    utterance.rate = 0.85;
+    utterance.pitch = 1.1;
     utterance.volume = 0.8;
+    utterance.lang = 'en-IN';
+    
+    // Try to find an Indian English voice
+    const voices = synthRef.current.getVoices();
+    const indianVoice = voices.find(voice => 
+      voice.lang.includes('en-IN') || 
+      voice.name.toLowerCase().includes('indian') ||
+      voice.name.toLowerCase().includes('ravi') ||
+      voice.name.toLowerCase().includes('veena') ||
+      voice.name.toLowerCase().includes('lekha')
+    );
+    
+    // Fallback to female English voices if no Indian voice found
+    const femaleVoice = voices.find(voice => 
+      voice.name.toLowerCase().includes('female') ||
+      voice.name.toLowerCase().includes('woman') ||
+      voice.name.toLowerCase().includes('samantha') ||
+      voice.name.toLowerCase().includes('karen') ||
+      voice.name.toLowerCase().includes('moira')
+    );
+    
+    if (indianVoice) {
+      utterance.voice = indianVoice;
+    } else if (femaleVoice) {
+      utterance.voice = femaleVoice;
+    }
 
     utterance.onstart = () => setIsSpeaking(true);
     utterance.onend = () => setIsSpeaking(false);
@@ -345,11 +388,16 @@ export function VoiceChatModal({ isOpen, onClose }: VoiceChatModalProps) {
           <div className="mt-4 text-center">
             <p className="text-sm text-gray-600">
               {isListening ? (
-                <span className="text-purple-600 font-medium">🎤 Listening... Speak now!</span>
+                <span className="text-purple-600 font-medium">🎤 Listening... Take your time to speak!</span>
               ) : (
-                'Click the microphone and tell me about your dream trip'
+                'Click the microphone and speak naturally about your dream trip'
               )}
             </p>
+            {isListening && (
+              <p className="text-xs text-gray-500 mt-1">
+                Click the microphone again when you're done speaking
+              </p>
+            )}
           </div>
         </div>
       </div>
