@@ -221,26 +221,52 @@ export const shareApi = {
 
   get: async (shareId: string): Promise<ApiResponse> => {
     try {
-      const { data, error } = await supabase
+      // First, get the shared itinerary record
+      const { data: sharedData, error: sharedError } = await supabase
         .from('shared_itineraries')
-        .select(`
-          *,
-          itineraries (*)
-        `)
+        .select('*')
         .eq('share_id', shareId);
 
-      if (error) {
-        throw error;
+      if (sharedError) {
+        throw sharedError;
       }
 
-      if (!data || data.length === 0) {
+      if (!sharedData || sharedData.length === 0) {
         return {
           success: false,
           error: 'Shared itinerary not found'
         };
       }
 
-      return { success: true, data: data[0] };
+      const sharedItinerary = sharedData[0];
+
+      // Then, get the linked itinerary data
+      const { data: itineraryData, error: itineraryError } = await supabase
+        .from('itineraries')
+        .select('*')
+        .eq('id', sharedItinerary.itinerary_id)
+        .single();
+
+      if (itineraryError) {
+        console.warn('Could not fetch itinerary data:', itineraryError);
+        // Return shared itinerary without nested itinerary data
+        return { 
+          success: true, 
+          data: { 
+            ...sharedItinerary, 
+            itineraries: null 
+          } 
+        };
+      }
+
+      // Return combined data with nested itinerary
+      return { 
+        success: true, 
+        data: { 
+          ...sharedItinerary, 
+          itineraries: itineraryData 
+        } 
+      };
     } catch (error) {
       console.error('Error getting shared itinerary:', error);
       return {
