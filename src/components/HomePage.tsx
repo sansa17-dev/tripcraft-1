@@ -267,7 +267,7 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
                 {/* See Live Demo */}
                 <button
                   onClick={() => {/* Live demo functionality */}}
-                  className="group flex items-center justify-between w-full lg:w-80 px-6 py-4 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white rounded-2xl hover:from-indigo-600 hover:via-purple-600 hover:to-pink-600 transition-all duration-300 shadow-xl hover:shadow-2xl hover:scale-105 font-display"
+                  className="group flex items-center justify-between w-full lg:w-80 px-6 py-4 bg-gradient-to-r from-slate-600 via-slate-700 to-slate-800 text-white rounded-2xl hover:from-slate-700 hover:via-slate-800 hover:to-slate-900 transition-all duration-300 shadow-xl hover:shadow-2xl hover:scale-105 font-display"
                 >
                   <div className="flex items-center gap-3">
                     <div className="bg-white/20 p-2 rounded-xl">
@@ -276,7 +276,9 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
                     <span className="font-semibold text-lg">See Live Demo</span>
                   </div>
                   
-                  <div className="w-0 h-0 border-l-[8px] border-l-white border-t-[6px] border-t-transparent border-b-[6px] border-b-transparent flex-shrink-0"></div>
+                  <div className="bg-white/20 p-1 rounded-lg flex-shrink-0">
+                    <Play className="h-4 w-4" />
+                  </div>
                 </button>
               </div>
               
@@ -284,7 +286,7 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
                 onClick={() => {/* Demo functionality */}}
                 className="flex items-center gap-2 px-6 py-3 text-white/90 hover:text-white transition-colors font-medium group"
               >
-                <span className="text-sm opacity-75">Scroll down to explore destinations</span>
+                <span className="text-sm">Or explore our features below</span>
               </button>
             </div>
 
