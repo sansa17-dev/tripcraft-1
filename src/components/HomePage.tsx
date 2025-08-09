@@ -275,7 +275,19 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
               </div>
             </div>
 
-            {/* Press Mentions */}
+            {/* Press Coverage Placeholder */}
+            <div className="mb-8">
+              <button 
+                onClick={() => alert('Press coverage details coming soon! 📰')}
+                className="group inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-6 py-3 border border-white/20 hover:bg-white/20 transition-all duration-300"
+              >
+                <span className="text-white/90 text-sm font-medium">
+                  🏆 "Revolutionizing Travel Planning" - See Press Coverage
+                </span>
+                <ArrowRight className="h-3 w-3 text-white/70 group-hover:translate-x-1 transition-transform" />
+              </button>
+            </div>
+
             {/* Trust Indicators */}
             <div className="mb-8">
               <p className="text-white/60 text-sm mb-4">Trusted by travelers worldwide</p>
@@ -324,21 +336,21 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
             
             <div className="text-center group">
               <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 group-hover:bg-white/20 transition-all duration-300 group-hover:scale-105">
-                <Star className="h-8 w-8 text-white mx-auto mb-3" />
-                <div className="text-2xl md:text-3xl font-bold text-white mb-1">
-                  {stats.rating}★
-                </div>
-                <div className="text-white/70 text-sm">User Rating</div>
-              </div>
-            </div>
-            
-            <div className="text-center group">
-              <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 group-hover:bg-white/20 transition-all duration-300 group-hover:scale-105">
                 <Clock className="h-8 w-8 text-white mx-auto mb-3" />
                 <div className="text-2xl md:text-3xl font-bold text-white mb-1">
                   {stats.planningTime}min
                 </div>
                 <div className="text-white/70 text-sm">Avg Planning</div>
+              </div>
+            </div>
+            
+            <div className="text-center group">
+              <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 group-hover:bg-white/20 transition-all duration-300 group-hover:scale-105">
+                <DollarSign className="h-8 w-8 text-white mx-auto mb-3" />
+                <div className="text-2xl md:text-3xl font-bold text-white mb-1">
+                  ₹35K
+                </div>
+                <div className="text-white/70 text-sm">Avg Savings</div>
               </div>
             </div>
           </div>
@@ -606,19 +618,7 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
                 </div>
               </div>
               
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-                <div>
-                  <div className="text-3xl font-bold text-blue-600 mb-2 flex items-center justify-center gap-1">
-                    4.9/5 <Star className="h-5 w-5 text-yellow-400 fill-current" />
-                  </div>
-                  <div className="text-gray-600 text-sm">User Rating</div>
-                  <div className="text-gray-400 text-xs mt-1">2,847 reviews</div>
-                </div>
-                <div>
-                  <div className="text-3xl font-bold text-green-600 mb-2">₹35K</div>
-                  <div className="text-gray-600 text-sm">Avg. Savings</div>
-                  <div className="text-gray-400 text-xs mt-1">Per trip</div>
-                </div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div>
                   <div className="text-3xl font-bold text-purple-600 mb-2">20hrs</div>
                   <div className="text-gray-600 text-sm">Time Saved</div>
@@ -628,6 +628,13 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
                   <div className="text-3xl font-bold text-orange-600 mb-2">98%</div>
                   <div className="text-gray-600 text-sm">Would Recommend</div>
                   <div className="text-gray-400 text-xs mt-1">To friends</div>
+                </div>
+                <div>
+                  <div className="text-3xl font-bold text-blue-600 mb-2 flex items-center justify-center gap-1">
+                    4.9/5 <Star className="h-5 w-5 text-yellow-400 fill-current" />
+                  </div>
+                  <div className="text-gray-600 text-sm">User Rating</div>
+                  <div className="text-gray-400 text-xs mt-1">2,847 reviews</div>
                 </div>
               </div>
               
