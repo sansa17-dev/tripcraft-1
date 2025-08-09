@@ -128,8 +128,8 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
             </h1>
             
             <p className="text-xl md:text-2xl text-blue-100 max-w-3xl mx-auto leading-relaxed mb-8">
-              Transform your travel dreams into detailed, personalized itineraries with the power of AI. 
-              Every destination, every preference, perfectly planned in minutes.
+              Transform your travel dreams into detailed, personalized itineraries with AI. 
+              Every destination, perfectly planned in minutes.
             </p>
 
             {/* CTA Buttons */}
