@@ -437,7 +437,13 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
                 <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-sm font-semibold px-4 py-2 rounded-full shadow-md">
                   Day {day.day}
                 </div>
-                <span className="text-sm text-gray-600 font-medium">{day.date}</span>
+                <span className="text-sm text-gray-600 font-medium">
+                  {new Date(day.date).toLocaleDateString('en-GB', { 
+                    day: 'numeric', 
+                    month: 'long', 
+                    year: 'numeric' 
+                  })}
+                </span>
                 {day.estimatedCost && (
                   <span className="text-sm text-green-600 font-semibold ml-auto bg-green-50 px-3 py-1 rounded-full">
                     {isEditing ? (

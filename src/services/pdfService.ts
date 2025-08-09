@@ -110,7 +110,7 @@ function generatePDFHTML(itinerary: GeneratedItinerary): string {
             <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; padding: 8px 12px; background: linear-gradient(135deg, #2563eb, #3b82f6); border-radius: 6px; color: white;">
               <div style="display: flex; align-items: center; gap: 8px;">
                 <span style="font-weight: 700; font-size: 12px;">Day ${day.day}</span>
-                <span style="font-size: 10px; opacity: 0.9;">${new Date(day.date).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' })}</span>
+                <span style="font-size: 10px; opacity: 0.9;">${new Date(day.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
               </div>
               ${day.estimatedCost ? `
                 <span style="background-color: rgba(255,255,255,0.2); padding: 2px 8px; border-radius: 10px; font-size: 9px; font-weight: 500;">
