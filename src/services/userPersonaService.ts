@@ -32,7 +32,7 @@ export async function saveUserPersona(
       .from('user_personas')
       .select('id')
       .eq('user_id', userId)
-      .single();
+      .maybeSingle();
 
     const personaData = {
       user_id: userId,
