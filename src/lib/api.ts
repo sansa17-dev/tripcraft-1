@@ -3,6 +3,7 @@
  * All operations go through Edge Functions where secrets are managed
  */
 import { supabase } from './supabase';
+import { SUPABASE_ANON_KEY } from './supabase';
 
 // API base URL using the same Supabase URL from supabase.ts
 const API_BASE_URL = 'https://ymjfseyxwlxvolhzfpuz.supabase.co/functions/v1';
@@ -17,16 +18,20 @@ async function apiCall(endpoint: string, data: any): Promise<ApiResponse> {
   try {
     console.log(`🔧 API Call: ${endpoint}`, data);
     
-    // Get the current session for authorization
-    const { data: { session } } = await supabase.auth.getSession();
-    
     const headers: Record<string, string> = {
       'Content-Type': 'application/json',
+      'apikey': SUPABASE_ANON_KEY,
     };
     
-    // Add authorization header if user is authenticated
-    if (session?.access_token) {
-      headers['Authorization'] = `Bearer ${session.access_token}`;
+    // Get the current session for authorization
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session?.access_token) {
+        headers['Authorization'] = `Bearer ${session.access_token}`;
+      }
+    } catch (authError) {
+      console.warn('Could not get session for API call:', authError);
+      // Continue without auth header for public endpoints
     }
     
     const response = await fetch(`${API_BASE_URL}/${endpoint}`, {
@@ -38,20 +43,36 @@ async function apiCall(endpoint: string, data: any): Promise<ApiResponse> {
     console.log(`✅ Response: ${endpoint}`, { status: response.status, ok: response.ok });
     
     if (!response.ok) {
-      const errorText = await response.text();
+      let errorText;
+      try {
+        errorText = await response.text();
+      } catch (e) {
+        errorText = `HTTP ${response.status} ${response.statusText}`;
+      }
       console.error(`❌ API Error: ${endpoint}`, { status: response.status, error: errorText });
       
       // Handle specific Edge Function deployment issues
       if (response.status === 404) {
         throw new Error(`Edge Function '${endpoint}' not found. Please ensure Supabase Edge Functions are deployed.`);
+      } else if (response.status === 401) {
+        throw new Error(`Authentication required for '${endpoint}'. Please sign in and try again.`);
+      } else if (response.status === 403) {
+        throw new Error(`Access denied for '${endpoint}'. Check your permissions.`);
       } else if (response.status === 500) {
         throw new Error(`Edge Function '${endpoint}' error. Check Supabase dashboard for function logs.`);
       } else {
-        throw new Error(`API request failed: ${response.status} ${response.statusText}`);
+        throw new Error(`API request failed: ${response.status} ${response.statusText}${errorText ? ` - ${errorText}` : ''}`);
       }
     }
     
-    const result = await response.json();
+    let result;
+    try {
+      result = await response.json();
+    } catch (e) {
+      console.error(`Failed to parse JSON response from ${endpoint}:`, e);
+      throw new Error(`Invalid response format from ${endpoint}`);
+    }
+    
     console.log(`📦 API Success: ${endpoint}`, result);
     return result;
   } catch (error) {
@@ -61,7 +82,7 @@ async function apiCall(endpoint: string, data: any): Promise<ApiResponse> {
     if (error instanceof TypeError && error.message === 'Failed to fetch') {
       return {
         success: false,
-        error: `Unable to connect to Supabase Edge Functions. Please check:\n1. Supabase project is active\n2. Edge Functions are deployed with secrets configured\n3. Network connectivity`
+        error: `Network error connecting to Edge Function '${endpoint}'. This could be due to:\n1. CORS configuration issues\n2. Network connectivity problems\n3. Edge Function not responding\n\nPlease check your Supabase project settings and try again.`
       };
     }
     
