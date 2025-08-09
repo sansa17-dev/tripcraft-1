@@ -12,6 +12,7 @@ import { Plane, AlertTriangle, RefreshCw, User, LogOut, Save, BookOpen, ArrowRig
 import { TravelPreferences, GeneratedItinerary } from './types';
 import { generateItinerary, generateDemoItinerary } from './services/itineraryService';
 import { saveItinerary } from './services/itineraryStorageService';
+import { isFeatureEnabled } from './utils/featureFlags';
 import { useAuth } from './hooks/useAuth';
 import { TravelForm } from './components/TravelForm';
 import { EditableItinerary } from './components/EditableItinerary';
@@ -179,47 +180,47 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
+    <div className="min-h-screen bg-white font-body">
       {/* Header */}
-      <header className="bg-white/80 backdrop-blur-sm shadow-sm border-b border-gray-200 sticky top-0 z-40">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+      <header className="bg-white/95 backdrop-blur-sm border-b border-gray-100 sticky top-0 z-40">
+        <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex items-center justify-between">
             {/* Logo */}
             <button
               onClick={() => setCurrentView('home')}
-              className="flex items-center gap-3 hover:opacity-80 transition-opacity"
+              className="flex items-center gap-3 hover:opacity-90 transition-opacity"
             >
-              <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-2.5 rounded-xl shadow-lg">
+              <div className="bg-gradient-to-r from-primary-600 to-primary-500 p-3 rounded-2xl shadow-sm">
                 <Plane className="h-6 w-6 text-white" />
               </div>
               <div className="text-left">
-                <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                <h1 className="font-display text-2xl font-bold bg-gradient-to-r from-primary-600 to-primary-500 bg-clip-text text-transparent">
                   TripCraft
                 </h1>
-                <p className="text-sm text-gray-600">AI-Powered Travel Planning</p>
+                <p className="text-sm text-gray-500">AI Travel Planning</p>
               </div>
             </button>
             
             <div className="flex items-center gap-3">
               {/* Navigation */}
               {user && (
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1">
                   <button
                     onClick={() => setCurrentView('planner')}
-                    className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                    className={`px-4 py-2.5 rounded-xl text-sm font-medium transition-colors ${
                       currentView === 'planner'
-                        ? 'bg-blue-100 text-blue-700'
-                        : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                        ? 'bg-primary-50 text-primary-700'
+                        : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
                     }`}
                   >
                     Plan Trip
                   </button>
                   <button
                     onClick={() => setCurrentView('saved')}
-                    className={`flex items-center gap-1 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                    className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-colors ${
                       currentView === 'saved'
-                        ? 'bg-blue-100 text-blue-700'
-                        : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                        ? 'bg-primary-50 text-primary-700'
+                        : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
                     }`}
                   >
                     <BookOpen className="h-4 w-4" />
@@ -231,7 +232,7 @@ function App() {
               {/* User Actions */}
               {user ? (
                 <div className="flex items-center gap-2">
-                  <div className="flex items-center gap-2 px-3 py-1.5 bg-gray-100 rounded-lg">
+                  <div className="flex items-center gap-2 px-4 py-2.5 bg-gray-50 rounded-xl">
                     <User className="h-4 w-4 text-gray-600" />
                     <span className="text-sm text-gray-700 max-w-32 truncate">
                       {user.email}
@@ -239,7 +240,7 @@ function App() {
                   </div>
                   <button
                     onClick={handleSignOut}
-                    className="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
+                    className="p-2.5 text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-xl transition-colors"
                     title="Sign out"
                   >
                     <LogOut className="h-4 w-4" />
@@ -249,13 +250,13 @@ function App() {
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => setShowAuthModal(true)}
-                    className="px-4 py-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors font-medium"
+                    className="px-4 py-2.5 text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-xl transition-colors font-medium"
                   >
                     Sign In
                   </button>
                   <button
                     onClick={() => setCurrentView('planner')}
-                    className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 shadow-md hover:shadow-lg font-medium"
+                    className="flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-primary-600 to-primary-500 text-white rounded-xl hover:from-primary-700 hover:to-primary-600 transition-all duration-200 shadow-sm hover:shadow-md font-medium"
                   >
                     Plan Your Trip
                     <ArrowRight className="h-4 w-4" />
@@ -267,7 +268,7 @@ function App() {
               {(itinerary || currentView !== 'home') && currentView !== 'home' && (
                 <button
                   onClick={handleReset}
-                  className="flex items-center gap-2 px-3 py-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
+                  className="flex items-center gap-2 px-4 py-2.5 text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-xl transition-colors"
                 >
                   <RefreshCw className="h-4 w-4" />
                   <span className="hidden sm:inline">Reset</span>
@@ -280,8 +281,8 @@ function App() {
 
       {/* Save Success Banner */}
       {saveSuccess && (
-        <div className="bg-green-50 border-b border-green-200">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+        <div className="bg-green-50 border-b border-green-100">
+          <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-4">
             <div className="flex items-center gap-2 text-green-800">
               <Save className="h-4 w-4" />
               <span className="text-sm font-medium">Itinerary saved successfully!</span>
@@ -290,17 +291,17 @@ function App() {
         </div>
       )}
 
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Save Itinerary Button */}
         {user && itinerary && currentView === 'results' && (
-          <div className="mb-6">
+          <div className="mb-8">
             <button
               onClick={handleSaveItinerary}
               disabled={savingItinerary}
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
+              className={`flex items-center gap-2 px-6 py-3 rounded-xl font-medium transition-all duration-200 ${
                 savingItinerary
-                  ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                  : 'bg-gradient-to-r from-green-600 to-emerald-600 text-white hover:from-green-700 hover:to-emerald-700 shadow-md hover:shadow-lg'
+                  ? 'bg-gray-50 text-gray-400 cursor-not-allowed'
+                  : 'bg-gradient-to-r from-green-600 to-emerald-600 text-white hover:from-green-700 hover:to-emerald-700 shadow-sm hover:shadow-md'
               }`}
             >
               {savingItinerary ? (
@@ -351,7 +352,7 @@ function App() {
         )}
 
         {/* Main Content */}
-        <div className="space-y-8">
+        <div className="space-y-12">
           {currentView === 'home' ? (
             <HomePage 
               onGetStarted={() => {
@@ -370,13 +371,12 @@ function App() {
             />
           ) : currentView === 'planner' ? (
             <div>
-              <div className="text-center mb-8">
-                <h2 className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent mb-3">
+              <div className="text-center mb-12 max-w-content-narrow mx-auto">
+                <h2 className="font-display text-3xl font-bold text-gray-900 mb-6">
                   Create Your Perfect Travel Itinerary
                 </h2>
-                <p className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
-                  Tell us about your travel preferences and we'll generate a personalised day-by-day 
-                  itinerary with activities, dining recommendations, and local insights.
+                <p className="text-lg text-gray-600 leading-relaxed-plus">
+                  Tell us your preferences and we'll create a personalized day-by-day itinerary.
                 </p>
               </div>
 
@@ -415,11 +415,11 @@ function App() {
 
           {/* Auth Prompt for Non-Users */}
           {!user && itinerary && (
-            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-6 shadow-sm">
+            <div className="bg-gradient-to-r from-primary-50 to-primary-50 border border-primary-100 rounded-2xl p-8 shadow-sm">
               <div className="text-center">
-                <User className="h-8 w-8 text-blue-600 mx-auto mb-3" />
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">Save Your Itinerary</h3>
-                <p className="text-gray-600 mb-4">
+                <User className="h-8 w-8 text-primary-600 mx-auto mb-4" />
+                <h3 className="font-display text-lg font-semibold text-gray-900 mb-3">Save Your Itinerary</h3>
+                <p className="text-gray-600 mb-6 leading-relaxed">
                   Create an account to save this itinerary and access it anytime, anywhere.
                 </p>
                 <button
@@ -427,7 +427,7 @@ function App() {
                     setAuthMode('signup');
                     setShowAuthModal(true);
                   }}
-                  className="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 shadow-md hover:shadow-lg font-medium"
+                  className="px-8 py-3 bg-gradient-to-r from-primary-600 to-primary-500 text-white rounded-xl hover:from-primary-700 hover:to-primary-600 transition-all duration-200 shadow-sm hover:shadow-md font-medium"
                 >
                   Create Free Account
                 </button>
@@ -438,9 +438,9 @@ function App() {
 
         {/* Footer Info */}
         {currentView === 'planner' && !itinerary && (
-          <div className="mt-16 text-center text-sm text-gray-500">
+          <div className="mt-18 text-center text-sm text-gray-500 max-w-2xl mx-auto">
             <p>
-              TripCraft uses AI to create personalised travel itineraries based on your preferences. 
+              TripCraft uses AI to create personalized travel itineraries based on your preferences. 
               Generated suggestions should be verified for accuracy and availability.
             </p>
           </div>

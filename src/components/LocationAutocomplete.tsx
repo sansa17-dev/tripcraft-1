@@ -173,7 +173,7 @@ export function LocationAutocomplete({
 
   return (
     <div>
-      <label htmlFor={id} className="block text-sm font-medium text-gray-700 mb-2">
+      <label htmlFor={id} className="block text-sm font-medium text-gray-700 mb-3">
         {label} {required && '*'}
       </label>
       <div className="relative">
@@ -193,17 +193,17 @@ export function LocationAutocomplete({
           onChange={handleInputChange}
           onBlur={handleInputBlur}
           placeholder={placeholder}
-          className="w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+          className="w-full pl-12 pr-4 py-4 border border-gray-200 rounded-xl shadow-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
           autoComplete="off"
         />
         {!isGoogleLoaded && !isLoading && (
           <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
-            <span className="text-xs text-gray-400">Manual entry</span>
+            <span className="text-xs text-gray-400">Manual</span>
           </div>
         )}
       </div>
       {!import.meta.env.VITE_GOOGLE_PLACES_API_KEY && (
-        <p className="mt-1 text-xs text-amber-600">
+        <p className="mt-2 text-xs text-amber-600">
           Add VITE_GOOGLE_PLACES_API_KEY to enable location suggestions
         </p>
       )}

@@ -55,20 +55,13 @@ export function TravelForm({ preferences, onPreferencesChange, onSubmit, isGener
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-8 relative overflow-hidden">
-      {/* Background Pattern */}
-      <div className="absolute inset-0 opacity-5">
-        <div className="absolute inset-0" style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%234F46E5' fill-opacity='1'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-        }}></div>
-      </div>
-
-      <h2 className="text-2xl font-semibold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent mb-6 flex items-center gap-2">
-        <Calendar className="h-6 w-6 text-blue-600" />
+    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-10 max-w-content-narrow mx-auto">
+      <h2 className="font-display text-2xl font-semibold text-gray-900 mb-8 flex items-center gap-3">
+        <Calendar className="h-6 w-6 text-primary-600" />
         Plan Your Trip
       </h2>
 
-      <form onSubmit={onSubmit} className="space-y-6 relative z-10">
+      <form onSubmit={onSubmit} className="space-y-8">
         {/* Origin */}
         <LocationAutocomplete
           id="origin"
@@ -92,9 +85,9 @@ export function TravelForm({ preferences, onPreferencesChange, onSubmit, isGener
         />
 
         {/* Dates */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <label htmlFor="startDate" className="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-1">
+            <label htmlFor="startDate" className="block text-sm font-medium text-gray-700 mb-3 flex items-center gap-2">
               <Calendar className="h-4 w-4" />
               Start Date *
             </label>
@@ -105,11 +98,11 @@ export function TravelForm({ preferences, onPreferencesChange, onSubmit, isGener
               value={preferences.startDate}
               onChange={(e) => updateField('startDate', e.target.value)}
               min={new Date().toISOString().split('T')[0]}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+              className="w-full px-4 py-4 border border-gray-200 rounded-xl shadow-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
             />
           </div>
           <div>
-            <label htmlFor="endDate" className="block text-sm font-medium text-gray-700 mb-2">
+            <label htmlFor="endDate" className="block text-sm font-medium text-gray-700 mb-3">
               End Date *
             </label>
             <input
@@ -119,15 +112,15 @@ export function TravelForm({ preferences, onPreferencesChange, onSubmit, isGener
               value={preferences.endDate}
               onChange={(e) => updateField('endDate', e.target.value)}
               min={preferences.startDate || new Date().toISOString().split('T')[0]}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+              className="w-full px-4 py-4 border border-gray-200 rounded-xl shadow-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
             />
           </div>
         </div>
 
         {/* Budget and Travelers */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <label htmlFor="budget" className="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-1">
+            <label htmlFor="budget" className="block text-sm font-medium text-gray-700 mb-3 flex items-center gap-2">
               <Wallet className="h-4 w-4" />
               Budget Level (per traveler per day) *
             </label>
@@ -136,7 +129,7 @@ export function TravelForm({ preferences, onPreferencesChange, onSubmit, isGener
               required
               value={preferences.budget}
               onChange={(e) => updateField('budget', e.target.value as TravelPreferences['budget'])}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+              className="w-full px-4 py-4 border border-gray-200 rounded-xl shadow-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
             >
               <option value="">Select budget range</option>
               <option value="budget">Budget ($50-100/day)</option>
@@ -145,7 +138,7 @@ export function TravelForm({ preferences, onPreferencesChange, onSubmit, isGener
             </select>
           </div>
           <div>
-            <label htmlFor="travelers" className="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-1">
+            <label htmlFor="travelers" className="block text-sm font-medium text-gray-700 mb-3 flex items-center gap-2">
               <Users className="h-4 w-4" />
               Number of Travelers *
             </label>
@@ -157,14 +150,14 @@ export function TravelForm({ preferences, onPreferencesChange, onSubmit, isGener
               max="20"
               value={preferences.travelers}
               onChange={(e) => updateField('travelers', parseInt(e.target.value))}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+              className="w-full px-4 py-4 border border-gray-200 rounded-xl shadow-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
             />
           </div>
         </div>
 
         {/* Accommodation Type */}
         <div>
-          <label htmlFor="accommodationType" className="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-1">
+          <label htmlFor="accommodationType" className="block text-sm font-medium text-gray-700 mb-3 flex items-center gap-2">
             <Home className="h-4 w-4" />
             Accommodation Preference
           </label>
@@ -172,7 +165,7 @@ export function TravelForm({ preferences, onPreferencesChange, onSubmit, isGener
             id="accommodationType"
             value={preferences.accommodationType}
             onChange={(e) => updateField('accommodationType', e.target.value as TravelPreferences['accommodationType'])}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+            className="w-full px-4 py-4 border border-gray-200 rounded-xl shadow-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
           >
             <option value="any">Any type</option>
             <option value="hotel">Hotel</option>
@@ -186,7 +179,7 @@ export function TravelForm({ preferences, onPreferencesChange, onSubmit, isGener
 
         {/* Vacation Pace */}
         <div>
-          <label htmlFor="vacationPace" className="block text-sm font-medium text-gray-700 mb-2">
+          <label htmlFor="vacationPace" className="block text-sm font-medium text-gray-700 mb-3">
             What kind of holiday do you prefer? *
           </label>
           <select
@@ -194,7 +187,7 @@ export function TravelForm({ preferences, onPreferencesChange, onSubmit, isGener
             required
             value={preferences.vacationPace}
             onChange={(e) => updateField('vacationPace', e.target.value as TravelPreferences['vacationPace'])}
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+            className="w-full px-4 py-4 border border-gray-200 rounded-xl shadow-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors"
           >
             <option value="">Select holiday pace</option>
             <option value="relaxed">Relaxed - Take it slow, enjoy leisure time</option>
@@ -205,18 +198,18 @@ export function TravelForm({ preferences, onPreferencesChange, onSubmit, isGener
 
         {/* Interests */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-3 flex items-center gap-1">
+          <label className="block text-sm font-medium text-gray-700 mb-4 flex items-center gap-2">
             <Heart className="h-4 w-4" />
             What interests you? (Select all that apply)
           </label>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {INTEREST_OPTIONS.map((interest) => (
-              <label key={interest} className="flex items-center space-x-2 p-3 rounded-lg border border-gray-200 hover:bg-blue-50 hover:border-blue-300 cursor-pointer transition-colors">
+              <label key={interest} className="flex items-center space-x-3 p-4 rounded-xl border border-gray-200 hover:bg-primary-50 hover:border-primary-200 cursor-pointer transition-colors">
                 <input
                   type="checkbox"
                   checked={preferences.interests.includes(interest)}
                   onChange={() => toggleInterest(interest)}
-                  className="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 transition-colors"
+                  className="rounded border-gray-300 text-primary-600 shadow-sm focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50 transition-colors"
                 />
                 <span className="text-sm text-gray-700">{interest}</span>
               </label>
@@ -225,11 +218,11 @@ export function TravelForm({ preferences, onPreferencesChange, onSubmit, isGener
         </div>
         {/* Submit Button */}
         {!isAuthenticated ? (
-          <div className="text-center p-4 bg-blue-50 rounded-lg border border-blue-200">
-            <p className="text-blue-700 mb-3">Please sign in to generate your personalized itinerary</p>
+          <div className="text-center p-6 bg-primary-50 rounded-2xl border border-primary-100">
+            <p className="text-primary-700 mb-4 leading-relaxed">Please sign in to generate your personalized itinerary</p>
             <button
               type="button"
-              className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              className="px-8 py-3 bg-primary-600 text-white rounded-xl hover:bg-primary-700 transition-colors font-medium"
               onClick={() => {/* This would trigger auth modal */}}
             >
               Sign In
@@ -239,7 +232,7 @@ export function TravelForm({ preferences, onPreferencesChange, onSubmit, isGener
           <button
             type="submit"
             disabled={isGenerating}
-            className="w-full py-4 px-6 rounded-lg text-white font-medium transition-all duration-200 shadow-lg hover:shadow-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full py-5 px-8 rounded-2xl text-white font-semibold transition-all duration-200 shadow-sm hover:shadow-md bg-gradient-to-r from-primary-600 to-primary-500 hover:from-primary-700 hover:to-primary-600 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed font-display"
           >
             {isGenerating ? (
               <div className="flex items-center justify-center gap-2">
