@@ -72,11 +72,23 @@ export function AIChatModal({ isOpen, onClose, itinerary, preferences, onItinera
         const assistantMessage: ChatMessage = {
           id: (Date.now() + 1).toString(),
           role: 'assistant',
-          content: result.response || 'I\'ve updated your itinerary based on your request. The changes have been applied!',
+          content: result.response || 'I\'ve updated your itinerary based on your request.',
           timestamp: new Date()
         };
 
         setMessages(prev => [...prev, assistantMessage]);
+        
+        // Show change summary if provided
+        if (result.changeSummary) {
+          const summaryMessage: ChatMessage = {
+            id: (Date.now() + 2).toString(),
+            role: 'assistant',
+            content: `📝 **Changes Made:**\n${result.changeSummary}`,
+            timestamp: new Date()
+          };
+          setMessages(prev => [...prev, summaryMessage]);
+        }
+        
         onItineraryUpdate(result.data);
       } else {
         throw new Error(result.error || 'Failed to process your request');

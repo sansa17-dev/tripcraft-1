@@ -188,6 +188,13 @@ function generateMockRefinement(request: ItineraryRefinementRequest): Refinement
     if (modifiedItinerary.days.length > 0 && modifiedItinerary.days[0].meals.dinner) {
       modifiedItinerary.days[0].meals.dinner = "Green Garden Vegetarian Restaurant - Highly rated plant-based cuisine";
       responseMessage = "I've updated your dinner recommendation to include a great vegetarian restaurant option.";
+      const changeSummary = "• Changed Day 1 dinner to Green Garden Vegetarian Restaurant\n• Updated to plant-based cuisine option";
+      return {
+        success: true,
+        data: modifiedItinerary,
+        response: responseMessage,
+        changeSummary: changeSummary
+      };
     }
   } else if (lowerMessage.includes('relaxed') || lowerMessage.includes('slower')) {
     // Reduce activities in a day
@@ -195,24 +202,46 @@ function generateMockRefinement(request: ItineraryRefinementRequest): Refinement
       modifiedItinerary.days[0].activities = modifiedItinerary.days[0].activities.slice(0, 2);
       modifiedItinerary.days[0].activities.push("Afternoon: Free time for relaxation or personal exploration");
       responseMessage = "I've made your itinerary more relaxed by reducing the number of scheduled activities and adding free time.";
+      const changeSummary = "• Reduced Day 1 activities from 3 to 2\n• Added free time for relaxation in the afternoon\n• Removed one scheduled activity";
+      return {
+        success: true,
+        data: modifiedItinerary,
+        response: responseMessage,
+        changeSummary: changeSummary
+      };
     }
   } else if (lowerMessage.includes('museum') || lowerMessage.includes('art')) {
     // Add a museum activity
     if (modifiedItinerary.days.length > 0) {
       modifiedItinerary.days[0].activities[1] = `Afternoon: Visit the local art museum or cultural center in ${itinerary.destination}`;
       responseMessage = "I've added a museum visit to your itinerary to match your interest in art and culture.";
+      const changeSummary = `• Updated Day 1 afternoon activity to museum visit\n• Added cultural center option in ${itinerary.destination}`;
+      return {
+        success: true,
+        data: modifiedItinerary,
+        response: responseMessage,
+        changeSummary: changeSummary
+      };
     }
   } else if (lowerMessage.includes('budget') || lowerMessage.includes('cheaper')) {
     // Modify to more budget-friendly options
     if (modifiedItinerary.days.length > 0) {
       modifiedItinerary.days[0].meals.lunch = "Local street food market - Authentic and budget-friendly dining";
       responseMessage = "I've updated your recommendations to include more budget-friendly options while maintaining quality.";
+      const changeSummary = "• Changed Day 1 lunch to local street food market\n• Updated to budget-friendly dining option\n• Maintained authentic local experience";
+      return {
+        success: true,
+        data: modifiedItinerary,
+        response: responseMessage,
+        changeSummary: changeSummary
+      };
     }
   }
   
   return {
     success: true,
     data: modifiedItinerary,
-    response: responseMessage
+    response: responseMessage,
+    changeSummary: "• Made general improvements to your itinerary based on your request"
   };
 }
