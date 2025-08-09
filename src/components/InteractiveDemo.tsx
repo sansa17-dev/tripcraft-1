@@ -124,11 +124,11 @@ export function InteractiveDemo({ onStartPlanning }: InteractiveDemoProps) {
           onClick={onStartPlanning}
           className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 shadow-lg hover:shadow-xl font-medium"
         >
-          Chat With AI Now
+          Try Voice Chat Now
           <ArrowRight className="h-4 w-4" />
         </button>
         <p className="text-xs text-gray-500 mt-2">
-          Free AI chat • No signup required • Instant local insights
+          Free voice chat • No signup required • Speak naturally with AI
         </p>
       </div>
     </div>

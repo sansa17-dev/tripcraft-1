@@ -8,9 +8,10 @@ import {
   Plane, MapPin, Clock, Users, Star, Compass, Globe, Zap, 
   Shield, Heart, ArrowRight, CheckCircle, Quote, Sparkles,
   Calendar, DollarSign, Camera, Mountain, Play, ChevronDown,
-  Award, TrendingUp, Smartphone, Laptop, Tablet, Waves, TreePine, ShoppingBag
+  Award, TrendingUp, Smartphone, Laptop, Tablet, Waves, TreePine, ShoppingBag, Mic
 } from 'lucide-react';
 import { InteractiveDemo } from './InteractiveDemo';
+import { VoiceChatModal } from './VoiceChatModal';
 
 interface HomePageProps {
   onGetStarted: () => void;
@@ -182,10 +183,10 @@ const FEATURES = [
   },
   {
     icon: Globe,
-    title: 'AI Travel Companion Chat',
-    description: 'Ask anything about your destination. "Best sunset spots in Santorini?" Get instant local insights via chat.',
+    title: 'Voice Chat with AI Buddy',
+    description: 'Just speak naturally! "Plan a romantic Bali trip for 5 days." Your AI buddy responds with voice and creates your itinerary.',
     color: 'from-blue-500 to-cyan-500',
-    metric: '24/7 AI chat',
+    metric: 'Voice + Chat',
     badge: 'Revolutionary'
   },
   {
@@ -296,6 +297,7 @@ const HOW_IT_WORKS = [
 export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePageProps) {
   const [showVideo, setShowVideo] = useState(false);
   const [expandedFAQ, setExpandedFAQ] = useState<number | null>(null);
+  const [showVoiceChat, setShowVoiceChat] = useState(false);
   const stats = useRealTimeStats();
 
   return (
@@ -370,7 +372,21 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
               </button>
               
               <button
-                onClick={() => setShowVideo(true)}
+                onClick={() => setShowVoiceChat(true)}
+                className="group relative inline-flex items-center gap-3 px-6 py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-2xl hover:from-purple-700 hover:to-pink-700 transition-all duration-300 shadow-2xl hover:shadow-purple-500/25 font-bold text-lg transform hover:scale-105 hover:-translate-y-1"
+              >
+                <Mic className="h-5 w-5 group-hover:scale-110 transition-transform duration-300" />
+                Voice Chat with AI
+                <Sparkles className="h-4 w-4 group-hover:rotate-12 transition-transform duration-300" />
+                
+                {/* New feature badge */}
+                <div className="absolute -top-2 -right-2 bg-green-500 text-white text-xs px-2 py-1 rounded-full animate-bounce">
+                  NEW
+                </div>
+              </button>
+              
+              <button
+                onClick={() => alert('Demo video coming soon! 🎬')}
                 className="flex items-center gap-2 px-6 py-4 bg-white/10 backdrop-blur-sm text-white rounded-2xl hover:bg-white/20 transition-all duration-300 border border-white/20 font-medium group"
               >
                 <Play className="h-4 w-4 group-hover:scale-110 transition-transform" />
@@ -851,6 +867,13 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
           <InteractiveDemo onStartPlanning={onGetStarted} />
         </div>
       </section>
+
+      {/* Voice Chat Modal */}
+      <VoiceChatModal 
+        isOpen={showVoiceChat}
+        onClose={() => setShowVoiceChat(false)}
+        onPlanGenerated={onGetStarted}
+      />
     </div>
   );
 }
