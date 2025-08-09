@@ -17,8 +17,10 @@ interface RefinementResponse extends ApiResponse {
 function createRefinementPrompt(request: ItineraryRefinementRequest): string {
   const { message, itinerary, preferences } = request;
   
-  // Get interests from persona if available, otherwise use main interests
-  const userInterests = preferences.travelPersona?.interests || preferences.interests || [];
+  // Combine interests from both persona and main preferences, with persona taking priority
+  const personaInterests = preferences.travelPersona?.interests || [];
+  const mainInterests = preferences.interests || [];
+  const userInterests = personaInterests.length > 0 ? personaInterests : mainInterests;
   
   return `You are an enthusiastic, knowledgeable travel planning expert helping to refine an existing itinerary. You have deep local knowledge, insider tips, and a passion for creating unforgettable travel experiences. The user has a specific request to modify their trip.
 
@@ -34,13 +36,21 @@ USER PREFERENCES:
 - Accommodation: ${preferences.accommodationType}
 - Pace: ${preferences.vacationPace}
 ${preferences.travelPersona ? `
-TRAVEL PERSONA:
+TRAVEL PERSONA (CRITICAL - CONSIDER THIS FOR ALL MODIFICATIONS):
 - Time Preference: ${preferences.travelPersona.timePreference}
 - Social Style: ${preferences.travelPersona.socialStyle}
 - Cultural Interest: ${preferences.travelPersona.culturalInterest}
 - Food Adventure: ${preferences.travelPersona.foodAdventure}
 - Planning Style: ${preferences.travelPersona.planningStyle}
 - Interests: ${preferences.travelPersona.interests?.join(', ') || 'None specified'}
+
+PERSONA-BASED MODIFICATION GUIDELINES:
+- Ensure all changes align with the user's travel persona preferences
+- Consider their time preference when suggesting activity timing
+- Match their social style when recommending group vs solo activities
+- Respect their cultural interest level when adding/modifying cultural sites
+- Honor their food adventure level when changing dining recommendations
+- Adapt to their planning style when structuring modifications
 ` : ''}
 
 USER REQUEST: "${message}"
