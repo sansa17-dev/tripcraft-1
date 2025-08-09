@@ -10,6 +10,7 @@ import {
   Calendar, DollarSign, Camera, Mountain, Play, ChevronDown,
   Award, TrendingUp, Smartphone, Laptop, Tablet
 } from 'lucide-react';
+import { InteractiveDemo } from './InteractiveDemo';
 
 interface HomePageProps {
   onGetStarted: () => void;
@@ -215,30 +216,33 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
             </div>
             
             <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight">
-              Your Perfect Trip
+              Your AI Travel
               <span className="block bg-gradient-to-r from-yellow-300 via-pink-300 to-cyan-300 bg-clip-text text-transparent animate-gradient">
-                In 90 Seconds
+                Companion
               </span>
             </h1>
             
-            <p className="text-xl md:text-2xl text-white/80 max-w-3xl mx-auto leading-relaxed mb-8">
-              Join 50,000+ travelers who save 20+ hours of planning with AI. 
-              <span className="text-yellow-300 font-semibold"> Get personalized itineraries instantly.</span>
+            <p className="text-xl md:text-2xl text-white/80 max-w-3xl mx-auto leading-relaxed mb-4">
+              <span className="text-yellow-300 font-bold text-2xl">"Plan like a local, travel like a pro"</span>
+            </p>
+            <p className="text-lg md:text-xl text-white/70 max-w-2xl mx-auto leading-relaxed mb-8">
+              Join 50,000+ travelers who save 20+ hours with AI-powered planning. 
+              Get personalized, local-insight itineraries in 90 seconds.
             </p>
 
             {/* Enhanced CTA Buttons */}
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8">
               <button
                 onClick={onGetStarted}
-                className="group relative flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-yellow-400 to-orange-500 text-black rounded-2xl hover:from-yellow-300 hover:to-orange-400 transition-all duration-300 shadow-2xl hover:shadow-yellow-500/25 font-bold text-lg transform hover:scale-105 hover:-translate-y-1 animate-bounce-subtle"
+                className="group relative inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-yellow-400 to-orange-500 text-black rounded-2xl hover:from-yellow-300 hover:to-orange-400 transition-all duration-300 shadow-2xl hover:shadow-yellow-500/25 font-bold text-lg transform hover:scale-105 hover:-translate-y-1 animate-pulse-slow"
               >
                 <Plane className="h-5 w-5 group-hover:rotate-12 transition-transform duration-300" />
-                Start Planning Free
+                Meet Your AI Companion
                 <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform duration-300" />
                 
                 {/* Urgency indicator */}
                 <div className="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full animate-pulse">
-                  Limited Time
+                  Try Free
                 </div>
               </button>
               
@@ -247,7 +251,7 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
                 className="flex items-center gap-2 px-6 py-4 bg-white/10 backdrop-blur-sm text-white rounded-2xl hover:bg-white/20 transition-all duration-300 border border-white/20 font-medium group"
               >
                 <Play className="h-4 w-4 group-hover:scale-110 transition-transform" />
-                Watch Demo (2 min)
+                See Live Demo
               </button>
             </div>
 
@@ -344,14 +348,14 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
           <div className="text-center mb-16">
             <div className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-100 to-purple-100 rounded-full px-4 py-2 mb-4">
               <Sparkles className="h-4 w-4 text-blue-600" />
-              <span className="text-blue-800 text-sm font-medium">How It Works</span>
+              <span className="text-blue-800 text-sm font-medium">Master Your Travel Universe</span>
             </div>
-            <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent mb-4">
-              From Dream to Itinerary
-              <span className="block text-blue-600">In 3 Simple Steps</span>
+            <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent mb-4">
+              How TripCraft Works
+              <span className="block text-blue-600 text-2xl md:text-3xl">Like Having a Local Friend Everywhere</span>
             </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Our AI does the heavy lifting while you focus on the excitement
+            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+              Our AI combines local insights with your preferences to create authentic travel experiences
             </p>
           </div>
 
@@ -406,12 +410,12 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
       <section className="py-24 bg-gradient-to-br from-gray-50 to-blue-50 relative overflow-hidden">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent mb-4">
-              Why 50,000+ Travelers
-              <span className="block text-blue-600">Choose TripCraft</span>
+            <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent mb-4">
+              Your Personal Travel Assistant
+              <span className="block text-blue-600 text-2xl md:text-3xl">Powered by Local Intelligence</span>
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Experience the future of travel planning with features that save time and money
+            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+              Get insider recommendations and authentic experiences that guidebooks miss
             </p>
           </div>
 
@@ -453,12 +457,12 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
       <section className="py-24 bg-white">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent mb-4">
-              Trending Destinations
-              <span className="block text-green-600">This Month</span>
+            <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent mb-4">
+              Plan Like a Local
+              <span className="block text-green-600 text-2xl md:text-3xl">Discover Hidden Gems</span>
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              See where our community is traveling and get inspired for your next adventure
+            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+              Access local insights and authentic experiences in these trending destinations
             </p>
           </div>
 
@@ -522,12 +526,12 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
       <section className="py-24 bg-gradient-to-br from-blue-50 to-indigo-50">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent mb-4">
-              Real Stories, Real Savings
-              <span className="block text-green-600">₹1.2M+ Saved by Our Community</span>
+            <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent mb-4">
+              Travelers Love Their AI Companion
+              <span className="block text-green-600 text-2xl md:text-3xl">₹1.2M+ Saved & Counting</span>
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Join thousands who've transformed their travel planning experience
+            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+              Real stories from travelers who discovered authentic experiences with TripCraft
             </p>
           </div>
 
@@ -621,15 +625,18 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
           </div>
           
           <h2 className="text-4xl md:text-6xl font-bold text-white mb-6">
-            Your Dream Trip
+            Ready to Travel
             <span className="block bg-gradient-to-r from-yellow-300 to-pink-300 bg-clip-text text-transparent">
-              Starts Right Now
+              Like a Local?
             </span>
           </h2>
           
-          <p className="text-xl text-white/80 mb-8 max-w-2xl mx-auto leading-relaxed">
-            Join 50,000+ travelers who've saved ₹1.2M+ and 100,000+ hours with TripCraft. 
-            <span className="text-yellow-300 font-semibold"> Your perfect itinerary is 90 seconds away.</span>
+          <p className="text-lg text-white/80 mb-4 max-w-2xl mx-auto leading-relaxed">
+            <span className="text-yellow-300 font-bold text-xl">"Your AI travel companion is waiting"</span>
+          </p>
+          <p className="text-lg text-white/70 mb-8 max-w-2xl mx-auto leading-relaxed">
+            Join 50,000+ travelers discovering authentic experiences. 
+            Your personalized local guide is 90 seconds away.
           </p>
 
           {/* Multiple CTAs */}
@@ -662,12 +669,18 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
             <Shield className="h-8 w-8 text-green-400 mx-auto mb-3" />
             <h3 className="text-white font-semibold mb-2">100% Risk-Free Guarantee</h3>
             <p className="text-white/80 text-sm">
-              Not happy with your itinerary? We'll refund your time and create a new one for free. 
-              That's our promise to you.
+              Your AI companion learns your style. Not satisfied? We'll create unlimited 
+              new itineraries until it's perfect. That's our promise.
             </p>
           </div>
         </div>
       </section>
     </div>
+      {/* Interactive Demo Section */}
+      <section className="py-24 bg-gradient-to-br from-gray-50 to-blue-50">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <InteractiveDemo onStartPlanning={onGetStarted} />
+        </div>
+      </section>
   );
 }
