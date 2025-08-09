@@ -1,3 +1,16 @@
+/// <reference types="vite/client" />
+
+interface ImportMetaEnv {
+  readonly VITE_GOOGLE_PLACES_API_KEY: string
+  readonly VITE_SUPABASE_URL: string
+  readonly VITE_SUPABASE_ANON_KEY: string
+  readonly VITE_OPENROUTER_API_KEY: string
+}
+
+interface ImportMeta {
+  readonly env: ImportMetaEnv
+}
+
 /**
  * TypeScript interfaces for TripCraft application
  * Defines the structure for travel preferences and itinerary data

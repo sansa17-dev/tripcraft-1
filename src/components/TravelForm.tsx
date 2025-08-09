@@ -4,8 +4,9 @@
  */
 
 import React from 'react';
-import { Calendar, MapPin, Users, Wallet, Heart, Home, FileText } from 'lucide-react';
+import { Calendar, Users, Wallet, Heart, Home, FileText } from 'lucide-react';
 import { TravelPreferences } from '../types';
+import { LocationAutocomplete } from './LocationAutocomplete';
 
 interface TravelFormProps {
   preferences: TravelPreferences;
@@ -63,42 +64,32 @@ export function TravelForm({ preferences, onPreferencesChange, onSubmit, isGener
       </div>
 
       <h2 className="text-2xl font-semibold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent mb-6 flex items-center gap-2">
-        <MapPin className="h-6 w-6 text-blue-600" />
+        <Calendar className="h-6 w-6 text-blue-600" />
         Plan Your Trip
       </h2>
 
       <form onSubmit={onSubmit} className="space-y-6 relative z-10">
         {/* Origin */}
-        <div>
-          <label htmlFor="origin" className="block text-sm font-medium text-gray-700 mb-2">
-            Where are you travelling from? *
-          </label>
-          <input
-            type="text"
-            id="origin"
-            required
-            value={preferences.origin}
-            onChange={(e) => updateField('origin', e.target.value)}
-            placeholder="e.g., Mumbai, Delhi, Bangalore"
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
-          />
-        </div>
+        <LocationAutocomplete
+          id="origin"
+          label="Where are you travelling from?"
+          value={preferences.origin}
+          onChange={(value) => updateField('origin', value)}
+          placeholder="e.g., Mumbai, Delhi, Bangalore"
+          required
+          types={['(cities)']}
+        />
 
         {/* Destination */}
-        <div>
-          <label htmlFor="destination" className="block text-sm font-medium text-gray-700 mb-2">
-            Where would you like to go? *
-          </label>
-          <input
-            type="text"
-            id="destination"
-            required
-            value={preferences.destination}
-            onChange={(e) => updateField('destination', e.target.value)}
-            placeholder="e.g., Goa, Kerala, Rajasthan"
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
-          />
-        </div>
+        <LocationAutocomplete
+          id="destination"
+          label="Where would you like to go?"
+          value={preferences.destination}
+          onChange={(value) => updateField('destination', value)}
+          placeholder="e.g., Goa, Kerala, Rajasthan"
+          required
+          types={['(cities)']}
+        />
 
         {/* Dates */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

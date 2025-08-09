@@ -1,0 +1,154 @@
+/**
+ * Google Places Autocomplete component
+ * Provides location suggestions using Google Places API
+ */
+
+import React, { useRef, useEffect, useState } from 'react';
+import { MapPin, Loader2 } from 'lucide-react';
+
+interface LocationAutocompleteProps {
+  value: string;
+  onChange: (value: string) => void;
+  placeholder: string;
+  label: string;
+  required?: boolean;
+  id: string;
+  types?: string[];
+}
+
+declare global {
+  interface Window {
+    google: any;
+    initGooglePlaces: () => void;
+  }
+}
+
+export function LocationAutocomplete({
+  value,
+  onChange,
+  placeholder,
+  label,
+  required = false,
+  id,
+  types = ['(cities)']
+}: LocationAutocompleteProps) {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const autocompleteRef = useRef<any>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isGoogleLoaded, setIsGoogleLoaded] = useState(false);
+
+  useEffect(() => {
+    const loadGooglePlaces = async () => {
+      const apiKey = import.meta.env.VITE_GOOGLE_PLACES_API_KEY;
+      
+      if (!apiKey) {
+        console.warn('Google Places API key not found. Location autocomplete will not work.');
+        return;
+      }
+
+      // Check if Google Maps is already loaded
+      if (window.google && window.google.maps && window.google.maps.places) {
+        initializeAutocomplete();
+        return;
+      }
+
+      setIsLoading(true);
+
+      try {
+        // Load Google Maps JavaScript API
+        const script = document.createElement('script');
+        script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places&callback=initGooglePlaces`;
+        script.async = true;
+        script.defer = true;
+
+        // Set up callback
+        window.initGooglePlaces = () => {
+          setIsGoogleLoaded(true);
+          initializeAutocomplete();
+          setIsLoading(false);
+        };
+
+        document.head.appendChild(script);
+
+        // Cleanup function
+        return () => {
+          if (script.parentNode) {
+            script.parentNode.removeChild(script);
+          }
+          delete window.initGooglePlaces;
+        };
+      } catch (error) {
+        console.error('Error loading Google Places API:', error);
+        setIsLoading(false);
+      }
+    };
+
+    const initializeAutocomplete = () => {
+      if (!inputRef.current || !window.google?.maps?.places) return;
+
+      // Create autocomplete instance
+      autocompleteRef.current = new window.google.maps.places.Autocomplete(
+        inputRef.current,
+        {
+          types: types,
+          fields: ['formatted_address', 'name', 'place_id', 'geometry']
+        }
+      );
+
+      // Add place changed listener
+      autocompleteRef.current.addListener('place_changed', () => {
+        const place = autocompleteRef.current.getPlace();
+        
+        if (place && (place.formatted_address || place.name)) {
+          const locationName = place.formatted_address || place.name;
+          onChange(locationName);
+        }
+      });
+    };
+
+    loadGooglePlaces();
+  }, [onChange, types]);
+
+  // Handle manual input changes
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    onChange(e.target.value);
+  };
+
+  return (
+    <div>
+      <label htmlFor={id} className="block text-sm font-medium text-gray-700 mb-2">
+        {label} {required && '*'}
+      </label>
+      <div className="relative">
+        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+          {isLoading ? (
+            <Loader2 className="h-4 w-4 text-gray-400 animate-spin" />
+          ) : (
+            <MapPin className="h-4 w-4 text-gray-400" />
+          )}
+        </div>
+        <input
+          ref={inputRef}
+          type="text"
+          id={id}
+          required={required}
+          value={value}
+          onChange={handleInputChange}
+          placeholder={placeholder}
+          className="w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+          autoComplete="off"
+        />
+        {!isGoogleLoaded && !isLoading && (
+          <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
+            <span className="text-xs text-gray-400">Manual entry</span>
+          </div>
+        )}
+      </div>
+      {!import.meta.env.VITE_GOOGLE_PLACES_API_KEY && (
+        <p className="mt-1 text-xs text-amber-600">
+          Add VITE_GOOGLE_PLACES_API_KEY to enable location suggestions
+        </p>
+      )}
+    </div>
+  );
+}
