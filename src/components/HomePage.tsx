@@ -523,7 +523,6 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
           <h2 className="font-display text-5xl font-bold text-white mb-8">
             Ready to Start Your Adventure?
           </h2>
-          <p className="text-xl text-purple-200 mb-12 max-w-2xl mx-auto leading-relaxed">
           <p className="text-xl text-cyan-200 mb-12 max-w-2xl mx-auto leading-relaxed">
             Create your personalized itinerary in minutes, not hours. Every journey begins with a single step.
           </p>
@@ -536,7 +535,6 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
             <ArrowRight className="h-6 w-6 group-hover:translate-x-2 transition-transform" />
           </button>
 
-          <div className="mt-12 flex flex-wrap items-center justify-center gap-8 text-purple-200 text-sm">
           <div className="mt-12 flex flex-wrap items-center justify-center gap-8 text-cyan-200 text-sm">
             <div className="flex items-center gap-2">
               <CheckCircle className="h-5 w-5 text-green-400" />
