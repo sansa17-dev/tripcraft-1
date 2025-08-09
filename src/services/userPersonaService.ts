@@ -90,25 +90,26 @@ export async function getUserPersona(userId: string): Promise<{
       .from('user_personas')
       .select('*')
       .eq('user_id', userId)
-      .single();
+      .maybeSingle();
 
     if (error) {
-      if (error.code === 'PGRST116') {
-        // No persona found - return empty persona
-        return { 
-          success: true, 
-          data: {
-            timePreference: '',
-            socialStyle: '',
-            culturalInterest: '',
-            foodAdventure: '',
-            planningStyle: '',
-            interests: []
-          }
-        };
-      }
       console.error('Error fetching user persona:', error);
       return { success: false, error: error.message };
+    }
+
+    if (!data) {
+      // No persona found - return empty persona
+      return { 
+        success: true, 
+        data: {
+          timePreference: '',
+          socialStyle: '',
+          culturalInterest: '',
+          foodAdventure: '',
+          planningStyle: '',
+          interests: []
+        }
+      };
     }
 
     const persona: TravelPersona = {
