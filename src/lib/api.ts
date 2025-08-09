@@ -3,10 +3,10 @@
  * All operations go through Edge Functions where secrets are managed
  */
 import { supabase } from './supabase';
-import { SUPABASE_ANON_KEY } from './supabase';
+import { SUPABASE_URL, SUPABASE_ANON_KEY } from './supabase';
 
 // API base URL using the same Supabase URL from supabase.ts
-const API_BASE_URL = 'https://ymjfseyxwlxvolhzfpuz.supabase.co/functions/v1';
+const API_BASE_URL = `${SUPABASE_URL}/functions/v1`;
 
 interface ApiResponse<T = any> {
   success: boolean;
