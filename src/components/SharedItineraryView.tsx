@@ -359,11 +359,12 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
               <div 
                 key={`${day.day}-${dayIndex}`}
                 className="bg-gradient-to-r from-gray-50 to-blue-50/30 rounded-xl p-6 relative shadow-sm"
+                style={{ paddingRight: '4rem' }}
               >
                 {/* Copy button */}
                 <button
                   onClick={() => copyDayToClipboard(day, day.day)}
-                  className="absolute top-4 right-4 p-2 text-gray-400 hover:text-gray-600 hover:bg-white rounded-lg transition-colors shadow-sm"
+                  className="absolute top-4 right-4 p-2 text-gray-400 hover:text-gray-600 hover:bg-white rounded-lg transition-colors shadow-sm z-10"
                   title="Copy day to clipboard"
                 >
                   {copiedDays.has(day.day) ? (
@@ -374,13 +375,13 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
                 </button>
 
                 {/* Day header */}
-                <div className="flex items-center gap-2 mb-3">
+                <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-3 pr-8">
                   <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-sm font-semibold px-4 py-2 rounded-full shadow-md">
                     Day {day.day}
                   </div>
-                  <span className="text-sm text-gray-600 font-medium">{day.date}</span>
+                  <span className="text-sm text-gray-600 font-medium break-words">{day.date}</span>
                   {day.estimatedCost && (
-                    <span className="text-sm text-green-600 font-semibold ml-auto bg-green-50 px-3 py-1 rounded-full">
+                    <span className="text-sm text-green-600 font-semibold sm:ml-auto bg-green-50 px-3 py-1 rounded-full whitespace-nowrap">
                       {day.estimatedCost}
                     </span>
                   )}
@@ -412,9 +413,9 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
                         if (!meal) return null;
                         
                         return (
-                          <div key={mealType} className="bg-white p-3 rounded-lg shadow-sm">
+                          <div key={mealType} className="bg-white p-3 rounded-lg shadow-sm min-w-0">
                             <span className="font-medium text-gray-600 capitalize">{mealType}:</span>
-                            <p className="text-gray-700 mt-1">{meal}</p>
+                            <p className="text-gray-700 mt-1 break-words">{meal}</p>
                           </div>
                         );
                       })}
@@ -429,8 +430,8 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
                       <Bed className="h-4 w-4 text-blue-600" />
                       Accommodation
                     </h4>
-                    <div className="bg-white p-3 rounded-lg shadow-sm">
-                      <p className="text-gray-700 text-sm">{day.accommodation}</p>
+                    <div className="bg-white p-3 rounded-lg shadow-sm min-w-0">
+                      <p className="text-gray-700 text-sm break-words">{day.accommodation}</p>
                     </div>
                   </div>
                 )}
@@ -438,7 +439,7 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
                 {/* Notes */}
                 {day.notes && (
                   <div className="pt-4 border-t border-gray-200">
-                    <p className="text-gray-600 text-sm italic bg-blue-50 p-3 rounded-lg">{day.notes}</p>
+                    <p className="text-gray-600 text-sm italic bg-blue-50 p-3 rounded-lg break-words">{day.notes}</p>
                   </div>
                 )}
               </div>
@@ -455,9 +456,9 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
             </h3>
             <ul className="space-y-3">
               {itinerary.tips.map((tip: string, index: number) => (
-                <li key={index} className="text-gray-700 flex items-start gap-3 bg-white p-4 rounded-lg shadow-sm">
+                <li key={index} className="text-gray-700 flex items-start gap-3 bg-white p-4 rounded-lg shadow-sm min-w-0">
                   <span className="w-2 h-2 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full mt-2 flex-shrink-0"></span>
-                  <span className="leading-relaxed">{tip}</span>
+                  <span className="leading-relaxed break-words">{tip}</span>
                 </li>
               ))}
             </ul>
