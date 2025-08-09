@@ -666,28 +666,30 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
 
               {/* Accommodation */}
               {(day.accommodation || isEditing) && (
-                <div className="mb-3 ml-6">
-                  <h4 className="font-semibold text-gray-900 mb-2 flex items-center gap-1">
-                    <Bed className="h-4 w-4 text-blue-600" />
-                    Accommodation
-                  </h4>
-                  <div className="bg-white p-3 rounded-lg shadow-sm min-w-0">
-                    {isEditing ? (
-                      <input
-                        type="text"
-                        value={day.accommodation || ''}
-                        onChange={(e) => updateDay(dayIndex, { ...day, accommodation: e.target.value })}
-                        className="w-full bg-gray-50 border border-gray-200 rounded px-3 py-2 text-sm focus:ring-1 focus:ring-blue-500 focus:border-blue-500 min-w-0"
-                        placeholder="Accommodation recommendation"
-                      />
-                    ) : (
-                      <p className="text-gray-700 text-sm break-words">{day.accommodation}</p>
-                    )}
+                <>
+                  <div className="mb-3 ml-6">
+                    <h4 className="font-semibold text-gray-900 mb-2 flex items-center gap-1">
+                      <Bed className="h-4 w-4 text-blue-600" />
+                      Accommodation
+                    </h4>
+                    <div className="bg-white p-3 rounded-lg shadow-sm min-w-0">
+                      {isEditing ? (
+                        <input
+                          type="text"
+                          value={day.accommodation || ''}
+                          onChange={(e) => updateDay(dayIndex, { ...day, accommodation: e.target.value })}
+                          className="w-full bg-gray-50 border border-gray-200 rounded px-3 py-2 text-sm focus:ring-1 focus:ring-blue-500 focus:border-blue-500 min-w-0"
+                          placeholder="Accommodation recommendation"
+                        />
+                      ) : (
+                        <p className="text-gray-700 text-sm break-words">{day.accommodation}</p>
+                      )}
+                    </div>
                   </div>
-                </div>
-                
-                {/* Day-specific Comments for Owners */}
-                {renderDayComments(dayIndex)}
+                  
+                  {/* Day-specific Comments for Owners */}
+                  {renderDayComments(dayIndex)}
+                </>
               )}
 
               {/* Notes */}
