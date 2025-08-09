@@ -4,8 +4,8 @@
  */
 import { supabase } from './supabase';
 
-// Hardcoded API base URL - update with your actual Supabase project URL
-const API_BASE_URL = 'https://your-project-id.supabase.co/functions/v1';
+// API base URL using the same Supabase URL from supabase.ts
+const API_BASE_URL = 'https://ymjfseyxwlxvolhzfpuz.supabase.co/functions/v1';
 
 interface ApiResponse<T = any> {
   success: boolean;
