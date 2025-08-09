@@ -134,7 +134,7 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
         <div className="relative z-10 px-4 sm:px-6 lg:px-8 py-24 text-center">
           <div className="max-w-4xl mx-auto">
             <h1 className="text-5xl md:text-6xl font-bold text-white mb-6 leading-tight">
-              Craft Your Perfect
+            <div className="flex items-center justify-start gap-4 mb-8">
               <span className="block bg-gradient-to-r from-yellow-300 to-orange-300 bg-clip-text text-transparent">
                 Travel Journey
               </span>
@@ -266,7 +266,7 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
               </div>
               <div>
                 <div className="text-3xl font-bold text-purple-600 mb-2">1M+</div>
-                <div className="text-gray-600">Activities Planned</div>
+              <div>
               </div>
               <div>
                 <div className="text-3xl font-bold text-green-600 mb-2">4.9★</div>
