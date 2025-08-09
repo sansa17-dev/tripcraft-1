@@ -3,7 +3,6 @@
  * Uses Supabase client directly instead of Edge Functions
  */
 import { supabase } from './supabase';
-import { sql } from '@supabase/postgrest-js';
 import { TravelPreferences, GeneratedItinerary } from '../types';
 
 interface ApiResponse<T = any> {
@@ -307,9 +306,19 @@ export const shareApi = {
 
   incrementView: async (shareId: string): Promise<ApiResponse> => {
     try {
+      // First get the current view count
+      const { data: currentData, error: fetchError } = await supabase
+        .from('shared_itineraries')
+        .select('view_count')
+        .eq('share_id', shareId)
+        .single();
+
+      if (fetchError) throw fetchError;
+
+      // Then increment it
       const { error } = await supabase
         .from('shared_itineraries')
-        .update({ view_count: sql`view_count + 1` })
+        .update({ view_count: (currentData?.view_count || 0) + 1 })
         .eq('share_id', shareId);
 
       if (error) throw error;
