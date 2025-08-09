@@ -18,7 +18,7 @@ const PERSONA_QUESTIONS = [
   {
     key: 'timePreference' as keyof TravelPersona,
     icon: Clock,
-    question: 'What\'s your ideal travel schedule?',
+    question: 'What\'s your preferred daily rhythm while traveling?',
     options: [
       { value: 'early-bird', label: 'Early Bird', description: 'Up with the sunrise, make the most of the day' },
       { value: 'night-owl', label: 'Night Owl', description: 'Late starts, evening adventures' },
@@ -33,16 +33,6 @@ const PERSONA_QUESTIONS = [
       { value: 'social', label: 'Social Explorer', description: 'Meet locals, join group activities' },
       { value: 'intimate', label: 'Intimate Moments', description: 'Small groups, meaningful connections' },
       { value: 'solo-friendly', label: 'Independent', description: 'Self-guided, peaceful exploration' }
-    ]
-  },
-  {
-    key: 'activityLevel' as keyof TravelPersona,
-    icon: Zap,
-    question: 'What\'s your preferred activity intensity?',
-    options: [
-      { value: 'low-key', label: 'Relaxed Pace', description: 'Leisurely walks, cafes, gentle sightseeing' },
-      { value: 'moderate', label: 'Balanced Mix', description: 'Some adventure, some relaxation' },
-      { value: 'high-energy', label: 'Action-Packed', description: 'Hiking, sports, full itineraries' }
     ]
   },
   {
@@ -87,7 +77,7 @@ export function TravelPersonaQuiz({ persona, onPersonaChange, isExpanded, onTogg
 
   const getCompletionPercentage = () => {
     const totalQuestions = PERSONA_QUESTIONS.length;
-    const answeredQuestions = PERSONA_QUESTIONS.filter(q => persona[q.key]).length;
+    const answeredQuestions = PERSONA_QUESTIONS.filter(q => persona[q.key] && persona[q.key] !== '').length;
     return Math.round((answeredQuestions / totalQuestions) * 100);
   };
 
@@ -107,9 +97,10 @@ export function TravelPersonaQuiz({ persona, onPersonaChange, isExpanded, onTogg
             <div>
               <h3 className="font-display text-lg font-semibold text-gray-900">
                 Travel Persona Quiz
+                <span className="text-sm font-normal text-gray-500 ml-2">(Optional)</span>
               </h3>
               <p className="text-sm text-gray-600">
-                {isExpanded ? 'Customize your travel style for better recommendations' : 'Get personalized recommendations'}
+                {isExpanded ? 'Help us understand your travel style for more personalized recommendations' : 'Optional: Get more personalized recommendations'}
               </p>
             </div>
           </div>
@@ -141,8 +132,8 @@ export function TravelPersonaQuiz({ persona, onPersonaChange, isExpanded, onTogg
         <div className="px-6 pb-6 space-y-8">
           <div className="text-sm text-gray-600 bg-white/60 rounded-lg p-4">
             <p className="leading-relaxed">
-              Help us understand your travel style better. These preferences will be used to create more personalized 
-              itineraries that match your unique way of exploring the world.
+              <strong>This quiz is completely optional.</strong> Answer any questions that interest you to help our AI create 
+              more personalized itineraries that match your unique travel style. You can skip any or all questions.
             </p>
           </div>
 
@@ -171,7 +162,7 @@ export function TravelPersonaQuiz({ persona, onPersonaChange, isExpanded, onTogg
                         type="radio"
                         name={question.key}
                         value={option.value}
-                        checked={currentValue === option.value}
+                        checked={currentValue === option.value && currentValue !== ''}
                         onChange={(e) => updatePersona(question.key, e.target.value)}
                         className="mt-1 text-primary-600 border-gray-300 focus:ring-primary-500"
                       />
@@ -181,6 +172,17 @@ export function TravelPersonaQuiz({ persona, onPersonaChange, isExpanded, onTogg
                       </div>
                     </label>
                   ))}
+                  
+                  {/* Skip option for each question */}
+                  <div className="text-center pt-2">
+                    <button
+                      type="button"
+                      onClick={() => updatePersona(question.key, '')}
+                      className="text-xs text-gray-400 hover:text-gray-600 transition-colors"
+                    >
+                      Skip this question
+                    </button>
+                  </div>
                 </div>
               </div>
             );

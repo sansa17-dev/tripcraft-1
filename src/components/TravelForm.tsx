@@ -232,12 +232,11 @@ export function TravelForm({ preferences, onPreferencesChange, onSubmit, isGener
         {isFeatureEnabled('FEATURE_TRAVEL_PERSONA') && (
           <TravelPersonaQuiz
             persona={preferences.travelPersona || {
-              timePreference: 'flexible',
-              socialStyle: 'intimate',
-              activityLevel: 'moderate',
-              culturalInterest: 'moderate',
-              foodAdventure: 'moderate',
-              planningStyle: 'flexible'
+              timePreference: '',
+              socialStyle: '',
+              culturalInterest: '',
+              foodAdventure: '',
+              planningStyle: ''
             }}
             onPersonaChange={updatePersona}
             isExpanded={showPersonaQuiz}

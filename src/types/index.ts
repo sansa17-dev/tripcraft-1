@@ -32,12 +32,11 @@ export interface TravelPreferences {
 }
 
 export interface TravelPersona {
-  timePreference: 'early-bird' | 'night-owl' | 'flexible';
-  socialStyle: 'social' | 'intimate' | 'solo-friendly';
-  activityLevel: 'low-key' | 'moderate' | 'high-energy';
-  culturalInterest: 'high' | 'moderate' | 'low';
-  foodAdventure: 'adventurous' | 'moderate' | 'familiar';
-  planningStyle: 'structured' | 'flexible' | 'spontaneous';
+  timePreference: 'early-bird' | 'night-owl' | 'flexible' | '';
+  socialStyle: 'social' | 'intimate' | 'solo-friendly' | '';
+  culturalInterest: 'high' | 'moderate' | 'low' | '';
+  foodAdventure: 'adventurous' | 'moderate' | 'familiar' | '';
+  planningStyle: 'structured' | 'flexible' | 'spontaneous' | '';
 }
 
 export interface ItineraryDay {
