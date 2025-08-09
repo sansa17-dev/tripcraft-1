@@ -8,11 +8,6 @@ const API_BASE_URL = import.meta.env.VITE_SUPABASE_URL
   ? `${import.meta.env.VITE_SUPABASE_URL}/functions/v1`
   : 'http://localhost:54321/functions/v1';
 
-// Validate environment configuration
-if (!import.meta.env.VITE_SUPABASE_URL) {
-  console.warn('⚠️ VITE_SUPABASE_URL not configured. Edge Functions may not work properly.');
-}
-
 interface ApiResponse<T = any> {
   success: boolean;
   data?: T;
@@ -70,7 +65,7 @@ async function apiCall<T>(endpoint: string, data: any): Promise<ApiResponse<T>> 
     if (error instanceof TypeError && error.message === 'Failed to fetch') {
       return {
         success: false,
-        error: `Unable to connect to Supabase Edge Functions. Please check:\n1. Supabase project is active\n2. Edge Functions are deployed\n3. Network connectivity`
+        error: `Unable to connect to Supabase Edge Functions. Please check:\n1. Supabase project is active\n2. Edge Functions are deployed with secrets configured\n3. Network connectivity`
       };
     }
     

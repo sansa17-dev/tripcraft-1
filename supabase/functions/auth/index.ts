@@ -21,14 +21,14 @@ Deno.serve(async (req) => {
   try {
     console.log('Auth function called with method:', req.method);
     
-    // Create Supabase client with service role key (server-side only)
+    // Create Supabase client with service role key from Edge Function secrets
     const supabaseClient = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     )
 
     if (!Deno.env.get('SUPABASE_URL') || !Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')) {
-      throw new Error('Missing Supabase environment variables')
+      throw new Error('Missing Supabase secrets in Edge Function configuration')
     }
     const { action, email, password }: AuthRequest = await req.json()
     console.log('Auth action:', action, 'email:', email);

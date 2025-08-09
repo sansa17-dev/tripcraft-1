@@ -35,13 +35,15 @@ Frontend (React) → Edge Functions (Deno) → Supabase Database
 
 ## Environment Variables (Server-Side Only)
 
-These are automatically available in Supabase Edge Functions:
+These should be configured in Supabase Dashboard → Edge Functions → Secrets:
 
 ```env
-SUPABASE_URL=your-project-url
-SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
+SUPABASE_URL=your-project-url (auto-configured)
+SUPABASE_SERVICE_ROLE_KEY=your-service-role-key (auto-configured)
 OPENROUTER_API_KEY=your-openrouter-api-key
 ```
+
+**Note**: `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` are automatically available in Edge Functions. You only need to manually add `OPENROUTER_API_KEY` in the Secrets section.
 
 ## Team Setup Instructions
 
@@ -53,8 +55,8 @@ OPENROUTER_API_KEY=your-openrouter-api-key
    # Get project URL and service role key
    ```
 
-2. **Configure Environment Variables:**
-   - Go to Supabase Dashboard → Edge Functions → Environment Variables
+2. **Configure Edge Function Secrets:**
+   - Go to Supabase Dashboard → Edge Functions → Secrets
    - Add `OPENROUTER_API_KEY` with your OpenRouter key
    - `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` are auto-configured
 

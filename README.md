@@ -70,7 +70,7 @@ For secure backend setup, see [BACKEND_SETUP.md](./BACKEND_SETUP.md) for detaile
 **Backend (Supabase Edge Functions - auto-configured):**
 - `SUPABASE_URL`: Auto-configured
 - `SUPABASE_SERVICE_ROLE_KEY`: Auto-configured  
-- `OPENROUTER_API_KEY`: Set in Supabase Dashboard
+- `OPENROUTER_API_KEY`: Set in Supabase Dashboard → Edge Functions → Secrets
 
 ## Security Features
 

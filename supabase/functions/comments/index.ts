@@ -26,7 +26,7 @@ Deno.serve(async (req) => {
   }
 
   try {
-    // Create Supabase client with service role key (server-side only)
+    // Create Supabase client with service role key from Edge Function secrets
     const supabaseClient = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''

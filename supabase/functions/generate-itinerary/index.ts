@@ -30,10 +30,11 @@ Deno.serve(async (req) => {
   try {
     const { preferences }: GenerateRequest = await req.json()
 
-    // Get OpenRouter API key from environment (server-side only)
+    // Get OpenRouter API key from Edge Function secrets (server-side only)
     const apiKey = Deno.env.get('OPENROUTER_API_KEY')
     
     if (!apiKey) {
+      console.log('⚠️ OPENROUTER_API_KEY not found in Edge Function secrets, using demo itinerary');
       // Return demo itinerary if no API key
       const duration = Math.ceil((new Date(preferences.endDate).getTime() - new Date(preferences.startDate).getTime()) / (1000 * 60 * 60 * 24))
       
