@@ -34,8 +34,8 @@ export function GooglePlacesAutocomplete({
       try {
         const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
         
-        if (!apiKey || apiKey === 'your-google-maps-api-key-here') {
-          setError('Google Maps API key not configured - using text input');
+        if (!apiKey) {
+          setError('Google Maps API key not configured');
           setIsLoading(false);
           return;
         }
