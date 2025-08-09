@@ -1,6 +1,6 @@
 /**
  * API client for secure backend communication
- * All Supabase operations go through Edge Functions to keep credentials secure
+ * All non-auth Supabase operations go through Edge Functions to keep credentials secure
  */
 
 const API_BASE_URL = import.meta.env.VITE_SUPABASE_URL 
@@ -47,23 +47,6 @@ async function apiCall<T>(endpoint: string, data: any): Promise<ApiResponse<T>> 
     };
   }
 }
-
-/**
- * Authentication API calls
- */
-export const authApi = {
-  signUp: async (email: string, password: string) => {
-    return apiCall('auth', { action: 'signup', email, password });
-  },
-
-  signIn: async (email: string, password: string) => {
-    return apiCall('auth', { action: 'signin', email, password });
-  },
-
-  signOut: async () => {
-    return apiCall('auth', { action: 'signout' });
-  }
-};
 
 /**
  * Itinerary API calls
@@ -118,6 +101,7 @@ export const generateItineraryApi = {
     return apiCall('generate-itinerary', { preferences });
   }
 };
+
 /**
  * Sharing API calls
  */

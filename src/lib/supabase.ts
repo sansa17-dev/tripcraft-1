@@ -1,13 +1,25 @@
 /**
- * Minimal Supabase configuration for frontend
- * All sensitive operations are handled by Edge Functions
+ * Supabase client configuration for frontend authentication
+ * Uses public anon key for secure client-side authentication
  */
 
-// Only the project URL is needed for frontend API calls
-// All sensitive credentials are kept server-side in Edge Functions
-export const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || 'http://localhost:54321';
+import { createClient } from '@supabase/supabase-js';
+
+// Get environment variables
+export const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
+export const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 // Validate configuration
-if (!import.meta.env.VITE_SUPABASE_URL) {
-  console.warn('VITE_SUPABASE_URL not configured. Please set up environment variables.');
+if (!SUPABASE_URL) {
+  console.error('VITE_SUPABASE_URL not configured. Please set up environment variables.');
 }
+
+if (!SUPABASE_ANON_KEY) {
+  console.warn('VITE_SUPABASE_ANON_KEY not configured. Please set up environment variables.');
+}
+
+// Create and export Supabase client
+export const supabase = createClient(
+  SUPABASE_URL || 'http://localhost:54321',
+  SUPABASE_ANON_KEY || ''
+);

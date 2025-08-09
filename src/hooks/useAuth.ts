@@ -1,20 +1,11 @@
 /**
  * Authentication hook for managing user state
- * Uses secure backend API calls instead of direct Supabase client
+ * Uses direct Supabase client for secure authentication
  */
 
 import { useState, useEffect } from 'react';
-import { authApi } from '../lib/api';
-
-interface User {
-  id: string;
-  email: string;
-}
-
-interface Session {
-  access_token: string;
-  user: User;
-}
+import { supabase } from '../lib/supabase';
+import type { User, Session } from '@supabase/supabase-js';
 
 interface AuthState {
   user: User | null;
@@ -35,69 +26,79 @@ export function useAuth(): AuthState & AuthActions {
   const [loading, setLoading] = useState(false);
   const [initialized, setInitialized] = useState(false);
 
-  // Initialize auth state from localStorage on mount
+  // Initialize auth state and listen for changes
   useEffect(() => {
-    const initializeAuth = () => {
+    let mounted = true;
+
+    const initializeAuth = async () => {
       try {
-        const savedUser = localStorage.getItem('tripcraft_user');
-        const savedSession = localStorage.getItem('tripcraft_session');
+        // Get initial session
+        const { data: { session: initialSession }, error } = await supabase.auth.getSession();
         
-        if (savedUser && savedSession) {
-          const parsedUser = JSON.parse(savedUser);
-          const parsedSession = JSON.parse(savedSession);
-          
-          console.log('🔄 Restoring auth state:', { user: parsedUser.email });
-          setUser(parsedUser);
-          setSession(parsedSession);
+        if (error) {
+          console.error('❌ Error getting session:', error);
+        } else if (initialSession && mounted) {
+          console.log('🔄 Restoring auth state:', { user: initialSession.user.email });
+          setUser(initialSession.user);
+          setSession(initialSession);
         }
       } catch (error) {
-        console.error('❌ Error restoring auth state:', error);
-        // Clear corrupted data
-        localStorage.removeItem('tripcraft_user');
-        localStorage.removeItem('tripcraft_session');
+        console.error('❌ Error initializing auth:', error);
       } finally {
-        setInitialized(true);
+        if (mounted) {
+          setInitialized(true);
+        }
       }
     };
 
-    initializeAuth();
-  }, []);
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      async (event, session) => {
+        if (!mounted) return;
 
-  // Save auth state to localStorage whenever it changes
-  useEffect(() => {
-    if (initialized) {
-      if (user && session) {
-        localStorage.setItem('tripcraft_user', JSON.stringify(user));
-        localStorage.setItem('tripcraft_session', JSON.stringify(session));
-        console.log('💾 Auth state saved:', { user: user.email });
-      } else {
-        localStorage.removeItem('tripcraft_user');
-        localStorage.removeItem('tripcraft_session');
-        console.log('🗑️ Auth state cleared');
+        console.log('🔄 Auth state changed:', event, session?.user?.email);
+        
+        if (session) {
+          setUser(session.user);
+          setSession(session);
+        } else {
+          setUser(null);
+          setSession(null);
+        }
       }
-    }
-  }, [user, session, initialized]);
+    );
+
+    initializeAuth();
+
+    return () => {
+      mounted = false;
+      subscription.unsubscribe();
+    };
+  }, []);
 
   const signUp = async (email: string, password: string) => {
     setLoading(true);
     try {
       console.log('📝 Signing up user:', email);
-      const result = await authApi.signUp(email, password);
-      if (result.success && result.data) {
-        if (result.data.user) {
-          setUser(result.data.user);
-          console.log('✅ User created:', result.data.user.email);
-        }
-        if (result.data.session) {
-          setSession(result.data.session);
-        }
-        return { error: null };
-      } else {
-        console.error('❌ Signup failed:', result.error);
-        return { error: result.error || 'Signup failed' };
+      
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+      });
+
+      if (error) {
+        console.error('❌ Signup failed:', error.message);
+        return { error: error.message };
       }
+
+      if (data.user) {
+        console.log('✅ User created:', data.user.email);
+        // Auth state will be updated via onAuthStateChange
+      }
+
+      return { error: null };
     } catch (error) {
-      console.error('Signup error:', error);
+      console.error('💥 Signup exception:', error);
       return { error: error instanceof Error ? error.message : 'Signup failed' };
     } finally {
       setLoading(false);
@@ -108,22 +109,25 @@ export function useAuth(): AuthState & AuthActions {
     setLoading(true);
     try {
       console.log('🔐 Signing in user:', email);
-      const result = await authApi.signIn(email, password);
-      if (result.success && result.data) {
-        if (result.data.user) {
-          setUser(result.data.user);
-          console.log('✅ User signed in:', result.data.user.email);
-        }
-        if (result.data.session) {
-          setSession(result.data.session);
-        }
-        return { error: null };
-      } else {
-        console.error('❌ Signin failed:', result.error);
-        return { error: result.error || 'Signin failed' };
+      
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (error) {
+        console.error('❌ Signin failed:', error.message);
+        return { error: error.message };
       }
+
+      if (data.user) {
+        console.log('✅ User signed in:', data.user.email);
+        // Auth state will be updated via onAuthStateChange
+      }
+
+      return { error: null };
     } catch (error) {
-      console.error('Signin error:', error);
+      console.error('💥 Signin exception:', error);
       return { error: error instanceof Error ? error.message : 'Signin failed' };
     } finally {
       setLoading(false);
@@ -134,13 +138,19 @@ export function useAuth(): AuthState & AuthActions {
     setLoading(true);
     try {
       console.log('🚪 Signing out user');
-      await authApi.signOut();
-      setUser(null);
-      setSession(null);
+      
+      const { error } = await supabase.auth.signOut();
+      
+      if (error) {
+        console.error('❌ Signout failed:', error.message);
+        return { error: error.message };
+      }
+
       console.log('✅ User signed out');
+      // Auth state will be updated via onAuthStateChange
       return { error: null };
     } catch (error) {
-      console.error('Signout error:', error);
+      console.error('💥 Signout exception:', error);
       return { error: error instanceof Error ? error.message : 'Signout failed' };
     } finally {
       setLoading(false);
