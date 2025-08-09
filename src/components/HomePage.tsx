@@ -249,10 +249,10 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
           <div className="mb-12">
             <h1 className="font-display text-6xl md:text-7xl lg:text-8xl font-bold text-white mb-8 leading-tight tracking-tight">
               <span className="bg-gradient-to-r from-cyan-300 via-teal-200 to-blue-300 bg-clip-text text-transparent animate-gradient">
-                Your AI Travel
+                From vision to voyage;
               </span>
               <br />
-              <span className="text-white">Companion</span>
+              <span className="text-white">perfected by AI</span>
             </h1>
             
             <p className="text-xl md:text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed mb-8">
