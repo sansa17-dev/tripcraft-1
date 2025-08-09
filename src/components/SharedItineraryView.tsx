@@ -127,7 +127,7 @@ export function SharedItineraryView({ shareId }: SharedItineraryViewProps) {
     setAddingComment(true);
     try {
       const result = await commentsApi.create(shareId, {
-        user_email: user.email,
+        user_email: user.email || 'Anonymous User',
         content: newGeneralComment.trim()
       }, null);
 
@@ -139,7 +139,7 @@ export function SharedItineraryView({ shareId }: SharedItineraryViewProps) {
       }
     } catch (err) {
       console.error('Error adding comment:', err);
-      alert('Failed to add comment');
+      alert('Failed to add comment: ' + (err instanceof Error ? err.message : 'Unknown error'));
     } finally {
       setAddingComment(false);
     }
@@ -152,7 +152,7 @@ export function SharedItineraryView({ shareId }: SharedItineraryViewProps) {
     setAddingDayComment(dayIndex);
     try {
       const result = await commentsApi.create(shareId, {
-        user_email: user.email,
+        user_email: user.email || 'Anonymous User',
         content: commentText.trim()
       }, dayIndex);
 
@@ -164,7 +164,7 @@ export function SharedItineraryView({ shareId }: SharedItineraryViewProps) {
       }
     } catch (err) {
       console.error('Error adding day comment:', err);
-      alert('Failed to add comment');
+      alert('Failed to add comment: ' + (err instanceof Error ? err.message : 'Unknown error'));
     } finally {
       setAddingDayComment(null);
     }
@@ -202,6 +202,11 @@ export function SharedItineraryView({ shareId }: SharedItineraryViewProps) {
             {/* Add comment for collaborators */}
             {canCollaborate && (
               <div className="bg-blue-50 rounded-lg p-3">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="text-sm font-medium text-blue-900">
+                    Commenting as: {user?.email || 'Anonymous User'}
+                  </span>
+                </div>
                 <textarea
                   value={newDayComments[dayIndex] || ''}
                   onChange={(e) => setNewDayComments(prev => ({ 
@@ -285,10 +290,16 @@ export function SharedItineraryView({ shareId }: SharedItineraryViewProps) {
               <div key={comment.id} className="bg-gray-50 rounded-lg p-3">
                 <div className="flex items-center justify-between mb-1">
                   <span className="text-sm font-medium text-gray-900">
-                    {comment.user_email}
+                    {comment.user_email || 'Anonymous User'}
                   </span>
                   <span className="text-xs text-gray-500">
-                    {new Date(comment.created_at).toLocaleDateString()}
+                    {new Date(comment.created_at).toLocaleDateString('en-US', {
+                      year: 'numeric',
+                      month: 'short',
+                      day: 'numeric',
+                      hour: '2-digit',
+                      minute: '2-digit'
+                    })}
                   </span>
                 </div>
                 <p className="text-sm text-gray-700">{comment.content}</p>
@@ -313,6 +324,11 @@ export function SharedItineraryView({ shareId }: SharedItineraryViewProps) {
         </p>
         <div className="flex items-center gap-4 text-sm">
           <div className="flex items-center gap-1 text-blue-700">
+            <div className="flex items-center gap-2 mb-2">
+              <span className="text-sm font-medium text-blue-900">
+                Commenting as: {user?.email || 'Anonymous User'}
+              </span>
+            </div>
             <Eye className="h-4 w-4" />
             View itinerary details
           </div>
@@ -528,7 +544,7 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
             )}
           </div>
         </div>
-      </div>
+                    {comment.user_email || 'Anonymous User'}
 
       {/* User Interface Indicators */}
       {canCollaborate && renderCollaboratorInterface()}
@@ -540,7 +556,13 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
           <div className="lg:col-span-2">
             {/* Main itinerary content will be here */}
           </div>
-          
+                    {new Date(comment.created_at).toLocaleDateString('en-US', {
+                      year: 'numeric',
+                      month: 'short',
+                      day: 'numeric',
+                      hour: '2-digit',
+                      minute: '2-digit'
+                    })}
           {/* General Comments Section */}
           {showComments && (
             <div className="lg:col-span-1">

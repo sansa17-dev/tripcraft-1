@@ -99,10 +99,15 @@ export function EditableItinerary({
             <div key={comment.id} className="bg-blue-50 border border-blue-200 rounded-lg p-3">
               <div className="flex items-center justify-between mb-1">
                 <span className="text-xs font-medium text-blue-900">
-                  {comment.user_email}
+                  {comment.user_email || 'Anonymous User'}
                 </span>
                 <span className="text-xs text-blue-600">
-                  {new Date(comment.created_at).toLocaleDateString()}
+                  {new Date(comment.created_at).toLocaleDateString('en-US', {
+                    month: 'short',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                  })}
                 </span>
               </div>
               <p className="text-sm text-blue-800">{comment.content}</p>
@@ -127,10 +132,16 @@ export function EditableItinerary({
             <div key={comment.id} className="bg-white border border-blue-200 rounded-lg p-4 shadow-sm">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm font-medium text-gray-900">
-                  {comment.user_email}
+                  {comment.user_email || 'Anonymous User'}
                 </span>
                 <span className="text-xs text-gray-500">
-                  {new Date(comment.created_at).toLocaleDateString()}
+                  {new Date(comment.created_at).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                  })}
                 </span>
               </div>
               <p className="text-sm text-gray-700 leading-relaxed">{comment.content}</p>

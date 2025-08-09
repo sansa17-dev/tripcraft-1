@@ -46,6 +46,11 @@ Deno.serve(async (req) => {
           throw new Error('Comment data is required for creation')
         }
         
+        // Validate user email
+        if (!data.user_email || data.user_email.trim() === '') {
+          throw new Error('User email is required for comments')
+        }
+        
         // Verify the shared itinerary exists and allows comments
         const { data: sharedItinerary } = await supabaseClient
           .from('shared_itineraries')
@@ -61,7 +66,7 @@ Deno.serve(async (req) => {
           .from('itinerary_comments')
           .insert({
             share_id: shareId,
-            user_email: data.user_email,
+            user_email: data.user_email.trim(),
             content: data.content,
             day_index: data.day_index || null
           })
