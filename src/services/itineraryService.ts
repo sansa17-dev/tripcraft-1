@@ -241,7 +241,7 @@ export async function generateItinerary(preferences: TravelPreferences): Promise
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': \`Bearer ${apiKey}`,
+        'Authorization': `Bearer ${apiKey}`,
         'HTTP-Referer': window.location.origin,
         'X-Title': 'TripCraft Travel Itinerary Generator'
       },
