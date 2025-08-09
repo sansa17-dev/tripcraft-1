@@ -92,7 +92,7 @@ export function VoiceChatModal({ isOpen, onClose }: VoiceChatModalProps) {
       
       // Speak welcome message
       setTimeout(() => {
-        speakText('Namaste! I am your AI travel companion. Please tell me where you would like to go or what kind of trip you are planning, and I will help you create the perfect itinerary!');
+        speakText('Hello! I am your AI travel companion. Please tell me where you would like to go or what kind of trip you are planning, and I will help you create the perfect itinerary!');
       }, 500);
     }
 
