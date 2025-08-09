@@ -497,7 +497,7 @@ function App() {
               savedItineraryId={currentSavedItineraryId}
               onShare={currentSavedItineraryId ? handleShareItinerary : undefined}
               shareId={currentSavedItineraryId}
-              showComments={!!currentSavedItineraryId}
+              showComments={true}
             />
           ) : currentView === 'saved' ? (
             /* Saved Itineraries */

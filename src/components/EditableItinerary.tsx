@@ -11,6 +11,7 @@ import {
 import { GeneratedItinerary, ItineraryDay } from '../types';
 import { updateItinerary } from '../services/itineraryStorageService';
 import { useAuth } from '../hooks/useAuth';
+import { commentsApi } from '../lib/api';
 
 interface EditableItineraryProps {
   itinerary: GeneratedItinerary;

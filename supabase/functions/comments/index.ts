@@ -32,7 +32,7 @@ Deno.serve(async (req) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     )
 
-    const { action, shareId, commentId, userId, data }: CommentRequest = await req.json()
+    const { action, shareId, commentId, userId, dayIndex, data }: CommentRequest = await req.json()
 
     if (!shareId) {
       throw new Error('Share ID is required')
