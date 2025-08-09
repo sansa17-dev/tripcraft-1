@@ -1,13 +1,13 @@
 /**
- * Professional homepage with complete landing page sections
- * Includes hero, features, about, testimonials, and call-to-action
+ * Enhanced homepage with themed destination categories and elegant design
+ * Features scrolling destination galleries organized by travel themes
  */
 
-import React from 'react';
+import React, { useState } from 'react';
 import { 
-  ArrowRight, CheckCircle, Play
+  ArrowRight, CheckCircle, Play, ChevronLeft, ChevronRight,
+  Mountain, Heart, Palmtree, ShoppingBag, Building, Users
 } from 'lucide-react';
-import { isFeatureEnabled } from '../utils/featureFlags';
 
 interface HomePageProps {
   onGetStarted: () => void;
@@ -15,21 +15,138 @@ interface HomePageProps {
   isAuthenticated: boolean;
 }
 
-const DESTINATIONS = [
+const TRAVEL_THEMES = [
   {
-    name: 'Santorini, Greece',
-    image: 'https://images.pexels.com/photos/161815/santorini-oia-greece-water-161815.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop',
-    trips: '2,847 trips planned'
+    id: 'adventure',
+    name: 'Adventure',
+    icon: Mountain,
+    color: 'from-orange-500 to-red-600',
+    description: 'Thrilling experiences and outdoor adventures',
+    destinations: [
+      {
+        name: 'Ladakh, India',
+        image: 'https://images.pexels.com/photos/1562058/pexels-photo-1562058.jpeg?auto=compress&cs=tinysrgb&w=500&h=350&fit=crop',
+        description: 'High-altitude desert adventures with stunning monasteries',
+        highlight: 'Motorcycle expeditions'
+      },
+      {
+        name: 'Rishikesh, India',
+        image: 'https://images.pexels.com/photos/3408744/pexels-photo-3408744.jpeg?auto=compress&cs=tinysrgb&w=500&h=350&fit=crop',
+        description: 'White water rafting and bungee jumping capital',
+        highlight: 'River adventures'
+      },
+      {
+        name: 'Manali, India',
+        image: 'https://images.pexels.com/photos/1586298/pexels-photo-1586298.jpeg?auto=compress&cs=tinysrgb&w=500&h=350&fit=crop',
+        description: 'Himalayan trekking and paragliding paradise',
+        highlight: 'Mountain sports'
+      },
+      {
+        name: 'Andaman Islands',
+        image: 'https://images.pexels.com/photos/1287460/pexels-photo-1287460.jpeg?auto=compress&cs=tinysrgb&w=500&h=350&fit=crop',
+        description: 'Scuba diving and pristine coral reefs',
+        highlight: 'Underwater exploration'
+      }
+    ]
   },
   {
-    name: 'Kyoto, Japan',
-    image: 'https://images.pexels.com/photos/2070033/pexels-photo-2070033.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop',
-    trips: '3,156 trips planned'
+    id: 'spiritual',
+    name: 'Spiritual',
+    icon: Heart,
+    color: 'from-purple-500 to-indigo-600',
+    description: 'Sacred places and spiritual journeys',
+    destinations: [
+      {
+        name: 'Varanasi, India',
+        image: 'https://images.pexels.com/photos/3581368/pexels-photo-3581368.jpeg?auto=compress&cs=tinysrgb&w=500&h=350&fit=crop',
+        description: 'Ancient spiritual capital on the sacred Ganges',
+        highlight: 'River ceremonies'
+      },
+      {
+        name: 'Dharamshala, India',
+        image: 'https://images.pexels.com/photos/2070033/pexels-photo-2070033.jpeg?auto=compress&cs=tinysrgb&w=500&h=350&fit=crop',
+        description: 'Tibetan Buddhist culture in the Himalayas',
+        highlight: 'Meditation retreats'
+      },
+      {
+        name: 'Pushkar, India',
+        image: 'https://images.pexels.com/photos/3581368/pexels-photo-3581368.jpeg?auto=compress&cs=tinysrgb&w=500&h=350&fit=crop',
+        description: 'Sacred lake town with ancient temples',
+        highlight: 'Holy pilgrimage'
+      },
+      {
+        name: 'Amritsar, India',
+        image: 'https://images.pexels.com/photos/3581368/pexels-photo-3581368.jpeg?auto=compress&cs=tinysrgb&w=500&h=350&fit=crop',
+        description: 'Golden Temple and Sikh heritage',
+        highlight: 'Sacred architecture'
+      }
+    ]
   },
   {
-    name: 'Bali, Indonesia',
-    image: 'https://images.pexels.com/photos/2474690/pexels-photo-2474690.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop',
-    trips: '4,293 trips planned'
+    id: 'leisure',
+    name: 'Leisure',
+    icon: Palmtree,
+    color: 'from-teal-500 to-cyan-600',
+    description: 'Relaxation and luxury experiences',
+    destinations: [
+      {
+        name: 'Goa, India',
+        image: 'https://images.pexels.com/photos/2474690/pexels-photo-2474690.jpeg?auto=compress&cs=tinysrgb&w=500&h=350&fit=crop',
+        description: 'Pristine beaches and Portuguese heritage',
+        highlight: 'Beach resorts'
+      },
+      {
+        name: 'Kerala Backwaters',
+        image: 'https://images.pexels.com/photos/2474690/pexels-photo-2474690.jpeg?auto=compress&cs=tinysrgb&w=500&h=350&fit=crop',
+        description: 'Houseboat cruises through tropical canals',
+        highlight: 'Ayurvedic spas'
+      },
+      {
+        name: 'Udaipur, India',
+        image: 'https://images.pexels.com/photos/161815/santorini-oia-greece-water-161815.jpeg?auto=compress&cs=tinysrgb&w=500&h=350&fit=crop',
+        description: 'City of lakes with royal palaces',
+        highlight: 'Luxury heritage hotels'
+      },
+      {
+        name: 'Coorg, India',
+        image: 'https://images.pexels.com/photos/417074/pexels-photo-417074.jpeg?auto=compress&cs=tinysrgb&w=500&h=350&fit=crop',
+        description: 'Coffee plantations and misty hills',
+        highlight: 'Wellness retreats'
+      }
+    ]
+  },
+  {
+    id: 'culture',
+    name: 'Culture & Heritage',
+    icon: Building,
+    color: 'from-amber-500 to-orange-600',
+    description: 'Rich history and architectural marvels',
+    destinations: [
+      {
+        name: 'Rajasthan, India',
+        image: 'https://images.pexels.com/photos/1603650/pexels-photo-1603650.jpeg?auto=compress&cs=tinysrgb&w=500&h=350&fit=crop',
+        description: 'Majestic forts and desert palaces',
+        highlight: 'Royal architecture'
+      },
+      {
+        name: 'Hampi, India',
+        image: 'https://images.pexels.com/photos/1603650/pexels-photo-1603650.jpeg?auto=compress&cs=tinysrgb&w=500&h=350&fit=crop',
+        description: 'Ancient Vijayanagara Empire ruins',
+        highlight: 'UNESCO World Heritage'
+      },
+      {
+        name: 'Khajuraho, India',
+        image: 'https://images.pexels.com/photos/1603650/pexels-photo-1603650.jpeg?auto=compress&cs=tinysrgb&w=500&h=350&fit=crop',
+        description: 'Intricate temple sculptures and art',
+        highlight: 'Medieval architecture'
+      },
+      {
+        name: 'Mysore, India',
+        image: 'https://images.pexels.com/photos/1603650/pexels-photo-1603650.jpeg?auto=compress&cs=tinysrgb&w=500&h=350&fit=crop',
+        description: 'Royal palaces and silk heritage',
+        highlight: 'Cultural festivals'
+      }
+    ]
   }
 ];
 
@@ -41,6 +158,19 @@ const STATS = [
 ];
 
 export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePageProps) {
+  const [activeTheme, setActiveTheme] = useState(0);
+
+  const scrollDestinations = (direction: 'left' | 'right') => {
+    const container = document.getElementById(`destinations-${TRAVEL_THEMES[activeTheme].id}`);
+    if (container) {
+      const scrollAmount = 320;
+      container.scrollBy({
+        left: direction === 'left' ? -scrollAmount : scrollAmount,
+        behavior: 'smooth'
+      });
+    }
+  };
+
   return (
     <div className="space-y-0 font-body">
       {/* Hero Section */}
@@ -55,33 +185,46 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
           <div className="absolute inset-0 bg-gradient-to-br from-primary-600/90 via-primary-500/90 to-primary-700/90"></div>
         </div>
 
+        {/* Floating Elements */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-20 left-10 opacity-5">
+            <Mountain className="h-32 w-32 text-white animate-pulse" />
+          </div>
+          <div className="absolute top-40 right-20 opacity-5">
+            <Heart className="h-24 w-24 text-white animate-pulse" style={{ animationDelay: '1s' }} />
+          </div>
+          <div className="absolute bottom-20 left-1/4 opacity-5">
+            <Palmtree className="h-28 w-28 text-white animate-pulse" style={{ animationDelay: '2s' }} />
+          </div>
+        </div>
+
         {/* Content */}
-        <div className="relative z-10 px-4 sm:px-6 lg:px-8 py-30 text-center">
+        <div className="relative z-10 px-4 sm:px-6 lg:px-8 py-32 text-center">
           <div className="max-w-content-narrow mx-auto">
             <h1 className="font-display text-5xl md:text-6xl font-bold text-white mb-8 leading-tight tracking-tight">
-              Travel Plans Made Easy
+              Craft Your Perfect Journey
             </h1>
             
             <p className="text-xl md:text-2xl text-white/90 max-w-2xl mx-auto leading-loose-plus mb-12">
-              Create personalized travel itineraries with AI. Every destination, perfectly planned in minutes.
+              Transform your travel dreams into detailed, personalized itineraries with AI. Every destination, perfectly planned in minutes.
             </p>
 
             {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-18">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-16">
               <button
                 onClick={onGetStarted}
-                className="flex items-center gap-3 px-10 py-5 bg-white text-primary-600 rounded-2xl hover:bg-gray-50 transition-all duration-200 shadow-2xl hover:shadow-3xl font-semibold text-lg hover:scale-105 font-display"
+                className="group flex items-center gap-3 px-12 py-5 bg-white text-primary-600 rounded-2xl hover:bg-gray-50 transition-all duration-300 shadow-2xl hover:shadow-3xl font-semibold text-lg hover:scale-105 font-display"
               >
                 Plan Your Trip
-                <ArrowRight className="h-5 w-5" />
+                <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
               </button>
               
               <button
                 onClick={() => {/* Demo functionality */}}
-                className="flex items-center gap-2 px-6 py-3 text-white/90 hover:text-white transition-colors font-medium"
+                className="flex items-center gap-2 px-6 py-3 text-white/90 hover:text-white transition-colors font-medium group"
               >
-                <Play className="h-4 w-4" />
-                Try Demo
+                <Play className="h-4 w-4 group-hover:scale-110 transition-transform" />
+                Watch Demo
               </button>
             </div>
 
@@ -100,80 +243,148 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
             </div>
           </div>
         </div>
-
-        {/* Bottom Wave */}
-        <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
       </section>
 
-      {/* Destinations Section */}
-      {isFeatureEnabled('FEATURE_LIVE_DESTINATIONS') && (
-      <section className="py-26 bg-white">
-        <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8">
+      {/* Themed Destinations Section */}
+      <section className="py-20 bg-gradient-to-br from-gray-50 to-blue-50/30">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Header */}
           <div className="text-center mb-16">
-            <h2 className="font-display text-3xl font-bold text-gray-900 mb-6">
-              Popular Destinations
+            <h2 className="font-display text-4xl font-bold text-gray-900 mb-6">
+              Discover by Theme
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed-plus">
-              Discover amazing destinations planned by thousands of travelers
+              Explore curated destinations tailored to your travel style and interests
             </p>
           </div>
 
-          <div className="flex gap-6 overflow-x-auto pb-4 scrollbar-hide">
-            {DESTINATIONS.map((destination, index) => (
-              <div 
-                key={index}
-                className="group bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-lg transition-all duration-200 flex-shrink-0 w-80"
-              >
-                <div className="relative h-48 overflow-hidden">
-                  <img 
-                    src={destination.image}
-                    alt={destination.name}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                  />
+          {/* Theme Selector */}
+          <div className="flex flex-wrap justify-center gap-4 mb-12">
+            {TRAVEL_THEMES.map((theme, index) => {
+              const IconComponent = theme.icon;
+              return (
+                <button
+                  key={theme.id}
+                  onClick={() => setActiveTheme(index)}
+                  className={`group flex items-center gap-3 px-6 py-4 rounded-2xl font-medium transition-all duration-300 ${
+                    activeTheme === index
+                      ? `bg-gradient-to-r ${theme.color} text-white shadow-lg scale-105`
+                      : 'bg-white text-gray-600 hover:bg-gray-50 shadow-md hover:shadow-lg'
+                  }`}
+                >
+                  <IconComponent className={`h-5 w-5 ${
+                    activeTheme === index ? 'text-white' : 'text-gray-500'
+                  } group-hover:scale-110 transition-transform`} />
+                  <span className="font-display">{theme.name}</span>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Active Theme Description */}
+          <div className="text-center mb-8">
+            <p className="text-gray-600 text-lg">
+              {TRAVEL_THEMES[activeTheme].description}
+            </p>
+          </div>
+
+          {/* Destinations Carousel */}
+          <div className="relative">
+            {/* Navigation Buttons */}
+            <button
+              onClick={() => scrollDestinations('left')}
+              className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white/90 backdrop-blur-sm p-3 rounded-full shadow-lg hover:bg-white transition-all duration-200 hover:scale-110"
+            >
+              <ChevronLeft className="h-6 w-6 text-gray-600" />
+            </button>
+            <button
+              onClick={() => scrollDestinations('right')}
+              className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white/90 backdrop-blur-sm p-3 rounded-full shadow-lg hover:bg-white transition-all duration-200 hover:scale-110"
+            >
+              <ChevronRight className="h-6 w-6 text-gray-600" />
+            </button>
+
+            {/* Destinations Grid */}
+            <div
+              id={`destinations-${TRAVEL_THEMES[activeTheme].id}`}
+              className="flex gap-6 overflow-x-auto pb-4 scrollbar-hide scroll-smooth px-12"
+              style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+            >
+              {TRAVEL_THEMES[activeTheme].destinations.map((destination, index) => (
+                <div 
+                  key={`${destination.name}-${index}`}
+                  className="group bg-white rounded-3xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-500 flex-shrink-0 w-80 hover:-translate-y-2"
+                >
+                  {/* Image */}
+                  <div className="relative h-48 overflow-hidden">
+                    <img 
+                      src={destination.image}
+                      alt={destination.name}
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    
+                    {/* Highlight Badge */}
+                    <div className={`absolute top-4 right-4 bg-gradient-to-r ${TRAVEL_THEMES[activeTheme].color} text-white px-3 py-1 rounded-full text-sm font-medium shadow-lg`}>
+                      {destination.highlight}
+                    </div>
+                  </div>
+
+                  {/* Content */}
+                  <div className="p-6">
+                    <h3 className="font-display text-xl font-bold text-gray-900 mb-3 group-hover:text-primary-600 transition-colors">
+                      {destination.name}
+                    </h3>
+                    <p className="text-gray-600 leading-relaxed mb-4">
+                      {destination.description}
+                    </p>
+                    
+                    <button 
+                      onClick={onGetStarted}
+                      className={`w-full py-3 px-4 rounded-xl font-medium transition-all duration-200 bg-gradient-to-r ${TRAVEL_THEMES[activeTheme].color} text-white hover:shadow-lg hover:scale-105`}
+                    >
+                      Plan This Trip
+                    </button>
+                  </div>
                 </div>
-                <div className="p-6">
-                  <h3 className="font-display text-lg font-semibold text-gray-900 mb-2">
-                    {destination.name}
-                  </h3>
-                  <p className="text-primary-600 text-sm font-medium">
-                    {destination.trips}
-                  </p>
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       </section>
-      )}
 
       {/* Final CTA Section */}
-      <section className="py-26 bg-gradient-to-r from-primary-600 to-primary-700 -mx-4 sm:-mx-6 lg:-mx-8">
+      <section className="py-20 bg-gradient-to-r from-primary-600 to-primary-700 -mx-4 sm:-mx-6 lg:-mx-8">
         <div className="max-w-content-narrow mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="font-display text-3xl font-bold text-white mb-8">
+          <h2 className="font-display text-4xl font-bold text-white mb-8">
             Ready to Start Your Adventure?
           </h2>
-          <p className="text-lg text-white/90 mb-12 max-w-xl mx-auto leading-relaxed-plus">
-            Create your personalized itinerary in minutes, not hours.
+          <p className="text-xl text-white/90 mb-12 max-w-xl mx-auto leading-relaxed-plus">
+            Create your personalized itinerary in minutes, not hours. Every journey begins with a single step.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
             <button
               onClick={onGetStarted}
-              className="flex items-center gap-3 px-10 py-5 bg-white text-primary-600 rounded-2xl hover:bg-gray-50 transition-all duration-200 shadow-2xl hover:shadow-3xl font-semibold text-lg hover:scale-105 font-display"
+              className="group flex items-center gap-3 px-12 py-5 bg-white text-primary-600 rounded-2xl hover:bg-gray-50 transition-all duration-300 shadow-2xl hover:shadow-3xl font-semibold text-lg hover:scale-105 font-display"
             >
               Start Planning Free
-              <ArrowRight className="h-5 w-5" />
+              <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
             </button>
           </div>
 
           <div className="mt-12 flex items-center justify-center gap-8 text-white/70 text-sm">
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-2">
               <CheckCircle className="h-4 w-4" />
               No credit card required
             </div>
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-2">
               <CheckCircle className="h-4 w-4" />
               Instant results
+            </div>
+            <div className="flex items-center gap-2">
+              <CheckCircle className="h-4 w-4" />
+              AI-powered recommendations
             </div>
           </div>
         </div>
