@@ -67,7 +67,13 @@ export function GooglePlacesAutocomplete({
         setIsLoading(false);
       } catch (err) {
         console.error('Error loading Google Maps:', err);
-        setError('Failed to load Google Maps');
+        // Check if it's a billing error
+        const errorMessage = err instanceof Error ? err.message : String(err);
+        if (errorMessage.includes('BillingNotEnabledMapError') || errorMessage.includes('billing')) {
+          setError('Google Maps billing not enabled - using text input');
+        } else {
+          setError('Failed to load Google Maps');
+        }
         setIsLoading(false);
       }
     };
@@ -106,7 +112,10 @@ export function GooglePlacesAutocomplete({
           />
         </div>
         <p className="text-xs text-amber-600 mt-1">
-          Google Maps unavailable - using text input
+          {error.includes('billing') ? 
+            'Google Maps requires billing to be enabled - using text input' : 
+            'Google Maps unavailable - using text input'
+          }
         </p>
       </div>
     );
@@ -136,7 +145,7 @@ export function GooglePlacesAutocomplete({
       </div>
       {!isLoading && (
         <p className="text-xs text-gray-500 mt-1">
-          Start typing to search for locations
+          {error ? 'Manual text input' : 'Start typing to search for locations'}
         </p>
       )}
     </div>
