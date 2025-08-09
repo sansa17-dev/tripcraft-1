@@ -23,7 +23,11 @@ Transform your travel dreams into detailed, personalized itineraries with AI-pow
    ```bash
    cp .env.example .env
    ```
-   Then edit `.env` with your Supabase project URL only
+   Then edit `.env` with your Supabase project URL and anon key:
+   ```
+   VITE_SUPABASE_URL=https://your-project-id.supabase.co
+   VITE_SUPABASE_ANON_KEY=your-anon-key-here
+   ```
 
 4. **Start development server**
    ```bash
@@ -35,8 +39,9 @@ Transform your travel dreams into detailed, personalized itineraries with AI-pow
 For secure backend setup, see [BACKEND_SETUP.md](./BACKEND_SETUP.md) for detailed instructions.
 
 **Team members only need:**
-- Supabase project URL (`VITE_SUPABASE_URL`)
-- No database credentials required
+- Supabase project URL (`VITE_SUPABASE_URL`) 
+- Supabase anon key (`VITE_SUPABASE_ANON_KEY`)
+- No service role keys or database credentials required
 - No AI API keys needed
 
 ## Features
@@ -59,7 +64,8 @@ For secure backend setup, see [BACKEND_SETUP.md](./BACKEND_SETUP.md) for detaile
 ## Environment Variables
 
 **Frontend (.env file):**
-- `VITE_SUPABASE_URL`: Your Supabase project URL (only this is needed)
+- `VITE_SUPABASE_URL`: Your Supabase project URL
+- `VITE_SUPABASE_ANON_KEY`: Your Supabase anon/public key
 
 **Backend (Supabase Edge Functions - auto-configured):**
 - `SUPABASE_URL`: Auto-configured

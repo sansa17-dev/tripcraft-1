@@ -51,13 +51,16 @@ export function EditableItinerary({
 
   // Load comments if shareId is provided
   useEffect(() => {
-    if (shareId && showComments) {
+    if (shareId && showComments && import.meta.env.VITE_SUPABASE_URL) {
       loadComments();
     }
   }, [shareId, showComments]);
 
   const loadComments = async () => {
-    if (!shareId) return;
+    if (!shareId || !import.meta.env.VITE_SUPABASE_URL) {
+      console.warn('⚠️ Comments feature requires Supabase configuration');
+      return;
+    }
     
     try {
       // Load general comments
