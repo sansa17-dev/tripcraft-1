@@ -15,19 +15,19 @@ function createItineraryPrompt(preferences: TravelPreferences): string {
   
   const duration = Math.ceil((new Date(endDate).getTime() - new Date(startDate).getTime()) / (1000 * 60 * 60 * 24));
   
-  return `Create a detailed ${duration}-day travel itinerary for ${destination} from ${startDate} to ${endDate}, travelling from ${origin}.
+  return `Create a detailed ${duration}-day travel itinerary for ${destination} from ${startDate} to ${endDate}, traveling from ${origin}.
 
 Travel Details:
-- Travelling from: ${origin}
+- Traveling from: ${origin}
 - Destination: ${destination}
-- ${travelers} traveller${travelers > 1 ? 's' : ''}
+- ${travelers} traveler${travelers > 1 ? 's' : ''}
 - Budget: ${budget}
 - Accommodation preference: ${accommodationType}
 - Holiday pace: ${vacationPace}
 - Interests: ${interests.join(', ')}
 ${additionalNotes ? `- Additional notes: ${additionalNotes}` : ''}
 
-Please provide a comprehensive itinerary including transportation from ${origin} to ${destination}. The itinerary should match the ${vacationPace} pace preference. Use Indian English spelling and terminology throughout. Provide the response in the following JSON format:
+Please provide a comprehensive itinerary including transportation from ${origin} to ${destination}. The itinerary should match the ${vacationPace} pace preference. Use USD ($) currency throughout. Provide the response in the following JSON format:
 {
   "title": "Trip title",
   "destination": "${destination}",
@@ -52,7 +52,7 @@ Please provide a comprehensive itinerary including transportation from ${origin}
   "tips": ["Travel tip 1", "Travel tip 2", "Travel tip 3"]
 }
 
-Make sure all recommendations match the ${budget} budget level (per traveller per day), match the ${vacationPace} holiday pace, and include practical details like opening hours considerations and transportation between activities. Use Indian English spelling throughout the response.`;
+Make sure all recommendations match the ${budget} budget level (per traveler per day), match the ${vacationPace} holiday pace, and include practical details like opening hours considerations and transportation between activities. Use USD ($) currency for all cost estimates.`;
 }
 
 /**
@@ -236,7 +236,7 @@ export function generateDemoItinerary(preferences: TravelPreferences): Generated
     title: `${duration}-Day Journey from ${preferences.origin} to ${preferences.destination}`,
     destination: preferences.destination,
     duration: `${duration} days`,
-    totalBudget: preferences.budget === 'budget' ? '₹15,000-25,000' : preferences.budget === 'mid-range' ? '₹30,000-50,000' : '₹60,000-1,00,000',
+    totalBudget: preferences.budget === 'budget' ? '$800-1,500' : preferences.budget === 'mid-range' ? '$1,500-3,000' : '$3,000-6,000',
     overview: `A carefully crafted ${duration}-day journey from ${preferences.origin} to ${preferences.destination}, featuring the best ${preferences.interests.join(' and ')} experiences tailored to your ${preferences.budget} budget and ${preferences.vacationPace} pace, including transportation and logistics.`,
     days: Array.from({ length: duration }, (_, index) => {
       const dayDate = new Date(preferences.startDate);
@@ -261,7 +261,7 @@ export function generateDemoItinerary(preferences: TravelPreferences): Generated
                      preferences.accommodationType === 'resort' ? 'Luxury resort' :
                      preferences.accommodationType === 'villa' ? 'Private villa' :
                      preferences.accommodationType === 'mix' ? 'Mix of accommodations' : 'Best local accommodation',
-        estimatedCost: preferences.budget === 'budget' ? '₹2,500-3,500' : preferences.budget === 'mid-range' ? '₹4,500-6,500' : '₹8,500-12,000',
+        estimatedCost: preferences.budget === 'budget' ? '$50-80' : preferences.budget === 'mid-range' ? '$100-150' : '$200-300',
         notes: index === 0 ? "Arrival day - lighter schedule recommended" : 
                index === duration - 1 ? "Departure day - plan for travel time" : `Full day of ${preferences.vacationPace} exploration`
       };
@@ -269,7 +269,7 @@ export function generateDemoItinerary(preferences: TravelPreferences): Generated
     tips: [
       `Best time to visit ${preferences.destination} is during your planned dates`,
       "Book accommodations in advance for better rates",
-      "Try local transportation to save money and experience authentic culture",
+      "Use local transportation to save money and experience authentic culture",
       "Keep copies of important documents in separate locations"
     ]
   };

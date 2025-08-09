@@ -138,7 +138,7 @@ export function TravelForm({ preferences, onPreferencesChange, onSubmit, isGener
           <div>
             <label htmlFor="budget" className="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-1">
               <Wallet className="h-4 w-4" />
-              Budget Level (per traveller per day) *
+              Budget Level (per traveler per day) *
             </label>
             <select
               id="budget"
@@ -148,15 +148,15 @@ export function TravelForm({ preferences, onPreferencesChange, onSubmit, isGener
               className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
             >
               <option value="">Select budget range</option>
-              <option value="budget">Budget (₹2,000-4,000/day)</option>
-              <option value="mid-range">Mid-range (₹4,000-8,000/day)</option>
-              <option value="luxury">Luxury (₹8,000+/day)</option>
+              <option value="budget">Budget ($50-100/day)</option>
+              <option value="mid-range">Mid-range ($100-200/day)</option>
+              <option value="luxury">Luxury ($200+/day)</option>
             </select>
           </div>
           <div>
             <label htmlFor="travelers" className="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-1">
               <Users className="h-4 w-4" />
-              Number of Travellers *
+              Number of Travelers *
             </label>
             <input
               type="number"
