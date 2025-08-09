@@ -215,7 +215,7 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
                 </span>
               )}
             </div>
-            <h2 className="text-xl font-bold text-gray-900 mb-1">{sharedItinerary.title}</h2>
+            <h2 className="text-xl font-bold text-gray-900 mb-1 break-words pr-4">{sharedItinerary.title}</h2>
             <div className="flex items-center gap-4 text-sm text-gray-600">
               <div className="flex items-center gap-1">
                 <Eye className="h-4 w-4" />
@@ -228,7 +228,7 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
             </div>
           </div>
           
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-shrink-0">
             <button
               onClick={copyShareLink}
               className="flex items-center gap-1 px-3 py-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors text-sm whitespace-nowrap"
@@ -326,9 +326,9 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
 
           {/* Header Content */}
           <div className="absolute inset-0 p-8 flex flex-col justify-end text-white">
-            <h2 className="text-3xl font-bold mb-3">{itinerary.title}</h2>
+            <h2 className="text-3xl font-bold mb-3 break-words pr-4">{itinerary.title}</h2>
             
-            <div className="flex flex-wrap items-center gap-6 text-sm mb-4">
+            <div className="flex flex-wrap items-center gap-6 text-sm mb-4 pr-4">
               <div className="flex items-center gap-1">
                 <MapPin className="h-4 w-4" />
                 {itinerary.destination}
@@ -343,7 +343,7 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
               </div>
             </div>
 
-            <p className="leading-relaxed text-lg">{itinerary.overview}</p>
+            <p className="leading-relaxed text-lg break-words pr-4">{itinerary.overview}</p>
           </div>
         </div>
 
