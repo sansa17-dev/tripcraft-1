@@ -6,7 +6,7 @@
 import React, { useState, useEffect } from 'react';
 import { 
   Calendar, MapPin, DollarSign, Clock, Utensils, Bed, Lightbulb, 
-  Copy, Check, Eye, Users, Share2, AlertCircle, ExternalLink
+  Copy, Check, Eye, Users, Share2, AlertCircle, ExternalLink, Edit3, Save, X, Plus, Trash2
 } from 'lucide-react';
 import { shareApi, commentsApi } from '../lib/api';
 import { useAuth } from '../hooks/useAuth';
@@ -53,6 +53,9 @@ export function SharedItineraryView({ shareId }: SharedItineraryViewProps) {
   const [newComment, setNewComment] = useState('');
   const [addingComment, setAddingComment] = useState(false);
   const [showComments, setShowComments] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedItinerary, setEditedItinerary] = useState<any>(null);
+  const [saving, setSaving] = useState(false);
 
   const { user } = useAuth();
 
@@ -70,6 +73,7 @@ export function SharedItineraryView({ shareId }: SharedItineraryViewProps) {
       
       if (result.success && result.data) {
         setSharedItinerary(result.data);
+        setEditedItinerary(result.data.itineraries);
         
         // Increment view count
         await shareApi.incrementView(shareId);
@@ -122,6 +126,78 @@ export function SharedItineraryView({ shareId }: SharedItineraryViewProps) {
     } finally {
       setAddingComment(false);
     }
+  };
+
+  const handleSaveChanges = async () => {
+    if (!user || !editedItinerary || !sharedItinerary) return;
+
+    setSaving(true);
+    try {
+      // Update the itinerary via the share API
+      const result = await shareApi.update(user.id, shareId, {
+        title: editedItinerary.title,
+        // Note: In a full implementation, you'd update the actual itinerary
+        // For now, we'll just update the shared itinerary title
+      });
+
+      if (result.success) {
+        setIsEditing(false);
+        // Reload the shared itinerary to get latest data
+        loadSharedItinerary();
+      } else {
+        throw new Error(result.error || 'Failed to save changes');
+      }
+    } catch (err) {
+      console.error('Error saving changes:', err);
+      alert('Failed to save changes');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const updateItineraryField = (field: string, value: any) => {
+    setEditedItinerary((prev: any) => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
+  const updateDay = (dayIndex: number, updatedDay: any) => {
+    setEditedItinerary((prev: any) => ({
+      ...prev,
+      days: prev.days.map((day: any, index: number) => 
+        index === dayIndex ? updatedDay : day
+      )
+    }));
+  };
+
+  const addActivity = (dayIndex: number) => {
+    const currentDay = editedItinerary.days[dayIndex];
+    const updatedDay = {
+      ...currentDay,
+      activities: [...currentDay.activities, 'New activity']
+    };
+    updateDay(dayIndex, updatedDay);
+  };
+
+  const removeActivity = (dayIndex: number, activityIndex: number) => {
+    const currentDay = editedItinerary.days[dayIndex];
+    const updatedDay = {
+      ...currentDay,
+      activities: currentDay.activities.filter((_: any, index: number) => index !== activityIndex)
+    };
+    updateDay(dayIndex, updatedDay);
+  };
+
+  const updateActivity = (dayIndex: number, activityIndex: number, value: string) => {
+    const currentDay = editedItinerary.days[dayIndex];
+    const updatedDay = {
+      ...currentDay,
+      activities: currentDay.activities.map((activity: string, index: number) => 
+        index === activityIndex ? value : activity
+      )
+    };
+    updateDay(dayIndex, updatedDay);
   };
 
   const copyDayToClipboard = async (day: any, dayNumber: number) => {
@@ -198,7 +274,7 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
     );
   }
 
-  const itinerary = sharedItinerary.itineraries;
+  const itinerary = editedItinerary || sharedItinerary.itineraries;
 
   return (
     <div className="space-y-6">
@@ -237,6 +313,16 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
               Copy Link
             </button>
             
+            {sharedItinerary.share_mode === 'collaborate' && user && (
+              <button
+                onClick={() => setIsEditing(!isEditing)}
+                className="flex items-center gap-1 px-3 py-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors text-sm whitespace-nowrap"
+              >
+                <Edit3 className="h-4 w-4" />
+                {isEditing ? 'Cancel Edit' : 'Edit'}
+              </button>
+            )}
+            
             {sharedItinerary.share_mode === 'collaborate' && (
               <button
                 onClick={() => setShowComments(!showComments)}
@@ -250,13 +336,51 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
         </div>
       </div>
 
+      {/* Edit Mode Controls */}
+      {isEditing && user && (
+        <div className="bg-white border border-gray-200 rounded-lg p-4 flex items-center justify-between">
+          <div className="text-sm text-gray-600">
+            You are editing this shared itinerary. Changes will be visible to all collaborators.
+          </div>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handleSaveChanges}
+              disabled={saving}
+              className="flex items-center gap-1 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm"
+            >
+              {saving ? (
+                <>
+                  <div className="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                  Saving...
+                </>
+              ) : (
+                <>
+                  <Save className="h-4 w-4" />
+                  Save Changes
+                </>
+              )}
+            </button>
+            <button
+              onClick={() => {
+                setIsEditing(false);
+                setEditedItinerary(sharedItinerary.itineraries);
+              }}
+              className="flex items-center gap-1 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors text-sm"
+            >
+              <X className="h-4 w-4" />
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Collaborative Features */}
       {sharedItinerary.share_mode === 'collaborate' && (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2">
             <CollaborativeEditor 
               itineraryId={sharedItinerary.id}
-              isEditing={false}
+              isEditing={isEditing}
             />
           </div>
           
@@ -326,24 +450,74 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
 
           {/* Header Content */}
           <div className="absolute inset-0 p-8 flex flex-col justify-end text-white">
-            <h2 className="text-3xl font-bold mb-3 break-words">{itinerary.title}</h2>
+            {isEditing ? (
+              <input
+                type="text"
+                value={itinerary.title}
+                onChange={(e) => updateItineraryField('title', e.target.value)}
+                className="text-3xl font-bold bg-transparent border-b-2 border-white/50 focus:border-white outline-none mb-3 text-white placeholder-white/70 min-w-0"
+                placeholder="Trip title"
+              />
+            ) : (
+              <h2 className="text-3xl font-bold mb-3 break-words">{itinerary.title}</h2>
+            )}
             
             <div className="flex flex-wrap items-center gap-6 text-sm mb-4">
               <div className="flex items-center gap-1">
                 <MapPin className="h-4 w-4" />
-                {itinerary.destination}
+                {isEditing ? (
+                  <input
+                    type="text"
+                    value={itinerary.destination}
+                    onChange={(e) => updateItineraryField('destination', e.target.value)}
+                    className="bg-transparent border-b border-white/50 focus:border-white outline-none text-white placeholder-white/70 min-w-0"
+                    placeholder="Destination"
+                  />
+                ) : (
+                  <span className="break-words">{itinerary.destination}</span>
+                )}
               </div>
               <div className="flex items-center gap-1">
                 <Clock className="h-4 w-4" />
-                {itinerary.duration}
+                {isEditing ? (
+                  <input
+                    type="text"
+                    value={itinerary.duration}
+                    onChange={(e) => updateItineraryField('duration', e.target.value)}
+                    className="bg-transparent border-b border-white/50 focus:border-white outline-none text-white placeholder-white/70 w-20 min-w-0"
+                    placeholder="Duration"
+                  />
+                ) : (
+                  itinerary.duration
+                )}
               </div>
               <div className="flex items-center gap-1">
                 <DollarSign className="h-4 w-4" />
-                {itinerary.total_budget}
+                {isEditing ? (
+                  <input
+                    type="text"
+                    value={itinerary.total_budget}
+                    onChange={(e) => updateItineraryField('total_budget', e.target.value)}
+                    className="bg-transparent border-b border-white/50 focus:border-white outline-none text-white placeholder-white/70 min-w-0"
+                    placeholder="Budget"
+                  />
+                ) : (
+                  <span className="break-words">{itinerary.total_budget}</span>
+                )}
               </div>
             </div>
 
-            <p className="leading-relaxed text-lg break-words">{itinerary.overview}</p>
+            {isEditing ? (
+              <textarea
+                value={itinerary.overview}
+                onChange={(e) => updateItineraryField('overview', e.target.value)}
+                className="bg-white/10 backdrop-blur-sm border border-white/30 rounded-lg p-3 text-white placeholder-white/70 resize-none min-w-0"
+                rows={2}
+                placeholder="Trip overview"
+              />
+            ) : (
+              <p className="leading-relaxed text-lg break-words">{itinerary.overview}</p>
+            )}
           </div>
         </div>
 

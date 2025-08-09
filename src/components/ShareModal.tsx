@@ -55,6 +55,13 @@ export function ShareModal({ isOpen, onClose, itineraryId, itineraryTitle }: Sha
     }
   };
 
+  // Regenerate share link when mode or public setting changes
+  useEffect(() => {
+    if (shareLink) {
+      generateShareLink();
+    }
+  }, [shareMode, isPublic]);
+
   const copyToClipboard = async () => {
     if (!shareLink) return;
 
