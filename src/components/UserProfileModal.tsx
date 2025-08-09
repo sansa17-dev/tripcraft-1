@@ -77,6 +77,10 @@ export function UserProfileModal({ isOpen, onClose, onPersonaLoad }: UserProfile
       const result = await getUserPersona(user.id);
       if (result.success && result.data) {
         setPersona(result.data);
+       // Notify parent component that persona has been loaded
+       if (onPersonaLoad) {
+         onPersonaLoad(result.data);
+       }
         // Check if persona has any data to determine if we should show in edit mode
         const hasData = Object.values(result.data).some(value => 
           Array.isArray(value) ? value.length > 0 : value !== ''
