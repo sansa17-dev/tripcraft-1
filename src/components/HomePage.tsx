@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import { InteractiveDemo } from './InteractiveDemo';
 import { VoiceChatModal } from './VoiceChatModal';
+import { ARPreviewModal } from './ARPreviewModal';
 
 interface HomePageProps {
   onGetStarted: () => void;
@@ -183,10 +184,10 @@ const FEATURES = [
   },
   {
     icon: Globe,
-    title: 'Voice Chat with AI Buddy',
-    description: 'Just speak naturally! "Plan a romantic Bali trip for 5 days." Your AI buddy responds with voice and creates your itinerary.',
+    title: 'AR Destination Previews',
+    description: 'See destinations before you go! 360° views, virtual hotel tours, and AR experiences. Walk through Santorini sunsets or Kyoto temples.',
     color: 'from-blue-500 to-cyan-500',
-    metric: 'Voice + Chat',
+    metric: '360° + AR',
     badge: 'Revolutionary'
   },
   {
@@ -298,6 +299,8 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
   const [showVideo, setShowVideo] = useState(false);
   const [expandedFAQ, setExpandedFAQ] = useState<number | null>(null);
   const [showVoiceChat, setShowVoiceChat] = useState(false);
+  const [showARPreview, setShowARPreview] = useState(false);
+  const [selectedDestination, setSelectedDestination] = useState<{name: string, country: string, theme: string} | undefined>();
   const stats = useRealTimeStats();
 
   return (
@@ -382,6 +385,23 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
                 {/* New feature badge */}
                 <div className="absolute -top-2 -right-2 bg-green-500 text-white text-xs px-2 py-1 rounded-full animate-bounce">
                   NEW
+                </div>
+              </button>
+              
+              <button
+                onClick={() => {
+                  setSelectedDestination({ name: 'Santorini', country: 'Greece', theme: 'Leisure' });
+                  setShowARPreview(true);
+                }}
+                className="group relative inline-flex items-center gap-3 px-6 py-4 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-2xl hover:from-emerald-700 hover:to-teal-700 transition-all duration-300 shadow-2xl hover:shadow-emerald-500/25 font-bold text-lg transform hover:scale-105 hover:-translate-y-1"
+              >
+                <Camera className="h-5 w-5 group-hover:scale-110 transition-transform duration-300" />
+                AR Preview Destinations
+                <Eye className="h-4 w-4 group-hover:rotate-12 transition-transform duration-300" />
+                
+                {/* Revolutionary badge */}
+                <div className="absolute -top-2 -right-2 bg-purple-500 text-white text-xs px-2 py-1 rounded-full animate-pulse">
+                  AR
                 </div>
               </button>
               
@@ -639,7 +659,14 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
               <div 
                 key={index}
                 className="group relative overflow-hidden rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 cursor-pointer"
-                onClick={onGetStarted}
+                onClick={() => {
+                  setSelectedDestination({ 
+                    name: destination.name, 
+                    country: destination.country, 
+                    theme: destination.name === 'Santorini' ? 'Leisure' : destination.name === 'Kyoto' ? 'Spiritual' : 'Adventure'
+                  });
+                  setShowARPreview(true);
+                }}
               >
                 {/* Popular Badge */}
                 {destination.popular && (
@@ -668,8 +695,8 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
                   <div className="flex items-center justify-between">
                     <span className="text-white/80 text-sm">{destination.duration}</span>
                     <div className="flex items-center gap-1 bg-white/20 backdrop-blur-sm rounded-full px-3 py-1">
-                      <ArrowRight className="h-3 w-3" />
-                      <span className="text-xs">Plan Trip</span>
+                      <Eye className="h-3 w-3" />
+                      <span className="text-xs">AR Preview</span>
                     </div>
                   </div>
                 </div>
@@ -680,11 +707,15 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
           {/* View All Destinations CTA */}
           <div className="text-center mt-12">
             <button
-              onClick={onGetStarted}
-              className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 shadow-lg hover:shadow-xl font-medium"
+              onClick={() => {
+                setSelectedDestination({ name: 'Santorini', country: 'Greece', theme: 'Leisure' });
+                setShowARPreview(true);
+              }}
+              className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-xl hover:from-emerald-700 hover:to-teal-700 transition-all duration-200 shadow-lg hover:shadow-xl font-medium"
             >
-              Explore All 247 Destinations
-              Watch AI in Action
+              <Camera className="h-4 w-4" />
+              Preview All 247 Destinations in AR
+              <Eye className="h-4 w-4" />
             </button>
           </div>
         </div>
@@ -873,6 +904,14 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
         isOpen={showVoiceChat}
         onClose={() => setShowVoiceChat(false)}
         onPlanGenerated={onGetStarted}
+      />
+
+      {/* AR Preview Modal */}
+      <ARPreviewModal 
+        isOpen={showARPreview}
+        onClose={() => setShowARPreview(false)}
+        destination={selectedDestination}
+        onPlanTrip={onGetStarted}
       />
     </div>
   );
