@@ -231,7 +231,7 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
           <div className="flex items-center gap-2">
             <button
               onClick={copyShareLink}
-              className="flex items-center gap-1 px-3 py-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors text-sm"
+              className="flex items-center gap-1 px-3 py-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors text-sm whitespace-nowrap"
             >
               <ExternalLink className="h-4 w-4" />
               Copy Link
@@ -240,7 +240,7 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
             {sharedItinerary.share_mode === 'collaborate' && (
               <button
                 onClick={() => setShowComments(!showComments)}
-                className="flex items-center gap-1 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg transition-colors text-sm"
+                className="flex items-center gap-1 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg transition-colors text-sm whitespace-nowrap"
               >
                 <Users className="h-4 w-4" />
                 Comments ({comments.length})
@@ -381,7 +381,7 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
                   </div>
                   <span className="text-sm text-gray-600 font-medium break-words">{day.date}</span>
                   {day.estimatedCost && (
-                    <span className="text-sm text-green-600 font-semibold sm:ml-auto bg-green-50 px-3 py-1 rounded-full whitespace-nowrap">
+                    <span className="text-sm text-green-600 font-semibold sm:ml-auto bg-green-50 px-3 py-1 rounded-full break-words max-w-48">
                       {day.estimatedCost}
                     </span>
                   )}

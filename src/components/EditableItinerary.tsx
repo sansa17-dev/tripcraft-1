@@ -309,14 +309,14 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
               type="text"
               value={editedItinerary.title}
               onChange={(e) => updateItineraryField('title', e.target.value)}
-              className="text-3xl font-bold bg-transparent border-b-2 border-white/50 focus:border-white outline-none mb-3 text-white placeholder-white/70 min-w-0 pr-80"
+              className="text-3xl font-bold bg-transparent border-b-2 border-white/50 focus:border-white outline-none mb-3 text-white placeholder-white/70 min-w-0 pr-96"
               placeholder="Trip title"
             />
           ) : (
-            <h2 className="text-3xl font-bold mb-3 break-words pr-80">{editedItinerary.title}</h2>
+            <h2 className="text-3xl font-bold mb-3 break-words pr-96">{editedItinerary.title}</h2>
           )}
           
-          <div className="flex flex-wrap items-center gap-6 text-sm mb-4 pr-80">
+          <div className="flex flex-wrap items-center gap-6 text-sm mb-4 pr-96">
             <div className="flex items-center gap-1">
               <MapPin className="h-4 w-4" />
               {isEditing ? (
@@ -365,22 +365,22 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
             <textarea
               value={editedItinerary.overview}
               onChange={(e) => updateItineraryField('overview', e.target.value)}
-              className="bg-white/10 backdrop-blur-sm border border-white/30 rounded-lg p-3 text-white placeholder-white/70 resize-none w-full min-w-0"
+              className="bg-white/10 backdrop-blur-sm border border-white/30 rounded-lg p-3 text-white placeholder-white/70 resize-none min-w-0 pr-96"
               rows={2}
               placeholder="Trip overview"
             />
           ) : (
-            <p className="leading-relaxed text-lg break-words">{editedItinerary.overview}</p>
+            <p className="leading-relaxed text-lg break-words pr-96">{editedItinerary.overview}</p>
           )}
         </div>
 
         {/* Edit Controls */}
-        <div className="absolute top-4 right-4 flex flex-wrap gap-2 max-w-80">
+        <div className="absolute top-4 right-4 flex flex-wrap gap-2 max-w-96 justify-end">
           {/* Share Button */}
           {onShare && (
             <button
               onClick={onShare}
-              className="flex items-center gap-2 px-3 py-2 bg-white/20 backdrop-blur-sm text-white rounded-lg hover:bg-white/30 transition-colors shadow-lg text-sm"
+              className="flex items-center gap-1 px-3 py-2 bg-white/20 backdrop-blur-sm text-white rounded-lg hover:bg-white/30 transition-colors shadow-lg text-sm whitespace-nowrap"
             >
               <Share2 className="h-4 w-4" />
               Share
@@ -391,7 +391,7 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
             <>
               {/* Save Error */}
               {saveError && (
-                <div className="absolute top-16 right-0 bg-red-50 border border-red-200 rounded-lg p-2 text-red-700 text-sm max-w-xs z-20">
+                <div className="absolute top-16 right-0 bg-red-50 border border-red-200 rounded-lg p-2 text-red-700 text-sm max-w-xs z-20 break-words">
                   {saveError}
                 </div>
               )}
@@ -399,7 +399,7 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
               <button
                 onClick={handleSave}
                 disabled={saving}
-                className="flex items-center gap-1 px-3 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors shadow-lg text-sm"
+                className="flex items-center gap-1 px-3 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors shadow-lg text-sm whitespace-nowrap"
               >
                 {saving ? (
                   <>
@@ -415,7 +415,7 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
               </button>
               <button
                 onClick={handleCancel}
-                className="flex items-center gap-1 px-3 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors shadow-lg text-sm"
+                className="flex items-center gap-1 px-3 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors shadow-lg text-sm whitespace-nowrap"
               >
                 <X className="h-4 w-4" />
                 Cancel
@@ -424,16 +424,17 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
           ) : (
             <button
               onClick={onToggleEdit}
-              className="flex items-center gap-2 px-3 py-2 bg-white/20 backdrop-blur-sm text-white rounded-lg hover:bg-white/30 transition-colors shadow-lg text-sm"
+              className="flex items-center gap-1 px-3 py-2 bg-white/20 backdrop-blur-sm text-white rounded-lg hover:bg-white/30 transition-colors shadow-lg text-sm whitespace-nowrap"
             >
               <Edit3 className="h-4 w-4" />
-              {savedItineraryId ? 'Edit & Collaborate' : 'Edit Itinerary'}
+              <span className="hidden sm:inline">{savedItineraryId ? 'Edit & Collaborate' : 'Edit Itinerary'}</span>
+              <span className="sm:hidden">Edit</span>
             </button>
           )}
 
           {/* Collaborative Indicator */}
           {savedItineraryId && isEditing && (
-            <div className="flex items-center gap-1 px-2 py-2 bg-blue-600/20 backdrop-blur-sm text-white rounded-lg text-sm">
+            <div className="flex items-center gap-1 px-2 py-2 bg-blue-600/20 backdrop-blur-sm text-white rounded-lg text-sm whitespace-nowrap">
               <Users className="h-4 w-4" />
               <span className="text-sm">Live</span>
             </div>
@@ -492,13 +493,13 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
                 </div>
                 <span className="text-sm text-gray-600 font-medium break-words">{day.date}</span>
                 {day.estimatedCost && (
-                  <span className="text-sm text-green-600 font-semibold sm:ml-auto bg-green-50 px-3 py-1 rounded-full break-words max-w-40">
+                  <span className="text-sm text-green-600 font-semibold sm:ml-auto bg-green-50 px-3 py-1 rounded-full break-words max-w-48">
                     {isEditing ? (
                       <input
                         type="text"
                         value={day.estimatedCost}
                         onChange={(e) => updateDay(dayIndex, { ...day, estimatedCost: e.target.value })}
-                        className="bg-transparent text-green-600 outline-none w-full min-w-0"
+                        className="bg-transparent text-green-600 outline-none w-full min-w-0 text-center"
                       />
                     ) : (
                       day.estimatedCost
