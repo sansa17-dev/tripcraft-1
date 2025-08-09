@@ -245,7 +245,7 @@ export const shareApi = {
         .from('itineraries')
         .select('*')
         .eq('id', sharedItinerary.itinerary_id)
-        .single();
+        .maybeSingle();
 
       if (itineraryError) {
         console.warn('Could not fetch itinerary data:', itineraryError);
@@ -264,7 +264,7 @@ export const shareApi = {
         success: true, 
         data: { 
           ...sharedItinerary, 
-          itineraries: itineraryData 
+          itineraries: itineraryData || null
         } 
       };
     } catch (error) {
