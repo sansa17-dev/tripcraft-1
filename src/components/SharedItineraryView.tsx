@@ -589,7 +589,20 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
                         return (
                           <div key={mealType} className="bg-white p-3 rounded-lg shadow-sm min-w-0">
                             <span className="font-medium text-gray-600 capitalize">{mealType}:</span>
-                            <p className="text-gray-700 mt-1 break-words">{meal}</p>
+                            {isEditing ? (
+                              <input
+                                type="text"
+                                value={meal || ''}
+                                onChange={(e) => updateDay(dayIndex, {
+                                  ...day,
+                                  meals: { ...day.meals, [mealType]: e.target.value }
+                                })}
+                                className="w-full mt-1 bg-gray-50 border border-gray-200 rounded px-2 py-1 text-sm focus:ring-1 focus:ring-blue-500 focus:border-blue-500 min-w-0"
+                                placeholder={`${mealType} recommendation`}
+                              />
+                            ) : (
+                              <p className="text-gray-700 mt-1 break-words">{meal}</p>
+                            )}
                           </div>
                         );
                       })}
@@ -598,22 +611,44 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
                 )}
 
                 {/* Accommodation */}
-                {day.accommodation && (
+                {(day.accommodation || isEditing) && (
                   <div className="mb-3">
                     <h4 className="font-semibold text-gray-900 mb-2 flex items-center gap-1">
                       <Bed className="h-4 w-4 text-blue-600" />
                       Accommodation
                     </h4>
                     <div className="bg-white p-3 rounded-lg shadow-sm min-w-0">
-                      <p className="text-gray-700 text-sm break-words">{day.accommodation}</p>
+                      {isEditing ? (
+                        <input
+                          type="text"
+                          value={day.accommodation || ''}
+                          onChange={(e) => updateDay(dayIndex, { ...day, accommodation: e.target.value })}
+                          className="w-full bg-gray-50 border border-gray-200 rounded px-3 py-2 text-sm focus:ring-1 focus:ring-blue-500 focus:border-blue-500 min-w-0"
+                          placeholder="Accommodation recommendation"
+                        />
+                      ) : (
+                        <p className="text-gray-700 text-sm break-words">{day.accommodation}</p>
+                      )}
                     </div>
                   </div>
                 )}
 
                 {/* Notes */}
-                {day.notes && (
+                {(day.notes || isEditing) && (
                   <div className="pt-4 border-t border-gray-200">
-                    <p className="text-gray-600 text-sm italic bg-blue-50 p-3 rounded-lg break-words">{day.notes}</p>
+                    {isEditing ? (
+                      <textarea
+                        value={day.notes || ''}
+                        onChange={(e) => updateDay(dayIndex, { ...day, notes: e.target.value })}
+                        className="w-full bg-blue-50 border border-blue-200 rounded-lg p-3 text-sm focus:ring-1 focus:ring-blue-500 focus:border-blue-500 resize-none min-w-0"
+                        rows={2}
+                        placeholder="Special notes for this day"
+                      />
+                    ) : (
+                      day.notes && (
+                        <p className="text-gray-600 text-sm italic bg-blue-50 p-3 rounded-lg break-words">{day.notes}</p>
+                      )
+                    )}
                   </div>
                 )}
               </div>
