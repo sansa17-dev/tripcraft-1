@@ -6,11 +6,10 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { 
   Calendar, MapPin, DollarSign, Clock, Utensils, Bed, Lightbulb, 
-  Copy, Check, Edit3, Save, X, Plus, Trash2, GripVertical, Download, Share
+  Copy, Check, Edit3, Save, X, Plus, Trash2, GripVertical, Download
 } from 'lucide-react';
 import { GeneratedItinerary, ItineraryDay } from '../types';
 import { downloadItineraryAsPDF } from '../services/pdfService';
-import { EmailShareModal } from './EmailShareModal';
 
 interface EditableItineraryProps {
   itinerary: GeneratedItinerary;
@@ -24,7 +23,6 @@ export function EditableItinerary({ itinerary, onSave, isEditing, onToggleEdit }
   const [copiedDays, setCopiedDays] = useState<Set<number>>(new Set());
   const [draggedDay, setDraggedDay] = useState<number | null>(null);
   const [isDownloadingPDF, setIsDownloadingPDF] = useState(false);
-  const [showEmailModal, setShowEmailModal] = useState(false);
 
   // Update edited itinerary when prop changes
   useEffect(() => {
@@ -306,16 +304,6 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
 
         {/* Edit Controls */}
         <div className="absolute top-4 right-4 flex gap-2">
-          {/* Email Share Button */}
-          <button
-            onClick={() => setShowEmailModal(true)}
-            className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors shadow-lg"
-            title="Share via email"
-          >
-            <Share className="h-4 w-4" />
-            Share
-          </button>
-
           {/* Download PDF Button */}
           <button
             onClick={handleDownloadPDF}
@@ -603,14 +591,6 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
           </ul>
         </div>
       )}
-
-      {/* Email Share Modal */}
-      <EmailShareModal
-        isOpen={showEmailModal}
-        onClose={() => setShowEmailModal(false)}
-        itinerary={editedItinerary}
-        senderName="TripCraft User"
-      />
     </div>
   );
 }
