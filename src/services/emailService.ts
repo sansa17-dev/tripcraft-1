@@ -50,7 +50,7 @@ export async function sendItineraryEmail(
       body: JSON.stringify({
         to: recipientEmail,
         itinerary: itinerary,
-        senderName: senderName
+        senderName: senderName || 'TripCraft User'
       })
     });
 
