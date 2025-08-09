@@ -41,8 +41,8 @@ export function VoiceChatModal({ isOpen, onClose }: VoiceChatModalProps) {
 
     // Initialize speech recognition
     recognitionRef.current = new SpeechRecognition();
-    recognitionRef.current.continuous = true;
-    recognitionRef.current.interimResults = false;
+    recognitionRef.current.continuous = false;
+    recognitionRef.current.interimResults = true;
     recognitionRef.current.lang = 'en-US';
     recognitionRef.current.maxAlternatives = 1;
 
@@ -64,10 +64,12 @@ export function VoiceChatModal({ isOpen, onClose }: VoiceChatModalProps) {
         }
       }
       
-      setTranscript(interimTranscript || finalTranscript);
+      setTranscript(finalTranscript || interimTranscript);
       
       if (finalTranscript) {
+        setIsListening(false);
         handleUserSpeech(finalTranscript);
+        setTranscript('');
       }
     };
 
@@ -121,12 +123,6 @@ export function VoiceChatModal({ isOpen, onClose }: VoiceChatModalProps) {
     if (recognitionRef.current) {
       recognitionRef.current.stop();
     }
-    
-    // Process any remaining transcript
-    if (transcript.trim()) {
-      handleUserSpeech(transcript.trim());
-      setTranscript('');
-    }
   };
 
   const speakText = (text: string) => {
@@ -136,34 +132,64 @@ export function VoiceChatModal({ isOpen, onClose }: VoiceChatModalProps) {
     synthRef.current.cancel();
 
     const utterance = new SpeechSynthesisUtterance(text);
-    utterance.rate = 0.85;
-    utterance.pitch = 1.1;
+    utterance.rate = 0.9;
+    utterance.pitch = 1.0;
     utterance.volume = 0.8;
     utterance.lang = 'en-IN';
     
-    // Try to find an Indian English voice
+    // Wait for voices to load, then find the best Indian voice
     const voices = synthRef.current.getVoices();
-    const indianVoice = voices.find(voice => 
-      voice.lang.includes('en-IN') || 
-      voice.name.toLowerCase().includes('indian') ||
-      voice.name.toLowerCase().includes('ravi') ||
-      voice.name.toLowerCase().includes('veena') ||
-      voice.name.toLowerCase().includes('lekha')
-    );
     
-    // Fallback to female English voices if no Indian voice found
-    const femaleVoice = voices.find(voice => 
-      voice.name.toLowerCase().includes('female') ||
-      voice.name.toLowerCase().includes('woman') ||
-      voice.name.toLowerCase().includes('samantha') ||
-      voice.name.toLowerCase().includes('karen') ||
-      voice.name.toLowerCase().includes('moira')
-    );
+    // Function to find the best voice
+    const findBestVoice = () => {
+      const voices = synthRef.current?.getVoices() || [];
+      
+      // Priority 1: Indian English voices (female preferred)
+      const indianFemaleVoice = voices.find(voice => 
+        voice.lang.includes('en-IN') && 
+        (voice.name.toLowerCase().includes('female') || 
+         voice.name.toLowerCase().includes('woman') ||
+         voice.name.toLowerCase().includes('veena') ||
+         voice.name.toLowerCase().includes('lekha') ||
+         voice.name.toLowerCase().includes('aditi') ||
+         voice.name.toLowerCase().includes('kavya'))
+      );
+      
+      if (indianFemaleVoice) return indianFemaleVoice;
+      
+      // Priority 2: Any Indian English voice
+      const indianVoice = voices.find(voice => 
+        voice.lang.includes('en-IN') || 
+        voice.name.toLowerCase().includes('indian')
+      );
+      
+      if (indianVoice) return indianVoice;
+      
+      // Priority 3: High-quality female English voices
+      const qualityFemaleVoice = voices.find(voice => 
+        voice.lang.includes('en') &&
+        (voice.name.toLowerCase().includes('samantha') ||
+         voice.name.toLowerCase().includes('karen') ||
+         voice.name.toLowerCase().includes('moira') ||
+         voice.name.toLowerCase().includes('fiona') ||
+         voice.name.toLowerCase().includes('tessa'))
+      );
+      
+      if (qualityFemaleVoice) return qualityFemaleVoice;
+      
+      // Priority 4: Any female voice
+      const femaleVoice = voices.find(voice => 
+        voice.name.toLowerCase().includes('female') ||
+        voice.name.toLowerCase().includes('woman')
+      );
+      
+      return femaleVoice || voices[0];
+    };
     
-    if (indianVoice) {
-      utterance.voice = indianVoice;
-    } else if (femaleVoice) {
-      utterance.voice = femaleVoice;
+    // Set the best available voice
+    const bestVoice = findBestVoice();
+    if (bestVoice) {
+      utterance.voice = bestVoice;
     }
 
     utterance.onstart = () => setIsSpeaking(true);
@@ -388,14 +414,14 @@ export function VoiceChatModal({ isOpen, onClose }: VoiceChatModalProps) {
           <div className="mt-4 text-center">
             <p className="text-sm text-gray-600">
               {isListening ? (
-                <span className="text-purple-600 font-medium">🎤 Listening... Take your time to speak!</span>
+                <span className="text-purple-600 font-medium">🎤 Listening... Speak naturally and pause when done!</span>
               ) : (
-                'Click the microphone and speak naturally about your dream trip'
+                'Click the microphone, speak your complete sentence, then pause'
               )}
             </p>
             {isListening && (
               <p className="text-xs text-gray-500 mt-1">
-                Click the microphone again when you're done speaking
+                The AI will respond automatically when you finish speaking
               </p>
             )}
           </div>
