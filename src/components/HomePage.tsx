@@ -185,37 +185,29 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
         <div className={`relative z-10 px-4 sm:px-6 lg:px-8 text-center max-w-7xl mx-auto transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
           
           {/* Scrolling Destinations Banner */}
-          <div className="mb-12 overflow-hidden">
-            <div className="flex items-center justify-center mb-6">
-              <div className="bg-white/15 backdrop-blur-sm px-6 py-3 rounded-full border border-white/30 shadow-lg">
-                <span className="text-white text-sm font-medium flex items-center gap-2">
-                  <Sparkles className="h-4 w-4" />
-                  Global Destinations
-                </span>
-              </div>
-            </div>
-            
-            <div className="relative h-32 overflow-hidden rounded-3xl bg-white/10 backdrop-blur-sm border border-white/20 shadow-2xl">
+          <div className="mb-12 overflow-hidden -mx-4 sm:-mx-6 lg:-mx-8">
+            <div className="relative h-64 overflow-hidden bg-white/10 backdrop-blur-sm border-y border-white/20 shadow-2xl">
               <div className="absolute inset-0 flex items-center">
                 <div className="animate-scroll-destinations flex items-center gap-6 whitespace-nowrap">
                   {/* First Set */}
                   {POPULAR_DESTINATIONS.map((dest, index) => (
-                    <div key={`first-${index}`} className={`relative flex items-center gap-4 px-6 py-4 bg-gradient-to-r ${dest.color} rounded-2xl shadow-lg hover:scale-105 transition-transform overflow-hidden min-w-[320px] h-24`}>
+                    <div key={`first-${index}`} className="relative flex items-center gap-4 px-6 py-4 rounded-2xl shadow-lg hover:scale-105 transition-transform overflow-hidden min-w-[320px] h-48">
                       {/* Background Image */}
-                      <div className="absolute inset-0 opacity-10">
+                      <div className="absolute inset-0">
                         <img 
                           src={dest.image} 
                           alt={dest.name}
                           className="w-full h-full object-cover"
                         />
+                        <div className="absolute inset-0 bg-black/30"></div>
                       </div>
                       
                       {/* Content */}
-                      <div className="relative z-10 flex items-center gap-3">
-                        <span className="text-2xl">{dest.emoji}</span>
+                      <div className="relative z-10 flex items-center gap-4">
+                        <span className="text-4xl drop-shadow-lg">{dest.emoji}</span>
                         <div className="text-left">
-                          <div className="text-white font-semibold text-sm">{dest.name}</div>
-                          <div className="text-white/80 text-xs">{dest.country}</div>
+                          <div className="text-white font-bold text-lg drop-shadow-lg">{dest.name}</div>
+                          <div className="text-white/90 text-sm drop-shadow-lg">{dest.country}</div>
                         </div>
                       </div>
                     </div>
@@ -223,22 +215,23 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
                   
                   {/* Duplicate Set for Seamless Loop */}
                   {POPULAR_DESTINATIONS.map((dest, index) => (
-                    <div key={`second-${index}`} className={`relative flex items-center gap-4 px-6 py-4 bg-gradient-to-r ${dest.color} rounded-2xl shadow-lg hover:scale-105 transition-transform overflow-hidden min-w-[320px] h-24`}>
+                    <div key={`second-${index}`} className="relative flex items-center gap-4 px-6 py-4 rounded-2xl shadow-lg hover:scale-105 transition-transform overflow-hidden min-w-[320px] h-48">
                       {/* Background Image */}
-                      <div className="absolute inset-0 opacity-10">
+                      <div className="absolute inset-0">
                         <img 
                           src={dest.image} 
                           alt={dest.name}
                           className="w-full h-full object-cover"
                         />
+                        <div className="absolute inset-0 bg-black/30"></div>
                       </div>
                       
                       {/* Content */}
-                      <div className="relative z-10 flex items-center gap-3">
-                        <span className="text-2xl">{dest.emoji}</span>
+                      <div className="relative z-10 flex items-center gap-4">
+                        <span className="text-4xl drop-shadow-lg">{dest.emoji}</span>
                         <div className="text-left">
-                          <div className="text-white font-semibold text-sm">{dest.name}</div>
-                          <div className="text-white/80 text-xs">{dest.country}</div>
+                          <div className="text-white font-bold text-lg drop-shadow-lg">{dest.name}</div>
+                          <div className="text-white/90 text-sm drop-shadow-lg">{dest.country}</div>
                         </div>
                       </div>
                     </div>
@@ -247,8 +240,8 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
               </div>
               
               {/* Gradient Overlays */}
-              <div className="absolute left-0 top-0 bottom-0 w-40 bg-gradient-to-r from-teal-800 to-transparent pointer-events-none"></div>
-              <div className="absolute right-0 top-0 bottom-0 w-40 bg-gradient-to-l from-teal-800 to-transparent pointer-events-none"></div>
+              <div className="absolute left-0 top-0 bottom-0 w-20 bg-gradient-to-r from-teal-800 to-transparent pointer-events-none"></div>
+              <div className="absolute right-0 top-0 bottom-0 w-20 bg-gradient-to-l from-teal-800 to-transparent pointer-events-none"></div>
             </div>
           </div>
 
@@ -295,15 +288,15 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
             {/* Primary CTA */}
             <button
               onClick={onGetStarted}
-              className="group relative flex items-center justify-between w-full lg:w-80 px-8 py-5 bg-gradient-to-r from-teal-500 via-cyan-500 to-blue-500 text-white rounded-2xl hover:from-teal-600 hover:via-cyan-600 hover:to-blue-600 transition-all duration-300 shadow-2xl hover:shadow-3xl hover:scale-105 font-display"
+              className="group relative flex items-center justify-between w-full lg:w-80 px-8 py-4 bg-gradient-to-r from-teal-500 via-cyan-500 to-blue-500 text-white rounded-2xl hover:from-teal-600 hover:via-cyan-600 hover:to-blue-600 transition-all duration-300 shadow-2xl hover:shadow-3xl hover:scale-105 font-display"
             >
               <div className="flex items-center gap-4">
                 <div className="bg-white/20 p-3 rounded-xl backdrop-blur-sm">
                   <Calendar className="w-6 h-6" />
                 </div>
                 <div className="text-left">
-                  <div className="font-semibold text-lg">Meet Your AI Companion</div>
-                  <div className="text-sm opacity-90">Your personalized travel assistant</div>
+                  <div className="font-semibold text-base">Meet Your AI Companion</div>
+                  <div className="text-xs opacity-90">Your personalized travel assistant</div>
                 </div>
               </div>
               
@@ -317,15 +310,15 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
             {/* Voice Chat CTA */}
             <button
               onClick={() => setShowVoiceChat(true)}
-              className="group relative flex items-center justify-between w-full lg:w-80 px-8 py-5 bg-gradient-to-r from-purple-500 via-indigo-500 to-blue-500 text-white rounded-2xl hover:from-purple-600 hover:via-indigo-600 hover:to-blue-600 transition-all duration-300 shadow-2xl hover:shadow-3xl hover:scale-105 font-display"
+              className="group relative flex items-center justify-between w-full lg:w-80 px-8 py-4 bg-gradient-to-r from-purple-500 via-indigo-500 to-blue-500 text-white rounded-2xl hover:from-purple-600 hover:via-indigo-600 hover:to-blue-600 transition-all duration-300 shadow-2xl hover:shadow-3xl hover:scale-105 font-display"
             >
               <div className="flex items-center gap-4">
                 <div className="bg-white/20 p-3 rounded-xl backdrop-blur-sm">
                   <Mic className="w-6 h-6" />
                 </div>
                 <div className="text-left">
-                  <div className="font-semibold text-lg">Voice Chat with AI</div>
-                  <div className="text-sm opacity-90">Speak to plan your trip</div>
+                  <div className="font-semibold text-base">Voice Chat with AI</div>
+                  <div className="text-xs opacity-90">Speak to plan your trip</div>
                 </div>
               </div>
               
