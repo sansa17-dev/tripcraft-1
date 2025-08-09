@@ -138,6 +138,7 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
               <span className="block bg-gradient-to-r from-yellow-300 to-orange-300 bg-clip-text text-transparent">
                 Travel Journey
               </span>
+            </div>
             </h1>
             
             <p className="text-xl md:text-2xl text-blue-100 max-w-3xl mx-auto leading-relaxed mb-8">
@@ -266,7 +267,7 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
               </div>
               <div>
                 <div className="text-3xl font-bold text-purple-600 mb-2">1M+</div>
-              <div>
+                <div className="text-gray-600">Activities Planned</div>
               </div>
               <div>
                 <div className="text-3xl font-bold text-green-600 mb-2">4.9★</div>
