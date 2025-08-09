@@ -303,20 +303,20 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
         </div>
 
         {/* Header Content */}
-        <div className="absolute inset-0 p-8 pb-24 flex flex-col justify-end text-white">
+        <div className="absolute inset-0 p-8 flex flex-col justify-end text-white">
           {isEditing ? (
             <input
               type="text"
               value={editedItinerary.title}
               onChange={(e) => updateItineraryField('title', e.target.value)}
-              className="text-3xl font-bold bg-transparent border-b-2 border-white/50 focus:border-white outline-none mb-3 text-white placeholder-white/70 min-w-0 pr-4"
+              className="text-3xl font-bold bg-transparent border-b-2 border-white/50 focus:border-white outline-none mb-3 text-white placeholder-white/70 min-w-0"
               placeholder="Trip title"
             />
           ) : (
-            <h2 className="text-3xl font-bold mb-3 break-words pr-4">{editedItinerary.title}</h2>
+            <h2 className="text-3xl font-bold mb-3 break-words">{editedItinerary.title}</h2>
           )}
           
-          <div className="flex flex-wrap items-center gap-6 text-sm mb-4 pr-4">
+          <div className="flex flex-wrap items-center gap-6 text-sm mb-4">
             <div className="flex items-center gap-1">
               <MapPin className="h-4 w-4" />
               {isEditing ? (
@@ -365,22 +365,22 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
             <textarea
               value={editedItinerary.overview}
               onChange={(e) => updateItineraryField('overview', e.target.value)}
-              className="bg-white/10 backdrop-blur-sm border border-white/30 rounded-lg p-3 text-white placeholder-white/70 resize-none min-w-0 pr-4"
+              className="bg-white/10 backdrop-blur-sm border border-white/30 rounded-lg p-3 text-white placeholder-white/70 resize-none min-w-0"
               rows={2}
               placeholder="Trip overview"
             />
           ) : (
-            <p className="leading-relaxed text-lg break-words pr-4">{editedItinerary.overview}</p>
+            <p className="leading-relaxed text-lg break-words">{editedItinerary.overview}</p>
           )}
         </div>
 
         {/* Edit Controls */}
-        <div className="absolute top-4 right-4 flex flex-wrap gap-2 max-w-80 justify-end">
+        <div className="absolute -bottom-6 right-4 flex flex-wrap gap-2 max-w-80 justify-end bg-white/95 backdrop-blur-sm rounded-lg p-2 shadow-lg">
           {/* Share Button */}
           {onShare && (
             <button
               onClick={onShare}
-              className="flex items-center gap-1 px-3 py-2 bg-white/20 backdrop-blur-sm text-white rounded-lg hover:bg-white/30 transition-colors shadow-lg text-sm whitespace-nowrap"
+              className="flex items-center gap-1 px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors shadow-md text-sm whitespace-nowrap"
             >
               <Share2 className="h-4 w-4" />
               Share
@@ -391,7 +391,7 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
             <>
               {/* Save Error */}
               {saveError && (
-                <div className="absolute top-16 right-0 bg-red-50 border border-red-200 rounded-lg p-2 text-red-700 text-sm max-w-xs z-20 break-words">
+                <div className="absolute -top-16 right-0 bg-red-50 border border-red-200 rounded-lg p-2 text-red-700 text-sm max-w-xs z-20 break-words">
                   {saveError}
                 </div>
               )}
@@ -399,7 +399,7 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
               <button
                 onClick={handleSave}
                 disabled={saving}
-                className="flex items-center gap-1 px-3 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors shadow-lg text-sm whitespace-nowrap"
+                className="flex items-center gap-1 px-3 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors shadow-md text-sm whitespace-nowrap"
               >
                 {saving ? (
                   <>
@@ -415,7 +415,7 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
               </button>
               <button
                 onClick={handleCancel}
-                className="flex items-center gap-1 px-3 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors shadow-lg text-sm whitespace-nowrap"
+                className="flex items-center gap-1 px-3 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors shadow-md text-sm whitespace-nowrap"
               >
                 <X className="h-4 w-4" />
                 Cancel
@@ -424,7 +424,7 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
           ) : (
             <button
               onClick={onToggleEdit}
-              className="flex items-center gap-1 px-3 py-2 bg-white/20 backdrop-blur-sm text-white rounded-lg hover:bg-white/30 transition-colors shadow-lg text-sm whitespace-nowrap"
+              className="flex items-center gap-1 px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors shadow-md text-sm whitespace-nowrap"
             >
               <Edit3 className="h-4 w-4" />
               <span className="hidden sm:inline">{savedItineraryId ? 'Edit & Collaborate' : 'Edit Itinerary'}</span>
@@ -434,7 +434,7 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
 
           {/* Collaborative Indicator */}
           {savedItineraryId && isEditing && (
-            <div className="flex items-center gap-1 px-2 py-2 bg-blue-600/20 backdrop-blur-sm text-white rounded-lg text-sm whitespace-nowrap">
+            <div className="flex items-center gap-1 px-2 py-2 bg-blue-600 text-white rounded-lg text-sm whitespace-nowrap">
               <Users className="h-4 w-4" />
               <span className="text-sm">Live</span>
             </div>
@@ -443,7 +443,7 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
       </div>
 
       {/* Daily Itinerary */}
-      <div className="p-8">
+      <div className="p-8 pt-12">
         <h3 className="text-xl font-semibold text-gray-900 mb-6 flex items-center gap-2">
           <Calendar className="h-5 w-5 text-blue-600" />
           Daily Itinerary

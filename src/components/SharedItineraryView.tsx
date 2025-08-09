@@ -210,10 +210,10 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
               <Share2 className="h-5 w-5 text-blue-600" />
               <span className="text-sm font-medium text-blue-700">Shared Itinerary</span>
               {sharedItinerary.share_mode === 'collaborate' && (
-                <span className="bg-green-100 text-green-700 px-2 py-1 rounded-full text-xs font-medium">
-                  Collaborative
+        <div className="absolute inset-0 p-8 flex flex-col justify-end text-white">
+          <h2 className="text-3xl font-bold mb-3 break-words">{itinerary.title}</h2>
                 </span>
-              )}
+          <div className="flex flex-wrap items-center gap-6 text-sm mb-4">
             </div>
             <h2 className="text-xl font-bold text-gray-900 mb-1 break-words pr-4">{sharedItinerary.title}</h2>
             <div className="flex items-center gap-4 text-sm text-gray-600">
@@ -246,7 +246,7 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
                 Comments ({comments.length})
               </button>
             )}
-          </div>
+          <p className="leading-relaxed text-lg break-words">{itinerary.overview}</p>
         </div>
       </div>
 
