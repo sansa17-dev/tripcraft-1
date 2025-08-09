@@ -530,9 +530,6 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
         )}
       </div>
       
-      {/* General Comments Section for Owners */}
-      {renderGeneralComments()}
-
       {/* Daily Itinerary */}
       <div className="p-8 pt-12">
         <h3 className="text-xl font-semibold text-gray-900 mb-6 flex items-center gap-2">
@@ -725,6 +722,9 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
             </div>
           ))}
         </div>
+        
+        {/* General Comments Section */}
+        {renderGeneralComments()}
       </div>
 
       {/* Travel Tips */}

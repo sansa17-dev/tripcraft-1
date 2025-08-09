@@ -194,5 +194,14 @@ export const commentsApi = {
       commentId,
       userId
     });
+  },
+
+  resolve: async (shareId: string, commentId: string, userId: string) => {
+    return apiCall('comments', {
+      action: 'resolve',
+      shareId,
+      commentId,
+      userId
+    });
   }
 };

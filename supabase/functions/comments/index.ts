@@ -128,6 +128,30 @@ Deno.serve(async (req) => {
         result = await deleteQuery
         break;
 
+      case 'resolve':
+        if (!commentId || !userId) {
+          throw new Error('Comment ID and User ID are required for resolving')
+        }
+        
+        // Only allow resolution by share owner
+        const { data: sharedItinerary } = await supabaseClient
+          .from('shared_itineraries')
+          .select('user_id')
+          .eq('share_id', shareId)
+          .single()
+        
+        if (!sharedItinerary || sharedItinerary.user_id !== userId) {
+          throw new Error('Only the itinerary owner can resolve comments')
+        }
+        
+        result = await supabaseClient
+          .from('itinerary_comments')
+          .update({ is_resolved: true })
+          .eq('id', commentId)
+          .eq('share_id', shareId)
+          .select()
+          .single()
+        break;
       default:
         throw new Error('Invalid action')
     }
