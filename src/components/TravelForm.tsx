@@ -54,13 +54,20 @@ export function TravelForm({ preferences, onPreferencesChange, onSubmit, isGener
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-8">
+    <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-8 relative overflow-hidden">
+      {/* Background Pattern */}
+      <div className="absolute inset-0 opacity-5">
+        <div className="absolute inset-0" style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%234F46E5' fill-opacity='1'%3E%3Ccircle cx='30' cy='30' r='2'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+        }}></div>
+      </div>
+
       <h2 className="text-2xl font-semibold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent mb-6 flex items-center gap-2">
         <MapPin className="h-6 w-6 text-blue-600" />
         Plan Your Trip
       </h2>
 
-      <form onSubmit={onSubmit} className="space-y-6">
+      <form onSubmit={onSubmit} className="space-y-6 relative z-10">
         {/* Origin */}
         <div>
           <label htmlFor="origin" className="block text-sm font-medium text-gray-700 mb-2">

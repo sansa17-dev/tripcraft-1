@@ -14,9 +14,12 @@ import { generateItinerary, generateDemoItinerary } from './services/itinerarySe
 import { saveItinerary } from './services/itineraryStorageService';
 import { useAuth } from './hooks/useAuth';
 import { TravelForm } from './components/TravelForm';
-import { ItineraryResults } from './components/ItineraryResults';
+import { EditableItinerary } from './components/EditableItinerary';
 import { AuthModal } from './components/AuthModal';
 import { SavedItineraries } from './components/SavedItineraries';
+import { BrandedHeader } from './components/BrandedHeader';
+import { TravelGallery } from './components/TravelGallery';
+import { LoadingSpinner } from './components/LoadingSpinner';
 
 function App() {
   const { user, signOut, loading: authLoading } = useAuth();
@@ -44,6 +47,7 @@ function App() {
   const [currentView, setCurrentView] = useState<'form' | 'results' | 'saved'>('form');
   const [savingItinerary, setSavingItinerary] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
+  const [isEditingItinerary, setIsEditingItinerary] = useState(false);
 
   /**
    * Handles form submission and itinerary generation
@@ -168,13 +172,18 @@ function App() {
     setCurrentView('results');
   };
 
+  /**
+   * Handles updating an edited itinerary
+   */
+  const handleUpdateItinerary = (updatedItinerary: GeneratedItinerary) => {
+    setItinerary(updatedItinerary);
+    // If this is a saved itinerary, we could update it in the database here
+  };
+
   if (authLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="h-12 w-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading TripCraft...</p>
-        </div>
+        <LoadingSpinner message="Loading TripCraft..." showTravelIcons={true} />
       </div>
     );
   }
@@ -185,17 +194,7 @@ function App() {
       <header className="bg-white/80 backdrop-blur-sm shadow-sm border-b border-gray-200 sticky top-0 z-40">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-2.5 rounded-xl shadow-lg">
-                <Plane className="h-6 w-6 text-white" />
-              </div>
-              <div>
-                <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-                  TripCraft
-                </h1>
-                <p className="text-sm text-gray-600">AI-Powered Travel Planning</p>
-              </div>
-            </div>
+            <BrandedHeader />
             
             <div className="flex items-center gap-3">
               {/* Navigation */}
@@ -341,29 +340,60 @@ function App() {
         {/* Main Content */}
         <div className="space-y-8">
           {currentView === 'form' && !itinerary ? (
-            /* Travel Preferences Form */
-            <div>
-              <div className="text-center mb-8">
-                <h2 className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent mb-3">
-                  Create Your Perfect Travel Itinerary
-                </h2>
-                <p className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
-                  Tell us about your travel preferences and we'll generate a personalised day-by-day 
-                  itinerary with activities, dining recommendations, and local insights.
-                </p>
-              </div>
+            <>
+              {/* Hero Section for New Users */}
+              {!user && (
+                <BrandedHeader 
+                  showHero={true}
+                  title="Craft Your Perfect Journey"
+                  subtitle="Transform your travel dreams into detailed, personalized itineraries with the power of AI. Every destination, every preference, perfectly planned."
+                />
+              )}
 
-              <TravelForm
-                preferences={preferences}
-                onPreferencesChange={setPreferences}
-                onSubmit={handleGenerateItinerary}
-                isGenerating={isGenerating}
-                isAuthenticated={!!user}
-              />
-            </div>
+              {/* Travel Gallery for Inspiration */}
+              {!user && <TravelGallery />}
+
+              {/* Travel Preferences Form */}
+              <div>
+                <div className="text-center mb-8">
+                  <h2 className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent mb-3">
+                    Create Your Perfect Travel Itinerary
+                  </h2>
+                  <p className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
+                    Tell us about your travel preferences and we'll generate a personalised day-by-day 
+                    itinerary with activities, dining recommendations, and local insights.
+                  </p>
+                </div>
+
+                <TravelForm
+                  preferences={preferences}
+                  onPreferencesChange={setPreferences}
+                  onSubmit={handleGenerateItinerary}
+                  isGenerating={isGenerating}
+                  isAuthenticated={!!user}
+                />
+
+                {/* Enhanced Loading State */}
+                {isGenerating && (
+                  <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
+                    <div className="bg-white rounded-2xl p-8 max-w-md mx-4 shadow-2xl">
+                      <LoadingSpinner 
+                        message="Analyzing your preferences and crafting the perfect itinerary..."
+                        showTravelIcons={true}
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
+            </>
           ) : currentView === 'results' && itinerary ? (
             /* Generated Itinerary Results */
-            <ItineraryResults itinerary={itinerary} />
+            <EditableItinerary 
+              itinerary={itinerary}
+              onSave={handleUpdateItinerary}
+              isEditing={isEditingItinerary}
+              onToggleEdit={() => setIsEditingItinerary(!isEditingItinerary)}
+            />
           ) : currentView === 'saved' ? (
             /* Saved Itineraries */
             <SavedItineraries onSelectItinerary={handleSelectSavedItinerary} />

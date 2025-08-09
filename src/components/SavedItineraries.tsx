@@ -176,15 +176,16 @@ export function SavedItineraries({ onSelectItinerary }: SavedItinerariesProps) {
               <div className="flex items-center gap-2 ml-4">
                 <button
                   onClick={() => handleView(itinerary)}
-                  className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                  className="flex items-center gap-1 px-3 py-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors text-sm font-medium"
                   title="View itinerary"
                 >
                   <Eye className="h-4 w-4" />
+                  <span className="hidden sm:inline">View</span>
                 </button>
                 <button
                   onClick={() => handleDelete(itinerary.id)}
                   disabled={deletingId === itinerary.id}
-                  className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-50"
+                  className="flex items-center gap-1 px-3 py-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-50 text-sm font-medium"
                   title="Delete itinerary"
                 >
                   {deletingId === itinerary.id ? (
@@ -192,6 +193,9 @@ export function SavedItineraries({ onSelectItinerary }: SavedItinerariesProps) {
                   ) : (
                     <Trash2 className="h-4 w-4" />
                   )}
+                  <span className="hidden sm:inline">
+                    {deletingId === itinerary.id ? 'Deleting...' : 'Delete'}
+                  </span>
                 </button>
               </div>
             </div>
