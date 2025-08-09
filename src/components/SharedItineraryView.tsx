@@ -202,11 +202,6 @@ export function SharedItineraryView({ shareId }: SharedItineraryViewProps) {
             {/* Add comment for collaborators */}
             {canCollaborate && (
               <div className="bg-blue-50 rounded-lg p-3">
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="text-sm font-medium text-blue-900">
-                    Commenting as: {user?.email || 'Anonymous User'}
-                  </span>
-                </div>
                 <textarea
                   value={newDayComments[dayIndex] || ''}
                   onChange={(e) => setNewDayComments(prev => ({ 
@@ -544,7 +539,7 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
             )}
           </div>
         </div>
-                    {comment.user_email || 'Anonymous User'}
+      </div>
 
       {/* User Interface Indicators */}
       {canCollaborate && renderCollaboratorInterface()}
@@ -556,13 +551,6 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
           <div className="lg:col-span-2">
             {/* Main itinerary content will be here */}
           </div>
-                    {new Date(comment.created_at).toLocaleDateString('en-US', {
-                      year: 'numeric',
-                      month: 'short',
-                      day: 'numeric',
-                      hour: '2-digit',
-                      minute: '2-digit'
-                    })}
           {/* General Comments Section */}
           {showComments && (
             <div className="lg:col-span-1">
