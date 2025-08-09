@@ -247,7 +247,7 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
 
           {/* Main Headline with Smart Typography */}
           <div className="mb-12">
-            <h1 className="font-display text-6xl md:text-7xl lg:text-8xl font-bold text-white mb-8 leading-tight tracking-tight">
+            <h1 className="font-display text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-8 leading-tight tracking-tight">
               <span className="bg-gradient-to-r from-cyan-300 via-teal-200 to-blue-300 bg-clip-text text-transparent animate-gradient">
                 From vision to voyage;
               </span>
