@@ -220,7 +220,7 @@ function App() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-teal-50 via-cyan-50 to-teal-100 font-body">
       {/* Header */}
-      <header className="bg-teal-50/95 backdrop-blur-sm border-b border-teal-100 sticky top-0 z-40">
+      <header className="bg-gradient-to-r from-teal-600/95 via-cyan-700/95 to-teal-800/95 backdrop-blur-sm border-b border-white/20 sticky top-0 z-40">
         <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex items-center justify-between">
             {/* Logo */}
@@ -228,14 +228,14 @@ function App() {
               onClick={() => setCurrentView('home')}
               className="flex items-center gap-3 hover:opacity-90 transition-opacity"
             >
-              <div className="bg-gradient-to-r from-primary-600 to-primary-500 p-3 rounded-2xl shadow-sm">
+              <div className="bg-gradient-to-r from-white/20 to-white/10 p-4 rounded-2xl shadow-lg backdrop-blur-sm border border-white/30">
                 <Plane className="h-6 w-6 text-white" />
               </div>
               <div className="text-left">
-                <h1 className="font-display text-2xl font-bold bg-gradient-to-r from-teal-600 to-cyan-600 bg-clip-text text-transparent">
+                <h1 className="font-display text-3xl font-bold text-white drop-shadow-lg">
                   TripCraft
                 </h1>
-                <p className="text-sm text-teal-600">AI Travel Planning</p>
+                <p className="text-sm text-white/90 font-medium">AI Travel Planning</p>
               </div>
             </button>
             
@@ -247,8 +247,8 @@ function App() {
                     onClick={() => setCurrentView('planner')}
                     className={`px-4 py-2.5 rounded-xl text-sm font-medium transition-colors ${
                       currentView === 'planner'
-                        ? 'bg-teal-50 text-teal-700'
-                        : 'text-gray-600 hover:text-gray-900 hover:bg-teal-50'
+                        ? 'bg-white/20 text-white backdrop-blur-sm'
+                        : 'text-white/80 hover:text-white hover:bg-white/10'
                     }`}
                   >
                     Plan Trip
@@ -257,8 +257,8 @@ function App() {
                     onClick={() => setCurrentView('saved')}
                     className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-colors ${
                       currentView === 'saved'
-                        ? 'bg-teal-50 text-teal-700'
-                        : 'text-gray-600 hover:text-gray-900 hover:bg-teal-50'
+                        ? 'bg-white/20 text-white backdrop-blur-sm'
+                        : 'text-white/80 hover:text-white hover:bg-white/10'
                     }`}
                   >
                     <BookOpen className="h-4 w-4" />
@@ -270,15 +270,15 @@ function App() {
               {/* User Actions */}
               {user ? (
                 <div className="flex items-center gap-2">
-                  <div className="flex items-center gap-2 px-4 py-2.5 bg-teal-50 rounded-xl">
-                    <User className="h-4 w-4 text-gray-600" />
-                    <span className="text-sm text-gray-700 max-w-32 truncate">
+                  <div className="flex items-center gap-2 px-4 py-2.5 bg-white/15 backdrop-blur-sm rounded-xl border border-white/20">
+                    <User className="h-4 w-4 text-white" />
+                    <span className="text-sm text-white max-w-32 truncate">
                       {user.email}
                     </span>
                   </div>
                   <button
                     onClick={handleSignOut}
-                    className="p-2.5 text-gray-600 hover:text-gray-900 hover:bg-teal-50 rounded-xl transition-colors"
+                    className="p-2.5 text-white/80 hover:text-white hover:bg-white/10 rounded-xl transition-colors"
                     title="Sign out"
                   >
                     <LogOut className="h-4 w-4" />
@@ -288,13 +288,13 @@ function App() {
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => setShowAuthModal(true)}
-                    className="px-4 py-2.5 text-gray-600 hover:text-gray-900 hover:bg-teal-50 rounded-xl transition-colors font-medium"
+                    className="px-4 py-2.5 text-white/80 hover:text-white hover:bg-white/10 rounded-xl transition-colors font-medium"
                   >
                     Sign In
                   </button>
                   <button
                     onClick={() => setCurrentView('planner')}
-                    className="flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-teal-600 to-cyan-600 text-white rounded-xl hover:from-teal-700 hover:to-cyan-700 transition-all duration-200 shadow-sm hover:shadow-md font-medium"
+                    className="flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-amber-400 to-orange-500 text-white rounded-xl hover:from-amber-500 hover:to-orange-600 transition-all duration-200 shadow-lg hover:shadow-xl font-medium"
                   >
                     Plan Your Trip
                     <ArrowRight className="h-4 w-4" />
@@ -306,7 +306,7 @@ function App() {
               {(itinerary || currentView !== 'home') && currentView !== 'home' && (
                 <button
                   onClick={handleReset}
-                  className="flex items-center gap-2 px-4 py-2.5 text-gray-600 hover:text-gray-900 hover:bg-teal-50 rounded-xl transition-colors"
+                  className="flex items-center gap-2 px-4 py-2.5 text-white/80 hover:text-white hover:bg-white/10 rounded-xl transition-colors"
                 >
                   <RefreshCw className="h-4 w-4" />
                   <span className="hidden sm:inline">Reset</span>
@@ -319,9 +319,9 @@ function App() {
 
       {/* Save Success Banner */}
       {saveSuccess && (
-        <div className="bg-teal-50 border-b border-teal-100">
+        <div className="bg-gradient-to-r from-teal-600/90 via-cyan-700/90 to-teal-800/90 border-b border-white/20">
           <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-4">
-            <div className="flex items-center gap-2 text-teal-800">
+            <div className="flex items-center gap-2 text-white">
               <Save className="h-4 w-4" />
               <span className="text-sm font-medium">Itinerary saved successfully!</span>
             </div>

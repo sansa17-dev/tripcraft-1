@@ -187,22 +187,22 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
           {/* Scrolling Destinations Banner */}
           <div className="mb-12 overflow-hidden">
             <div className="flex items-center justify-center mb-6">
-              <div className="bg-white/10 backdrop-blur-sm px-6 py-3 rounded-full border border-white/20 shadow-lg">
-                <span className="text-cyan-200 text-sm font-medium flex items-center gap-2">
+              <div className="bg-white/15 backdrop-blur-sm px-6 py-3 rounded-full border border-white/30 shadow-lg">
+                <span className="text-white text-sm font-medium flex items-center gap-2">
                   <Sparkles className="h-4 w-4" />
                   Global Destinations
                 </span>
               </div>
             </div>
             
-            <div className="relative h-20 overflow-hidden rounded-3xl bg-white/5 backdrop-blur-sm border border-white/10 shadow-2xl">
+            <div className="relative h-32 overflow-hidden rounded-3xl bg-white/10 backdrop-blur-sm border border-white/20 shadow-2xl">
               <div className="absolute inset-0 flex items-center">
                 <div className="animate-scroll-destinations flex items-center gap-6 whitespace-nowrap">
                   {/* First Set */}
                   {POPULAR_DESTINATIONS.map((dest, index) => (
-                    <div key={`first-${index}`} className={`relative flex items-center gap-4 px-6 py-3 bg-gradient-to-r ${dest.color} rounded-2xl shadow-lg hover:scale-105 transition-transform overflow-hidden min-w-[280px]`}>
+                    <div key={`first-${index}`} className={`relative flex items-center gap-4 px-6 py-4 bg-gradient-to-r ${dest.color} rounded-2xl shadow-lg hover:scale-105 transition-transform overflow-hidden min-w-[320px] h-24`}>
                       {/* Background Image */}
-                      <div className="absolute inset-0 opacity-20">
+                      <div className="absolute inset-0 opacity-10">
                         <img 
                           src={dest.image} 
                           alt={dest.name}
@@ -223,9 +223,9 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
                   
                   {/* Duplicate Set for Seamless Loop */}
                   {POPULAR_DESTINATIONS.map((dest, index) => (
-                    <div key={`second-${index}`} className={`relative flex items-center gap-4 px-6 py-3 bg-gradient-to-r ${dest.color} rounded-2xl shadow-lg hover:scale-105 transition-transform overflow-hidden min-w-[280px]`}>
+                    <div key={`second-${index}`} className={`relative flex items-center gap-4 px-6 py-4 bg-gradient-to-r ${dest.color} rounded-2xl shadow-lg hover:scale-105 transition-transform overflow-hidden min-w-[320px] h-24`}>
                       {/* Background Image */}
-                      <div className="absolute inset-0 opacity-20">
+                      <div className="absolute inset-0 opacity-10">
                         <img 
                           src={dest.image} 
                           alt={dest.name}
@@ -247,8 +247,8 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
               </div>
               
               {/* Gradient Overlays */}
-              <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-teal-800 to-transparent pointer-events-none"></div>
-              <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-teal-800 to-transparent pointer-events-none"></div>
+              <div className="absolute left-0 top-0 bottom-0 w-40 bg-gradient-to-r from-teal-800 to-transparent pointer-events-none"></div>
+              <div className="absolute right-0 top-0 bottom-0 w-40 bg-gradient-to-l from-teal-800 to-transparent pointer-events-none"></div>
             </div>
           </div>
 
@@ -269,20 +269,20 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
 
             {/* Value Proposition Pills */}
             <div className="flex flex-wrap justify-center gap-4 mb-12">
-              <div className="bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full border border-white/20">
-                <span className="text-cyan-200 text-sm font-medium flex items-center gap-2">
+              <div className="bg-white/15 backdrop-blur-sm px-4 py-2 rounded-full border border-white/30">
+                <span className="text-white text-sm font-medium flex items-center gap-2">
                   <Clock className="h-4 w-4" />
                   60-second planning
                 </span>
               </div>
-              <div className="bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full border border-white/20">
-                <span className="text-cyan-200 text-sm font-medium flex items-center gap-2">
+              <div className="bg-white/15 backdrop-blur-sm px-4 py-2 rounded-full border border-white/30">
+                <span className="text-white text-sm font-medium flex items-center gap-2">
                   <Shield className="h-4 w-4" />
                   100% Free to start
                 </span>
               </div>
-              <div className="bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full border border-white/20">
-                <span className="text-cyan-200 text-sm font-medium flex items-center gap-2">
+              <div className="bg-white/15 backdrop-blur-sm px-4 py-2 rounded-full border border-white/30">
+                <span className="text-white text-sm font-medium flex items-center gap-2">
                   <Users className="h-4 w-4" />
                   100K+ travelers
                 </span>
@@ -348,10 +348,10 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
               return (
                 <div key={index} className="text-center group">
                   <div className="flex items-center justify-center mb-2">
-                    <IconComponent className="h-6 w-6 text-cyan-300 mr-2 group-hover:scale-110 transition-transform" />
+                    <IconComponent className="h-6 w-6 text-white mr-2 group-hover:scale-110 transition-transform" />
                     <div className="text-3xl md:text-4xl font-bold text-white font-display">{indicator.metric}</div>
                   </div>
-                  <div className="text-gray-400 text-sm">{indicator.label}</div>
+                  <div className="text-white/80 text-sm">{indicator.label}</div>
                 </div>
               );
             })}
@@ -506,19 +506,19 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
           {/* Trust Indicators */}
           <div className="flex flex-wrap items-center justify-center gap-8 text-cyan-200 text-sm">
             <div className="flex items-center gap-2">
-              <CheckCircle className="h-5 w-5 text-green-400" />
+              <CheckCircle className="h-5 w-5 text-white" />
               No credit card required
             </div>
             <div className="flex items-center gap-2">
-              <CheckCircle className="h-5 w-5 text-green-400" />
+              <CheckCircle className="h-5 w-5 text-white" />
               60-second setup
             </div>
             <div className="flex items-center gap-2">
-              <CheckCircle className="h-5 w-5 text-green-400" />
+              <CheckCircle className="h-5 w-5 text-white" />
               100K+ happy travelers
             </div>
             <div className="flex items-center gap-2">
-              <CheckCircle className="h-5 w-5 text-green-400" />
+              <CheckCircle className="h-5 w-5 text-white" />
               4.9★ rating
             </div>
           </div>
