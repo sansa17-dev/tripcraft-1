@@ -15,7 +15,7 @@ function createItineraryPrompt(preferences: TravelPreferences): string {
   
   const duration = Math.ceil((new Date(endDate).getTime() - new Date(startDate).getTime()) / (1000 * 60 * 60 * 24));
   
-  return `Create a detailed ${duration}-day travel itinerary for ${destination} from ${startDate} to ${endDate}, traveling from ${origin}.
+  return `Create an incredibly detailed and inspiring ${duration}-day travel itinerary for ${destination} from ${startDate} to ${endDate}, traveling from ${origin}.
 
 Travel Details:
 - Traveling from: ${origin}
@@ -27,30 +27,73 @@ Travel Details:
 - Interests: ${interests.join(', ')}
 ${additionalNotes ? `- Additional notes: ${additionalNotes}` : ''}
 
-Please provide a comprehensive itinerary including transportation from ${origin} to ${destination}. The itinerary should match the ${vacationPace} pace preference. Use USD ($) currency throughout. Provide the response in the following JSON format:
+IMPORTANT INSTRUCTIONS FOR CREATING AN AMAZING TRAVEL EXPERIENCE:
+
+1. MAKE IT INSPIRING: Use vivid, descriptive language that makes travelers excited about their journey
+2. BE DETAILED: Include specific recommendations with WHY they're special, not just WHAT to do
+3. ADD LOCAL INSIGHTS: Include hidden gems, local secrets, cultural tips, and insider knowledge
+4. EXPLAIN THE EXPERIENCE: Describe what travelers will see, feel, taste, and experience
+5. PROVIDE CONTEXT: Add historical background, cultural significance, and interesting facts
+6. INCLUDE PRACTICAL DETAILS: Opening hours, booking tips, best times to visit, what to expect
+7. MAKE IT PERSONAL: Tailor recommendations to the specific interests and travel style
+8. ADD SENSORY DETAILS: Describe sounds, smells, textures, and atmosphere
+9. SUGGEST PHOTO OPPORTUNITIES: Mention Instagram-worthy spots and unique experiences
+10. INCLUDE LOCAL FOOD CULTURE: Explain dishes, ingredients, dining customs, and must-try experiences
+
+Create a comprehensive itinerary including transportation from ${origin} to ${destination}. The itinerary should match the ${vacationPace} pace preference and be written in an engaging, enthusiastic tone that makes travelers excited about their adventure.
+
+For each activity, meal, and accommodation:
+- Explain WHY it's recommended (what makes it special/unique)
+- Describe the EXPERIENCE (what they'll see, do, feel)
+- Add CULTURAL CONTEXT (history, significance, local customs)
+- Include PRACTICAL TIPS (best times, booking advice, what to bring)
+- Mention SENSORY DETAILS (atmosphere, sounds, smells, textures)
+
+Use USD ($) currency throughout. Provide the response in the following JSON format:
 {
-  "title": "Trip title",
+  "title": "Inspiring trip title that captures the essence of the adventure",
   "destination": "${destination}",
   "duration": "${duration} days",
-  "totalBudget": "Estimated total budget range",
-  "overview": "Brief trip overview (2-3 sentences)",
+  "totalBudget": "Detailed budget breakdown with explanations",
+  "overview": "Inspiring and detailed trip overview (4-6 sentences) that captures the magic of the destination and what makes this journey special",
   "days": [
     {
       "day": 1,
       "date": "${startDate}",
-      "activities": ["Morning activity", "Afternoon activity", "Evening activity"],
+      "activities": [
+        "Morning: Detailed, inspiring description of morning activity with WHY it's special, WHAT to expect, and insider tips (2-3 sentences)",
+        "Afternoon: Engaging description of afternoon experience with cultural context, sensory details, and practical advice (2-3 sentences)", 
+        "Evening: Captivating description of evening activity with atmosphere details, local insights, and photo opportunities (2-3 sentences)"
+      ],
       "meals": {
-        "breakfast": "Recommended breakfast spot",
-        "lunch": "Recommended lunch spot",
-        "dinner": "Recommended dinner spot"
+        "breakfast": "Detailed breakfast recommendation with description of the place, signature dishes, atmosphere, and why it's special (1-2 sentences)",
+        "lunch": "Engaging lunch suggestion with local specialties, cultural context, and dining experience details (1-2 sentences)",
+        "dinner": "Inspiring dinner recommendation with ambiance, must-try dishes, and what makes the experience memorable (1-2 sentences)"
       },
-      "accommodation": "Recommended place to stay",
+      "accommodation": "Detailed accommodation recommendation with unique features, location benefits, amenities, and why it enhances the travel experience (1-2 sentences)",
       "estimatedCost": "$X-Y per person",
-      "notes": "Any special notes for this day"
+      "notes": "Inspiring notes with insider tips, cultural insights, best photo spots, or special experiences unique to this day (1-2 sentences)"
     }
   ],
-  "tips": ["Travel tip 1", "Travel tip 2", "Travel tip 3"]
+  "tips": [
+    "Detailed, actionable travel tip with specific advice and cultural insights (1-2 sentences)",
+    "Inspiring local secret or hidden gem with explanation of why it's special (1-2 sentences)",
+    "Practical advice with cultural context and insider knowledge (1-2 sentences)",
+    "Food/dining tip with local customs and must-try experiences (1-2 sentences)",
+    "Photography/experience tip with best times and unique opportunities (1-2 sentences)"
+  ]
 }
+
+WRITING STYLE REQUIREMENTS:
+- Use enthusiastic, inspiring language that builds excitement
+- Include sensory descriptions (what you'll see, hear, smell, taste, feel)
+- Add cultural context and historical background
+- Mention local customs, traditions, and etiquette
+- Include insider tips and hidden gems
+- Describe unique photo opportunities and Instagram-worthy moments
+- Explain the "why" behind each recommendation
+- Use vivid adjectives and engaging storytelling
+- Make travelers feel like they're getting exclusive, expert advice
 
 Make sure all recommendations match the ${budget} budget level (per traveler per day), match the ${vacationPace} holiday pace, and include practical details like opening hours considerations and transportation between activities. Use USD ($) currency for all cost estimates.`;
 }
@@ -242,11 +285,11 @@ export function generateDemoItinerary(preferences: TravelPreferences): Generated
   const duration = Math.ceil((new Date(preferences.endDate).getTime() - new Date(preferences.startDate).getTime()) / (1000 * 60 * 60 * 24));
   
   return {
-    title: `${duration}-Day Journey from ${preferences.origin} to ${preferences.destination}`,
+    title: `${duration}-Day Magical Discovery of ${preferences.destination}: An Unforgettable Journey from ${preferences.origin}`,
     destination: preferences.destination,
     duration: `${duration} days`,
     totalBudget: preferences.budget === 'budget' ? '$800-1,500' : preferences.budget === 'mid-range' ? '$1,500-3,000' : '$3,000-6,000',
-    overview: `A carefully crafted ${duration}-day journey from ${preferences.origin} to ${preferences.destination}, featuring the best ${preferences.interests.join(' and ')} experiences tailored to your ${preferences.budget} budget and ${preferences.vacationPace} pace, including transportation and logistics.`,
+    overview: `Embark on an extraordinary ${duration}-day adventure from ${preferences.origin} to the captivating destination of ${preferences.destination}! This carefully curated journey blends the perfect mix of ${preferences.interests.join(', ')} experiences, designed specifically for your ${preferences.vacationPace} travel style. Discover hidden gems, savor authentic local flavors, and create unforgettable memories while staying within your ${preferences.budget} budget. From the moment you arrive until your reluctant departure, every detail has been thoughtfully planned to showcase the very best this incredible destination has to offer, including seamless transportation and insider access to experiences most travelers never discover.`,
     days: Array.from({ length: duration }, (_, index) => {
       const dayDate = new Date(preferences.startDate);
       dayDate.setDate(dayDate.getDate() + index);
@@ -255,14 +298,14 @@ export function generateDemoItinerary(preferences: TravelPreferences): Generated
         day: index + 1,
         date: dayDate.toISOString().split('T')[0],
         activities: [
-          `Morning: Explore local ${preferences.interests[0] || 'attractions'}`,
-          `Afternoon: Visit popular ${preferences.interests[1] || 'landmarks'}`,
-          `Evening: Experience local ${preferences.interests[2] || 'culture'}`
+          `Morning: Begin your day with an enchanting exploration of ${preferences.destination}'s most captivating ${preferences.interests[0] || 'attractions'} - discover the stories behind these remarkable places as golden morning light creates perfect photo opportunities and fewer crowds allow for intimate experiences with local culture and history.`,
+          `Afternoon: Immerse yourself in the heart of ${preferences.destination} by visiting the iconic ${preferences.interests[1] || 'landmarks'} that define this destination's character - learn fascinating historical details from knowledgeable locals, capture Instagram-worthy shots, and understand why these places have captivated travelers for generations.`,
+          `Evening: As the sun sets, dive deep into the authentic ${preferences.interests[2] || 'cultural'} scene that makes ${preferences.destination} truly special - experience the magical transformation as the destination comes alive with evening energy, local traditions, and unforgettable moments that will become your favorite travel memories.`
         ],
         meals: {
-          breakfast: "Local café recommendation",
-          lunch: "Traditional restaurant",
-          dinner: "Highly-rated local dining"
+          breakfast: `Start your morning at a charming local café where the aroma of freshly brewed coffee mingles with traditional breakfast specialties - this beloved neighborhood spot offers authentic flavors and the perfect opportunity to observe daily life while fueling up for your adventures.`,
+          lunch: `Savor an unforgettable midday meal at a traditional restaurant renowned for its time-honored recipes and warm hospitality - taste signature dishes passed down through generations while enjoying the bustling atmosphere that captures the true spirit of ${preferences.destination}.`,
+          dinner: `End your day with an extraordinary dining experience at a highly-rated local establishment where innovative cuisine meets traditional flavors - indulge in carefully crafted dishes that showcase the region's finest ingredients while soaking in the romantic ambiance and creating lasting memories.`
         },
         accommodation: preferences.accommodationType === 'hotel' ? 'Recommended hotel' : 
                      preferences.accommodationType === 'hostel' ? 'Top-rated hostel' :
@@ -271,15 +314,17 @@ export function generateDemoItinerary(preferences: TravelPreferences): Generated
                      preferences.accommodationType === 'villa' ? 'Private villa' :
                      preferences.accommodationType === 'mix' ? 'Mix of accommodations' : 'Best local accommodation',
         estimatedCost: preferences.budget === 'budget' ? '$50-80' : preferences.budget === 'mid-range' ? '$100-150' : '$200-300',
-        notes: index === 0 ? "Arrival day - lighter schedule recommended" : 
-               index === duration - 1 ? "Departure day - plan for travel time" : `Full day of ${preferences.vacationPace} exploration`
+        notes: index === 0 ? "Arrival day magic: Take time to soak in the excitement of being in a new place - the lighter schedule allows you to wander, get oriented, and feel the unique energy of your destination while jet lag fades and anticipation builds." : 
+               index === duration - 1 ? "Departure day reflections: Savor your final moments in this incredible destination - plan for travel time but also leave space for last-minute discoveries, souvenir shopping, and those bittersweet goodbye moments that make travel so meaningful." : 
+               `A perfect day of ${preferences.vacationPace} exploration awaits - this carefully balanced itinerary ensures you experience the destination's highlights while maintaining your preferred travel rhythm, creating space for spontaneous discoveries and authentic local encounters.`
       };
     }),
     tips: [
-      `Best time to visit ${preferences.destination} is during your planned dates`,
-      "Book accommodations in advance for better rates",
-      "Use local transportation to save money and experience authentic culture",
-      "Keep copies of important documents in separate locations"
+      `The timing of your visit to ${preferences.destination} during your planned dates is absolutely perfect - you'll experience ideal weather conditions, vibrant local life, and seasonal specialties that make this period truly magical for travelers seeking authentic experiences.`,
+      `Secure your accommodations well in advance to unlock the best rates and ensure you stay in the most characterful places - early booking often means access to unique properties with the best locations, stunning views, and those special touches that transform a good trip into an extraordinary adventure.`,
+      `Embrace local transportation as your gateway to authentic cultural immersion - not only will you save money, but you'll also experience daily life alongside locals, discover hidden neighborhoods, and gain insider knowledge that no guidebook can provide.`,
+      `Protect your peace of mind by keeping copies of important documents in separate locations - store digital copies in cloud storage and physical copies in different bags, ensuring that unexpected situations never derail your incredible journey.`,
+      `Download offline maps and translation apps before you go - having these tools at your fingertips opens doors to spontaneous adventures, meaningful conversations with locals, and the confidence to explore beyond the typical tourist paths.`
     ]
   };
 }

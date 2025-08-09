@@ -17,7 +17,7 @@ interface RefinementResponse extends ApiResponse {
 function createRefinementPrompt(request: ItineraryRefinementRequest): string {
   const { message, itinerary, preferences } = request;
   
-  return `You are a travel planning assistant helping to refine an existing itinerary. The user has a specific request to modify their trip.
+  return `You are an enthusiastic, knowledgeable travel planning expert helping to refine an existing itinerary. You have deep local knowledge, insider tips, and a passion for creating unforgettable travel experiences. The user has a specific request to modify their trip.
 
 CURRENT ITINERARY:
 ${JSON.stringify(itinerary, null, 2)}
@@ -42,23 +42,40 @@ TRAVEL PERSONA:
 
 USER REQUEST: "${message}"
 
+REFINEMENT INSTRUCTIONS:
+1. Make changes that are inspiring, detailed, and enhance the travel experience
+2. Use vivid, engaging language that builds excitement about the modifications
+3. Include cultural context, insider tips, and local insights in your changes
+4. Explain WHY each change makes the experience better
+5. Add sensory details and unique experiences where relevant
+6. Maintain the overall structure while making meaningful improvements
+
 Please modify the itinerary based on the user's request while keeping the overall structure intact. Provide:
-1. A brief, friendly response explaining what you've changed
-2. The updated itinerary in the exact same JSON format
+1. An enthusiastic, detailed response explaining what you've changed and WHY it makes the experience better
+2. The updated itinerary in the exact same JSON format with enhanced, inspiring descriptions
 
 Respond with a JSON object in this format:
 {
-  "response": "Brief explanation of changes made",
+  "response": "Enthusiastic, detailed explanation of changes made with cultural insights and why these improvements enhance the travel experience (2-3 sentences)",
   "itinerary": {
-    "title": "Updated title if needed",
+    "title": "Inspiring updated title if needed",
     "destination": "${itinerary.destination}",
     "duration": "${itinerary.duration}",
-    "totalBudget": "Updated budget if needed",
-    "overview": "Updated overview if needed",
-    "days": [...updated days array...],
-    "tips": [...updated tips array...]
+    "totalBudget": "Detailed updated budget if needed",
+    "overview": "Enhanced, inspiring overview if needed",
+    "days": [...updated days array with detailed, engaging descriptions...],
+    "tips": [...updated tips array with insider knowledge and cultural insights...]
   }
 }
+
+WRITING STYLE FOR MODIFICATIONS:
+- Use enthusiastic, inspiring language that builds excitement
+- Include cultural context and local insights
+- Explain the unique aspects of each recommendation
+- Add sensory descriptions where appropriate
+- Mention insider tips and hidden gems
+- Describe what makes each experience special
+- Use vivid adjectives and engaging storytelling
 
 Make sure all recommendations match the ${preferences.budget} budget level and ${preferences.vacationPace} pace. Use USD ($) currency for all cost estimates.`;
 }
@@ -178,7 +195,7 @@ function generateMockRefinement(request: ItineraryRefinementRequest): Refinement
   
   // Create a simple mock modification based on common requests
   const modifiedItinerary = { ...itinerary };
-  let responseMessage = "I've made some adjustments to your itinerary based on your request.";
+  let responseMessage = "I've made some exciting adjustments to your itinerary based on your request!";
   
   // Simple keyword-based modifications for demo
   const lowerMessage = message.toLowerCase();
@@ -186,9 +203,9 @@ function generateMockRefinement(request: ItineraryRefinementRequest): Refinement
   if (lowerMessage.includes('vegetarian') || lowerMessage.includes('vegan')) {
     // Modify a meal recommendation
     if (modifiedItinerary.days.length > 0 && modifiedItinerary.days[0].meals.dinner) {
-      modifiedItinerary.days[0].meals.dinner = "Green Garden Vegetarian Restaurant - Highly rated plant-based cuisine";
-      responseMessage = "I've updated your dinner recommendation to include a great vegetarian restaurant option.";
-      const changeSummary = "• Changed Day 1 dinner to Green Garden Vegetarian Restaurant\n• Updated to plant-based cuisine option";
+      modifiedItinerary.days[0].meals.dinner = "Green Garden Vegetarian Restaurant - A culinary paradise for plant-based food lovers, this award-winning establishment transforms fresh, locally-sourced ingredients into innovative dishes that even meat-eaters rave about. The cozy atmosphere, complete with living walls and soft jazz, creates the perfect setting for an unforgettable dining experience.";
+      responseMessage = "I've discovered an absolutely incredible vegetarian restaurant that will make your taste buds dance with joy! This change ensures you'll experience some of the most innovative plant-based cuisine in the city while supporting local, sustainable dining practices.";
+      const changeSummary = "• Upgraded Day 1 dinner to Green Garden Vegetarian Restaurant - an award-winning plant-based culinary experience\n• Enhanced with detailed description of the innovative cuisine and cozy atmosphere\n• Added context about local sourcing and sustainability focus";
       return {
         success: true,
         data: modifiedItinerary,
@@ -200,9 +217,9 @@ function generateMockRefinement(request: ItineraryRefinementRequest): Refinement
     // Reduce activities in a day
     if (modifiedItinerary.days.length > 0 && modifiedItinerary.days[0].activities.length > 2) {
       modifiedItinerary.days[0].activities = modifiedItinerary.days[0].activities.slice(0, 2);
-      modifiedItinerary.days[0].activities.push("Afternoon: Free time for relaxation or personal exploration");
-      responseMessage = "I've made your itinerary more relaxed by reducing the number of scheduled activities and adding free time.";
-      const changeSummary = "• Reduced Day 1 activities from 3 to 2\n• Added free time for relaxation in the afternoon\n• Removed one scheduled activity";
+      modifiedItinerary.days[0].activities.push("Afternoon: Embrace the art of slow travel with unscheduled time to wander charming neighborhoods, discover hidden cafés, or simply sit in a beautiful park and watch the world go by - these spontaneous moments often become the most treasured memories of any journey.");
+      responseMessage = "I've transformed your itinerary into a more relaxed, mindful experience that allows you to truly savor each moment! This slower pace creates space for serendipitous discoveries and deeper connections with the local culture.";
+      const changeSummary = "• Reduced Day 1 activities from 3 to 2 for a more leisurely pace\n• Added inspiring free time description that encourages spontaneous exploration\n• Created space for serendipitous discoveries and deeper cultural connections";
       return {
         success: true,
         data: modifiedItinerary,
@@ -213,9 +230,9 @@ function generateMockRefinement(request: ItineraryRefinementRequest): Refinement
   } else if (lowerMessage.includes('museum') || lowerMessage.includes('art')) {
     // Add a museum activity
     if (modifiedItinerary.days.length > 0) {
-      modifiedItinerary.days[0].activities[1] = `Afternoon: Visit the local art museum or cultural center in ${itinerary.destination}`;
-      responseMessage = "I've added a museum visit to your itinerary to match your interest in art and culture.";
-      const changeSummary = `• Updated Day 1 afternoon activity to museum visit\n• Added cultural center option in ${itinerary.destination}`;
+      modifiedItinerary.days[0].activities[1] = `Afternoon: Immerse yourself in the rich artistic heritage at ${itinerary.destination}'s premier art museum, where world-class collections tell the story of local culture through centuries of creative expression - don't miss the rooftop sculpture garden with panoramic city views and the interactive exhibits that bring history to life.`;
+      responseMessage = "I've added an incredible cultural experience that will deepen your appreciation for ${itinerary.destination}'s artistic soul! This museum visit offers both world-class art and stunning city views, creating the perfect blend of culture and beauty.";
+      const changeSummary = `• Enhanced Day 1 afternoon with detailed art museum experience in ${itinerary.destination}\n• Added specific highlights: rooftop sculpture garden and interactive exhibits\n• Included cultural context about local artistic heritage and panoramic city views`;
       return {
         success: true,
         data: modifiedItinerary,
@@ -226,9 +243,9 @@ function generateMockRefinement(request: ItineraryRefinementRequest): Refinement
   } else if (lowerMessage.includes('budget') || lowerMessage.includes('cheaper')) {
     // Modify to more budget-friendly options
     if (modifiedItinerary.days.length > 0) {
-      modifiedItinerary.days[0].meals.lunch = "Local street food market - Authentic and budget-friendly dining";
-      responseMessage = "I've updated your recommendations to include more budget-friendly options while maintaining quality.";
-      const changeSummary = "• Changed Day 1 lunch to local street food market\n• Updated to budget-friendly dining option\n• Maintained authentic local experience";
+      modifiedItinerary.days[0].meals.lunch = "Vibrant local street food market - A sensory adventure where the aroma of sizzling spices fills the air and friendly vendors serve up authentic regional specialties at unbeatable prices. This bustling marketplace offers the most genuine taste of local culture, where every bite tells a story and your budget stretches further while experiencing the true heart of the destination.";
+      responseMessage = "I've discovered an amazing way to stretch your budget while diving deeper into authentic local culture! This street food market experience offers incredible value and unforgettable flavors that expensive restaurants simply can't match.";
+      const changeSummary = "• Upgraded Day 1 lunch to vibrant local street food market with detailed sensory descriptions\n• Enhanced budget-friendly option with cultural authenticity and storytelling elements\n• Added context about genuine local experiences and unbeatable value";
       return {
         success: true,
         data: modifiedItinerary,
@@ -241,7 +258,7 @@ function generateMockRefinement(request: ItineraryRefinementRequest): Refinement
   return {
     success: true,
     data: modifiedItinerary,
-    response: responseMessage,
-    changeSummary: "• Made general improvements to your itinerary based on your request"
+    response: "I've made some wonderful enhancements to your itinerary that will make your travel experience even more memorable and engaging!",
+    changeSummary: "• Enhanced your itinerary with more detailed, inspiring descriptions and local insights\n• Added cultural context and insider tips to make your experience more authentic\n• Improved recommendations to create more memorable and meaningful travel moments"
   };
 }
