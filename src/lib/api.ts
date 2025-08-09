@@ -4,21 +4,32 @@
  */
 import { supabase } from './supabase';
 
-const API_BASE_URL = (() => {
+const getApiBaseUrl = (): string => {
   const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-  if (supabaseUrl) {
-    return `${supabaseUrl}/functions/v1`;
+  
+  console.log('Environment check:', {
+    VITE_SUPABASE_URL: supabaseUrl,
+    hostname: window.location.hostname,
+    env: import.meta.env
+  });
+  
+  if (supabaseUrl && supabaseUrl.trim()) {
+    const baseUrl = `${supabaseUrl.trim()}/functions/v1`;
+    console.log('Using Supabase URL:', baseUrl);
+    return baseUrl;
   }
   
   // Fallback for local development
   if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-    return 'http://localhost:54321/functions/v1';
+    const localUrl = 'http://localhost:54321/functions/v1';
+    console.log('Using local development URL:', localUrl);
+    return localUrl;
   }
   
   // If no VITE_SUPABASE_URL is set and not on localhost, show error
   console.error('VITE_SUPABASE_URL environment variable is not set. Please configure your Supabase project URL.');
   throw new Error('Supabase URL not configured. Please set VITE_SUPABASE_URL environment variable.');
-})();
+};
 
 interface ApiResponse<T = any> {
   success: boolean;
@@ -31,6 +42,7 @@ interface ApiResponse<T = any> {
  */
 async function apiCall<T>(endpoint: string, data: any): Promise<ApiResponse<T>> {
   try {
+    const API_BASE_URL = getApiBaseUrl();
     console.log(`🚀 API Call: ${endpoint}`, { url: `${API_BASE_URL}/${endpoint}`, data });
     
     // Get the current session for authorization
