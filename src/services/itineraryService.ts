@@ -405,9 +405,9 @@ export function generateDemoItinerary(preferences: TravelPreferences): Generated
   const duration = Math.ceil((new Date(preferences.endDate).getTime() - new Date(preferences.startDate).getTime()) / (1000 * 60 * 60 * 24));
   
   return {
-    title: \`${duration}-Day Magical Discovery of ${preferences.destination}: An Unforgettable Journey from ${preferences.origin}`,
+    title: `${duration}-Day Magical Discovery of ${preferences.destination}: An Unforgettable Journey from ${preferences.origin}`,
     destination: preferences.destination,
-    duration: \`${duration} days`,
+    duration: `${duration} days`,
     totalBudget: preferences.budget === 'budget' ? '$800-1,500' : preferences.budget === 'mid-range' ? '$1,500-3,000' : '$3,000-6,000',
     overview: \`Embark on an extraordinary ${duration}-day adventure from ${preferences.origin} to the captivating destination of ${preferences.destination}! This carefully curated journey blends the perfect mix of ${preferences.interests.join(', ')} experiences, designed specifically for your ${preferences.vacationPace} travel style. Discover hidden gems, savor authentic local flavors, and create unforgettable memories while staying within your ${preferences.budget} budget. From the moment you arrive until your reluctant departure, every detail has been thoughtfully planned to showcase the very best this incredible destination has to offer, including seamless transportation and insider access to experiences most travelers never discover.`,
     days: Array.from({ length: duration }, (_, index) => {
