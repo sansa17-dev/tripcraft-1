@@ -154,15 +154,6 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
                 Plan Your Trip
                 <ArrowRight className="h-5 w-5" />
               </button>
-              
-              {!isAuthenticated && (
-                <button
-                  onClick={onSignIn}
-                  className="px-8 py-4 border-2 border-white text-white rounded-xl hover:bg-white hover:text-blue-600 transition-all duration-200 font-semibold text-lg"
-                >
-                  Sign In
-                </button>
-              )}
             </div>
 
             {/* Stats */}
