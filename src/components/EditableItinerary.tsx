@@ -524,9 +524,9 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
             )}
           </div>
           <ul className="space-y-3">
-            <span className="text-sm text-gray-600 font-medium flex-shrink-0">{day.date}</span>
+            {editedItinerary.tips.map((tip, index) => (
               <li key={index} className="text-gray-700 flex items-start gap-3 bg-white p-4 rounded-lg shadow-sm min-w-0">
-              <span className="text-sm text-green-600 font-semibold ml-auto bg-green-50 px-3 py-1 rounded-full flex-shrink-0">
+                <span className="w-2 h-2 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full mt-2 flex-shrink-0"></span>
                 {isEditing ? (
                   <div className="flex-1 flex items-center gap-2">
                     <input
@@ -540,7 +540,7 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
                       className="p-1 text-red-600 hover:bg-red-50 rounded transition-colors flex-shrink-0"
                     >
                       <Trash2 className="h-3 w-3" />
-                    className="bg-transparent text-green-600 outline-none w-20 text-center"
+                    </button>
                   </div>
                 ) : (
                   <span className="leading-relaxed break-words">{tip}</span>
