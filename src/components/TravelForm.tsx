@@ -223,37 +223,32 @@ export function TravelForm({ preferences, onPreferencesChange, onSubmit, isGener
             ))}
           </div>
         </div>
-        {/* Origin */}
-        <LocationAutocomplete
-          id="origin"
-          label="Where are you travelling from?"
-          value={preferences.origin}
-          onChange={(value) => updateField('origin', value)}
-          placeholder="e.g., Mumbai, Delhi, Bangalore"
-          required
-          types={['(cities)']}
-        />
-
-        {/* Destination */}
-        <LocationAutocomplete
-          id="destination"
-          label="Where would you like to go?"
-          value={preferences.destination}
-          onChange={(value) => updateField('destination', value)}
-          placeholder="e.g., Goa, Kerala, Rajasthan"
-          required
-          types={['(cities)']}
-        />
-            ) : (
-              <span className="text-lg">Generate Itinerary</span>
-            )}
-          </button>
+        {/* Submit Button */}
+        {!isAuthenticated ? (
+          <div className="text-center p-4 bg-blue-50 rounded-lg border border-blue-200">
+            <p className="text-blue-700 mb-3">Please sign in to generate your personalized itinerary</p>
+            <button
+              type="button"
+              className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              onClick={() => {/* This would trigger auth modal */}}
+            >
+              Sign In
+            </button>
+          </div>
         ) : (
           <button
             type="submit"
-            className="w-full py-4 px-6 rounded-lg text-white font-medium transition-all duration-200 shadow-lg hover:shadow-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            disabled={isGenerating}
+            className="w-full py-4 px-6 rounded-lg text-white font-medium transition-all duration-200 shadow-lg hover:shadow-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            <span className="text-lg">Generate Itinerary</span>
+            {isGenerating ? (
+              <div className="flex items-center justify-center gap-2">
+                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                <span className="text-lg">Generating...</span>
+              </div>
+            ) : (
+              <span className="text-lg">Generate Itinerary</span>
+            )}
           </button>
         )}
       </form>
