@@ -7,6 +7,7 @@ import React from 'react';
 import { Calendar, Users, Wallet, Heart, Home, FileText } from 'lucide-react';
 import { TravelPreferences } from '../types';
 import { LocationAutocomplete } from './LocationAutocomplete';
+import { LocationAutocomplete } from './LocationAutocomplete';
 
 interface TravelFormProps {
   preferences: TravelPreferences;
@@ -223,39 +224,27 @@ export function TravelForm({ preferences, onPreferencesChange, onSubmit, isGener
             ))}
           </div>
         </div>
+        {/* Origin */}
+        <LocationAutocomplete
+          id="origin"
+          label="Where are you travelling from?"
+          value={preferences.origin}
+          onChange={(value) => updateField('origin', value)}
+          placeholder="e.g., Mumbai, Delhi, Bangalore"
+          required
+          types={['(cities)']}
+        />
 
-        {/* Additional Notes */}
-        <div>
-          <label htmlFor="additionalNotes" className="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-1">
-            <FileText className="h-4 w-4" />
-            Additional Notes (Optional)
-          </label>
-          <textarea
-            id="additionalNotes"
-            rows={3}
-            value={preferences.additionalNotes || ''}
-            onChange={(e) => updateField('additionalNotes', e.target.value)}
-            placeholder="Any special requirements, dietary restrictions, accessibility needs, etc."
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors resize-none"
-          />
-        </div>
-
-        {/* Submit Button */}
-        {isAuthenticated ? (
-          <button
-            type="submit"
-            disabled={isGenerating}
-            className={`w-full py-4 px-6 rounded-lg text-white font-medium transition-all duration-200 shadow-lg hover:shadow-xl ${
-              isGenerating
-                ? 'bg-gray-400 cursor-not-allowed shadow-none'
-                : 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2'
-            }`}
-          >
-            {isGenerating ? (
-              <div className="flex items-center justify-center gap-2">
-                <div className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                Generating Your Itinerary...
-              </div>
+        {/* Destination */}
+        <LocationAutocomplete
+          id="destination"
+          label="Where would you like to go?"
+          value={preferences.destination}
+          onChange={(value) => updateField('destination', value)}
+          placeholder="e.g., Goa, Kerala, Rajasthan"
+          required
+          types={['(cities)']}
+        />
             ) : (
               <span className="text-lg">Generate Itinerary</span>
             )}
