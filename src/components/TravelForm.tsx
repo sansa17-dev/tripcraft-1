@@ -7,7 +7,6 @@ import React from 'react';
 import { Calendar, Users, Wallet, Heart, Home, FileText } from 'lucide-react';
 import { TravelPreferences } from '../types';
 import { LocationAutocomplete } from './LocationAutocomplete';
-import { LocationAutocomplete } from './LocationAutocomplete';
 
 interface TravelFormProps {
   preferences: TravelPreferences;
