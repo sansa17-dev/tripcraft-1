@@ -3,6 +3,7 @@
  * Uses Supabase client directly instead of Edge Functions
  */
 import { supabase } from './supabase';
+import { sql } from '@supabase/supabase-js';
 import { TravelPreferences, GeneratedItinerary } from '../types';
 
 interface ApiResponse<T = any> {
@@ -308,7 +309,7 @@ export const shareApi = {
     try {
       const { error } = await supabase
         .from('shared_itineraries')
-        .update({ view_count: supabase.sql`view_count + 1` })
+        .update({ view_count: sql`view_count + 1` })
         .eq('share_id', shareId);
 
       if (error) throw error;
