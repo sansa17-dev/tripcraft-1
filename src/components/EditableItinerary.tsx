@@ -85,6 +85,7 @@ export function EditableItinerary({
     const updatedItinerary = {
       ...editedItinerary,
       [field]: value
+    };
     setEditedItinerary(updatedItinerary);
     
     // Auto-save for collaborative editing if this is a saved itinerary
