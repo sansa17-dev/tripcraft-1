@@ -619,6 +619,10 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
             setEditedItinerary(updatedItinerary);
             onSave(updatedItinerary);
           }}
+          onRedirectToItinerary={() => {
+            // This will ensure the user sees the updated itinerary
+            setShowAIChat(false);
+          }}
         />
       )}
     </div>

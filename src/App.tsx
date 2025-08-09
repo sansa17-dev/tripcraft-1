@@ -112,13 +112,30 @@ function App() {
    * Handles saving the current itinerary
    */
   const handleSaveItinerary = async () => {
-    if (!user || !itinerary || !generatedPreferences) return;
+    if (!user || !itinerary) {
+      setError('Please sign in and generate an itinerary first');
+      return;
+    }
+
+    // Use generatedPreferences if available, otherwise create minimal preferences from itinerary
+    const preferencesToSave = generatedPreferences || {
+      origin: 'Unknown',
+      destination: itinerary.destination,
+      startDate: new Date().toISOString().split('T')[0], // Today's date as fallback
+      endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 7 days from now
+      budget: 'mid-range' as const,
+      interests: [],
+      travelers: 1,
+      accommodationType: 'any' as const,
+      vacationPace: 'balanced' as const,
+      additionalNotes: ''
+    };
 
     setSavingItinerary(true);
     setSaveSuccess(false);
 
     try {
-      const result = await saveItinerary(itinerary, generatedPreferences, user.id);
+      const result = await saveItinerary(itinerary, preferencesToSave, user.id);
       if (result.success) {
         setSaveSuccess(true);
         setTimeout(() => setSaveSuccess(false), 3000);
@@ -297,7 +314,7 @@ function App() {
 
       <main className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Save Itinerary Button */}
-        {user && itinerary && currentView === 'results' && (
+        {user && itinerary && currentView === 'results' && !isEditingItinerary && (
           <div className="mb-8">
             <button
               onClick={handleSaveItinerary}

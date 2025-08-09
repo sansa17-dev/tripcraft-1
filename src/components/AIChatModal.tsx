@@ -14,6 +14,7 @@ interface AIChatModalProps {
   itinerary: GeneratedItinerary;
   preferences: TravelPreferences;
   onItineraryUpdate: (updatedItinerary: GeneratedItinerary) => void;
+  onRedirectToItinerary?: () => void;
 }
 
 export function AIChatModal({ isOpen, onClose, itinerary, preferences, onItineraryUpdate }: AIChatModalProps) {
@@ -90,6 +91,14 @@ export function AIChatModal({ isOpen, onClose, itinerary, preferences, onItinera
         }
         
         onItineraryUpdate(result.data);
+        
+        // Auto-close modal and redirect to updated itinerary after 2 seconds
+        setTimeout(() => {
+          onClose();
+          if (onRedirectToItinerary) {
+            onRedirectToItinerary();
+          }
+        }, 2000);
       } else {
         throw new Error(result.error || 'Failed to process your request');
       }
