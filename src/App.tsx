@@ -21,6 +21,7 @@ import { HomePage } from './components/HomePage';
 import { LoadingSpinner } from './components/LoadingSpinner';
 import { ShareModal } from './components/ShareModal';
 import { SharedItineraryView } from './components/SharedItineraryView';
+import { Edit3 } from 'lucide-react';
 
 function App() {
   const { user, signOut, loading: authLoading } = useAuth();
@@ -350,9 +351,9 @@ function App() {
       )}
 
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Save Itinerary Button */}
+        {/* Action Buttons Row */}
         {user && itinerary && currentView === 'results' && (
-          <div className="mb-6 relative z-10">
+          <div className="mb-6 relative z-10 flex flex-wrap items-center gap-3">
             <button
               onClick={handleSaveItinerary}
               disabled={savingItinerary}
@@ -373,6 +374,27 @@ function App() {
                   Save Itinerary
                 </>
               )}
+            </button>
+            
+            {/* Share Button */}
+            {currentSavedItineraryId && (
+              <button
+                onClick={handleShareItinerary}
+                className="flex items-center gap-2 px-4 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 shadow-lg hover:shadow-xl font-medium"
+              >
+                <Share2 className="h-4 w-4" />
+                Share
+              </button>
+            )}
+            
+            {/* Edit Button */}
+            <button
+              onClick={() => setIsEditingItinerary(!isEditingItinerary)}
+              className="flex items-center gap-2 px-4 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg hover:from-purple-700 hover:to-pink-700 transition-all duration-200 shadow-lg hover:shadow-xl font-medium"
+            >
+              <Edit3 className="h-4 w-4" />
+              <span className="hidden sm:inline">{currentSavedItineraryId ? 'Edit & Collaborate' : 'Edit Itinerary'}</span>
+              <span className="sm:hidden">Edit</span>
             </button>
           </div>
         )}

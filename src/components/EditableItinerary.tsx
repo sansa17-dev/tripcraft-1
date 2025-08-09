@@ -374,72 +374,50 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
           )}
         </div>
 
-        {/* Edit Controls */}
-        <div className="absolute -bottom-6 right-4 flex flex-wrap gap-2 max-w-80 justify-end bg-white/95 backdrop-blur-sm rounded-lg p-2 shadow-lg">
-          {/* Share Button */}
-          {onShare && (
-            <button
-              onClick={onShare}
-              className="flex items-center gap-1 px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors shadow-md text-sm whitespace-nowrap"
-            >
-              <Share2 className="h-4 w-4" />
-              Share
-            </button>
-          )}
+        {/* Edit Mode Controls - Only show when editing */}
+        {isEditing && (
+          <div className="absolute -bottom-6 right-4 flex flex-wrap gap-2 max-w-80 justify-end bg-white/95 backdrop-blur-sm rounded-lg p-2 shadow-lg">
+            {/* Save Error */}
+            {saveError && (
+              <div className="absolute -top-16 right-0 bg-red-50 border border-red-200 rounded-lg p-2 text-red-700 text-sm max-w-xs z-20 break-words">
+                {saveError}
+              </div>
+            )}
 
-          {isEditing ? (
-            <>
-              {/* Save Error */}
-              {saveError && (
-                <div className="absolute -top-16 right-0 bg-red-50 border border-red-200 rounded-lg p-2 text-red-700 text-sm max-w-xs z-20 break-words">
-                  {saveError}
-                </div>
+            <button
+              onClick={handleSave}
+              disabled={saving}
+              className="flex items-center gap-1 px-3 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors shadow-md text-sm whitespace-nowrap"
+            >
+              {saving ? (
+                <>
+                  <div className="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                  Saving...
+                </>
+              ) : (
+                <>
+                  <Save className="h-4 w-4" />
+                  Save Changes
+                </>
               )}
-
-              <button
-                onClick={handleSave}
-                disabled={saving}
-                className="flex items-center gap-1 px-3 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors shadow-md text-sm whitespace-nowrap"
-              >
-                {saving ? (
-                  <>
-                    <div className="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                    Saving...
-                  </>
-                ) : (
-                  <>
-                    <Save className="h-4 w-4" />
-                    Save Changes
-                  </>
-                )}
-              </button>
-              <button
-                onClick={handleCancel}
-                className="flex items-center gap-1 px-3 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors shadow-md text-sm whitespace-nowrap"
-              >
-                <X className="h-4 w-4" />
-                Cancel
-              </button>
-            </>
-          ) : (
-            <button
-              onClick={onToggleEdit}
-              className="flex items-center gap-1 px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors shadow-md text-sm whitespace-nowrap"
-            >
-              <Edit3 className="h-4 w-4" />
-              <span className="hidden sm:inline">{savedItineraryId ? 'Edit & Collaborate' : 'Edit Itinerary'}</span>
-              <span className="sm:hidden">Edit</span>
             </button>
-          )}
+            <button
+              onClick={handleCancel}
+              className="flex items-center gap-1 px-3 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors shadow-md text-sm whitespace-nowrap"
+            >
+              <X className="h-4 w-4" />
+              Cancel
+            </button>
 
-          {/* Collaborative Indicator */}
-          {savedItineraryId && isEditing && (
-            <div className="flex items-center gap-1 px-2 py-2 bg-blue-600 text-white rounded-lg text-sm whitespace-nowrap">
-              <Users className="h-4 w-4" />
-              <span className="text-sm">Live</span>
-            </div>
-          )}
-        </div>
+            {/* Collaborative Indicator */}
+            {savedItineraryId && (
+              <div className="flex items-center gap-1 px-2 py-2 bg-blue-600 text-white rounded-lg text-sm whitespace-nowrap">
+                <Users className="h-4 w-4" />
+                <span className="text-sm">Live</span>
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Daily Itinerary */}
