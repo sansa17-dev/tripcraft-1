@@ -19,6 +19,8 @@ interface EditableItineraryProps {
   onToggleEdit: () => void;
   savedItineraryId?: string;
   onShare?: () => void;
+  shareId?: string;
+  showComments?: boolean;
 }
 
 export function EditableItinerary({ 
@@ -27,13 +29,17 @@ export function EditableItinerary({
   isEditing, 
   onToggleEdit, 
   savedItineraryId,
-  onShare 
+  onShare,
+  shareId,
+  showComments = false
 }: EditableItineraryProps) {
   const [editedItinerary, setEditedItinerary] = useState<GeneratedItinerary>(itinerary);
   const [copiedDays, setCopiedDays] = useState<Set<number>>(new Set());
   const [draggedDay, setDraggedDay] = useState<number | null>(null);
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
+  const [dayComments, setDayComments] = useState<{ [dayIndex: number]: any[] }>({});
+  const [generalComments, setGeneralComments] = useState<any[]>([]);
 
   const { user } = useAuth();
 
@@ -41,6 +47,98 @@ export function EditableItinerary({
   useEffect(() => {
     setEditedItinerary(itinerary);
   }, [itinerary]);
+
+  // Load comments if shareId is provided
+  useEffect(() => {
+    if (shareId && showComments) {
+      loadComments();
+    }
+  }, [shareId, showComments]);
+
+  const loadComments = async () => {
+    if (!shareId) return;
+    
+    try {
+      // Load general comments
+      const generalResult = await commentsApi.list(shareId, null);
+      if (generalResult.success && generalResult.data) {
+        setGeneralComments(generalResult.data);
+      }
+      
+      // Load day-specific comments
+      const dayCommentsMap: { [dayIndex: number]: any[] } = {};
+      for (let i = 0; i < editedItinerary.days.length; i++) {
+        const dayIndex = i + 1;
+        const dayResult = await commentsApi.list(shareId, dayIndex);
+        if (dayResult.success && dayResult.data) {
+          dayCommentsMap[dayIndex] = dayResult.data;
+        }
+      }
+      setDayComments(dayCommentsMap);
+    } catch (err) {
+      console.error('Error loading comments:', err);
+    }
+  };
+
+  const renderDayComments = (dayIndex: number) => {
+    if (!showComments || !shareId) return null;
+    
+    const comments = dayComments[dayIndex] || [];
+    
+    if (comments.length === 0) return null;
+    
+    return (
+      <div className="mt-4 pt-4 border-t border-gray-200">
+        <h5 className="text-sm font-medium text-gray-900 mb-3 flex items-center gap-2">
+          <Users className="h-4 w-4 text-blue-600" />
+          Collaborator Comments ({comments.length})
+        </h5>
+        <div className="space-y-2">
+          {comments.map((comment: any) => (
+            <div key={comment.id} className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+              <div className="flex items-center justify-between mb-1">
+                <span className="text-xs font-medium text-blue-900">
+                  {comment.user_email}
+                </span>
+                <span className="text-xs text-blue-600">
+                  {new Date(comment.created_at).toLocaleDateString()}
+                </span>
+              </div>
+              <p className="text-sm text-blue-800">{comment.content}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  };
+
+  const renderGeneralComments = () => {
+    if (!showComments || !shareId || generalComments.length === 0) return null;
+    
+    return (
+      <div className="p-8 border-t border-gray-200 bg-gradient-to-r from-blue-50 to-indigo-50">
+        <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
+          <Users className="h-5 w-5 text-blue-600" />
+          General Comments from Collaborators ({generalComments.length})
+        </h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {generalComments.map((comment: any) => (
+            <div key={comment.id} className="bg-white border border-blue-200 rounded-lg p-4 shadow-sm">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-sm font-medium text-gray-900">
+                  {comment.user_email}
+                </span>
+                <span className="text-xs text-gray-500">
+                  {new Date(comment.created_at).toLocaleDateString()}
+                </span>
+              </div>
+              <p className="text-sm text-gray-700 leading-relaxed">{comment.content}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  };
 
   /**
    * Handles saving changes
@@ -419,6 +517,9 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
           </div>
         )}
       </div>
+      
+      {/* General Comments Section for Owners */}
+      {renderGeneralComments()}
 
       {/* Daily Itinerary */}
       <div className="p-8 pt-12">
@@ -584,6 +685,9 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
                     )}
                   </div>
                 </div>
+                
+                {/* Day-specific Comments for Owners */}
+                {renderDayComments(dayIndex)}
               )}
 
               {/* Notes */}

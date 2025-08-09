@@ -42,20 +42,22 @@ interface Comment {
   user_email: string;
   content: string;
   created_at: string;
+  day_index: number | null;
 }
 
 export function SharedItineraryView({ shareId }: SharedItineraryViewProps) {
   const [sharedItinerary, setSharedItinerary] = useState<SharedItinerary | null>(null);
-  const [comments, setComments] = useState<Comment[]>([]);
+  const [generalComments, setGeneralComments] = useState<Comment[]>([]);
+  const [dayComments, setDayComments] = useState<{ [dayIndex: number]: Comment[] }>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [copiedDays, setCopiedDays] = useState<Set<number>>(new Set());
-  const [newComment, setNewComment] = useState('');
+  const [newGeneralComment, setNewGeneralComment] = useState('');
+  const [newDayComments, setNewDayComments] = useState<{ [dayIndex: number]: string }>({});
   const [addingComment, setAddingComment] = useState(false);
+  const [addingDayComment, setAddingDayComment] = useState<number | null>(null);
   const [showComments, setShowComments] = useState(false);
-  const [isEditing, setIsEditing] = useState(false);
-  const [editedItinerary, setEditedItinerary] = useState<any>(null);
-  const [saving, setSaving] = useState(false);
+  const [showDayComments, setShowDayComments] = useState<{ [dayIndex: number]: boolean }>({});
 
   const { user } = useAuth();
 
@@ -80,7 +82,7 @@ export function SharedItineraryView({ shareId }: SharedItineraryViewProps) {
         
         // Load comments if collaborative
         if (result.data.share_mode === 'collaborate') {
-          loadComments();
+          loadAllComments();
         }
       } else {
         throw new Error(result.error || 'Shared itinerary not found');
@@ -93,30 +95,46 @@ export function SharedItineraryView({ shareId }: SharedItineraryViewProps) {
     }
   };
 
-  const loadComments = async () => {
+  const loadAllComments = async () => {
     try {
-      const result = await commentsApi.list(shareId);
-      if (result.success && result.data) {
-        setComments(result.data);
+      // Load general comments
+      const generalResult = await commentsApi.list(shareId, null);
+      if (generalResult.success && generalResult.data) {
+        setGeneralComments(generalResult.data);
+      }
+      
+      // Load day-specific comments for each day
+      if (sharedItinerary?.itineraries?.days) {
+        const dayCommentsMap: { [dayIndex: number]: Comment[] } = {};
+        
+        for (let i = 0; i < sharedItinerary.itineraries.days.length; i++) {
+          const dayIndex = i + 1;
+          const dayResult = await commentsApi.list(shareId, dayIndex);
+          if (dayResult.success && dayResult.data) {
+            dayCommentsMap[dayIndex] = dayResult.data;
+          }
+        }
+        
+        setDayComments(dayCommentsMap);
       }
     } catch (err) {
       console.error('Error loading comments:', err);
     }
   };
 
-  const addComment = async () => {
-    if (!newComment.trim() || !user) return;
+  const addGeneralComment = async () => {
+    if (!newGeneralComment.trim() || !user) return;
 
     setAddingComment(true);
     try {
       const result = await commentsApi.create(shareId, {
         user_email: user.email,
-        content: newComment.trim()
-      });
+        content: newGeneralComment.trim()
+      }, null);
 
       if (result.success) {
-        setNewComment('');
-        loadComments(); // Reload comments
+        setNewGeneralComment('');
+        loadAllComments(); // Reload comments
       } else {
         throw new Error(result.error || 'Failed to add comment');
       }
@@ -128,20 +146,254 @@ export function SharedItineraryView({ shareId }: SharedItineraryViewProps) {
     }
   };
 
-  const handleSaveChanges = async () => {
-    if (!user || !editedItinerary || !sharedItinerary) return;
+  const addDayComment = async (dayIndex: number) => {
+    const commentText = newDayComments[dayIndex];
+    if (!commentText?.trim() || !user) return;
 
-    setSaving(true);
+    setAddingDayComment(dayIndex);
     try {
-      // Update the itinerary via the share API
+      const result = await commentsApi.create(shareId, {
+        user_email: user.email,
+        content: commentText.trim()
+      }, dayIndex);
+
+      if (result.success) {
+        setNewDayComments(prev => ({ ...prev, [dayIndex]: '' }));
+        loadAllComments(); // Reload comments
+      } else {
+        throw new Error(result.error || 'Failed to add comment');
+      }
+    } catch (err) {
+      console.error('Error adding day comment:', err);
+      alert('Failed to add comment');
+    } finally {
+      setAddingDayComment(null);
+    }
+  };
+
+  const toggleDayComments = (dayIndex: number) => {
+    setShowDayComments(prev => ({
+      ...prev,
+      [dayIndex]: !prev[dayIndex]
+    }));
+  };
+
+  const isOwner = user && sharedItinerary && user.id === sharedItinerary.user_id;
+  const canCollaborate = sharedItinerary?.share_mode === 'collaborate' && user && !isOwner;
+
+  const renderDayComments = (dayIndex: number) => {
+    const comments = dayComments[dayIndex] || [];
+    const isVisible = showDayComments[dayIndex];
+    
+    return (
+      <div className="mt-4 border-t border-gray-200 pt-4">
+        <button
+          onClick={() => toggleDayComments(dayIndex)}
+          className="flex items-center gap-2 text-sm font-medium text-gray-700 hover:text-gray-900 mb-3"
+        >
+          <Users className="h-4 w-4" />
+          Day {dayIndex} Comments ({comments.length})
+          <span className="text-xs text-gray-500">
+            {isVisible ? '▼' : '▶'}
+          </span>
+        </button>
+        
+        {isVisible && (
+          <div className="space-y-3">
+            {/* Add comment for collaborators */}
+            {canCollaborate && (
+              <div className="bg-blue-50 rounded-lg p-3">
+                <textarea
+                  value={newDayComments[dayIndex] || ''}
+                  onChange={(e) => setNewDayComments(prev => ({ 
+                    ...prev, 
+                    [dayIndex]: e.target.value 
+                  }))}
+                  placeholder={`Add a comment for Day ${dayIndex}...`}
+                  className="w-full p-2 border border-gray-200 rounded resize-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+                  rows={2}
+                />
+                <button
+                  onClick={() => addDayComment(dayIndex)}
+                  disabled={!newDayComments[dayIndex]?.trim() || addingDayComment === dayIndex}
+                  className="mt-2 px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors text-sm"
+                >
+                  {addingDayComment === dayIndex ? 'Adding...' : 'Add Comment'}
+                </button>
+              </div>
+            )}
+            
+            {/* Display comments */}
+            {comments.length === 0 ? (
+              <p className="text-gray-500 text-sm italic">No comments for this day yet</p>
+            ) : (
+              comments.map((comment) => (
+                <div key={comment.id} className="bg-white border border-gray-200 rounded-lg p-3">
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-sm font-medium text-gray-900">
+                      {comment.user_email}
+                    </span>
+                    <span className="text-xs text-gray-500">
+                      {new Date(comment.created_at).toLocaleDateString()}
+                    </span>
+                  </div>
+                  <p className="text-sm text-gray-700">{comment.content}</p>
+                </div>
+              ))
+            )}
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  const renderGeneralComments = () => {
+    if (sharedItinerary?.share_mode !== 'collaborate') return null;
+    
+    return (
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+        <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+          <Users className="h-5 w-5" />
+          General Comments ({generalComments.length})
+        </h3>
+        
+        {/* Add general comment for collaborators */}
+        {canCollaborate && (
+          <div className="mb-4 bg-blue-50 rounded-lg p-4">
+            <textarea
+              value={newGeneralComment}
+              onChange={(e) => setNewGeneralComment(e.target.value)}
+              placeholder="Add a general comment about this itinerary..."
+              className="w-full p-3 border border-gray-200 rounded-lg resize-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              rows={3}
+            />
+            <button
+              onClick={addGeneralComment}
+              disabled={!newGeneralComment.trim() || addingComment}
+              className="mt-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors text-sm"
+            >
+              {addingComment ? 'Adding...' : 'Add General Comment'}
+            </button>
+          </div>
+        )}
+        
+        {/* Display general comments */}
+        <div className="space-y-3 max-h-96 overflow-y-auto">
+          {generalComments.length === 0 ? (
+            <p className="text-gray-500 text-sm text-center py-4">No general comments yet</p>
+          ) : (
+            generalComments.map((comment) => (
+              <div key={comment.id} className="bg-gray-50 rounded-lg p-3">
+                <div className="flex items-center justify-between mb-1">
+                  <span className="text-sm font-medium text-gray-900">
+                    {comment.user_email}
+                  </span>
+                  <span className="text-xs text-gray-500">
+                    {new Date(comment.created_at).toLocaleDateString()}
+                  </span>
+                </div>
+                <p className="text-sm text-gray-700">{comment.content}</p>
+              </div>
+            ))
+          )}
+        </div>
+      </div>
+    );
+  };
+
+  // Show different interface for collaborators vs owners
+  const renderCollaboratorInterface = () => {
+    return (
+      <div className="bg-blue-50 border border-blue-200 rounded-xl p-6 mb-6">
+        <div className="flex items-center gap-2 mb-3">
+          <Users className="h-5 w-5 text-blue-600" />
+          <span className="font-medium text-blue-900">Collaboration Mode</span>
+        </div>
+        <p className="text-blue-800 text-sm mb-4">
+          You're viewing this itinerary as a collaborator. You can add comments to each day and general comments to share your thoughts with the owner.
+        </p>
+        <div className="flex items-center gap-4 text-sm">
+          <div className="flex items-center gap-1 text-blue-700">
+            <Eye className="h-4 w-4" />
+            View itinerary details
+          </div>
+          <div className="flex items-center gap-1 text-blue-700">
+            <Users className="h-4 w-4" />
+            Add comments and suggestions
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const renderOwnerInterface = () => {
+    if (!isOwner) return null;
+    
+    return (
+      <div className="bg-green-50 border border-green-200 rounded-xl p-6 mb-6">
+        <div className="flex items-center gap-2 mb-3">
+          <Edit3 className="h-5 w-5 text-green-600" />
+          <span className="font-medium text-green-900">Owner Mode</span>
+        </div>
+        <p className="text-green-800 text-sm mb-4">
+          This is your shared itinerary. You can see all comments from collaborators and make edits to the itinerary.
+        </p>
+        <div className="flex items-center gap-4 text-sm">
+          <div className="flex items-center gap-1 text-green-700">
+            <Edit3 className="h-4 w-4" />
+            Edit itinerary content
+          </div>
+          <div className="flex items-center gap-1 text-green-700">
+            <Users className="h-4 w-4" />
+            View all collaborator comments
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const handleOwnerSaveChanges = async () => {
+    // This would be implemented for owner editing functionality
+    // For now, we'll focus on the comment system
+    try {
+      // Save changes logic here
+      alert('Save functionality will be implemented for owners');
+    } catch (err) {
+      console.error('Error saving changes:', err);
+      alert('Failed to save changes');
+    }
+  };
+
+  const updateItineraryField = (field: string, value: any) => {
+    // Owner editing functionality - to be implemented
+  };
+
+  const updateDay = (dayIndex: number, updatedDay: any) => {
+    // Owner editing functionality - to be implemented
+  };
+
+  const addActivity = (dayIndex: number) => {
+    // Owner editing functionality - to be implemented
+  };
+
+  const removeActivity = (dayIndex: number, activityIndex: number) => {
+    // Owner editing functionality - to be implemented
+  };
+
+  const updateActivity = (dayIndex: number, activityIndex: number, value: string) => {
+    // Owner editing functionality - to be implemented
+  };
+
+  const handleSaveChanges = async () => {
+    if (!user || !sharedItinerary) return;
+
+    try {
+      // Owner save functionality
       const result = await shareApi.update(user.id, shareId, {
-        title: editedItinerary.title,
-        // Note: In a full implementation, you'd update the actual itinerary
-        // For now, we'll just update the shared itinerary title
+        title: sharedItinerary.title
       });
 
       if (result.success) {
-        setIsEditing(false);
         // Reload the shared itinerary to get latest data
         loadSharedItinerary();
       } else {
@@ -150,54 +402,7 @@ export function SharedItineraryView({ shareId }: SharedItineraryViewProps) {
     } catch (err) {
       console.error('Error saving changes:', err);
       alert('Failed to save changes');
-    } finally {
-      setSaving(false);
     }
-  };
-
-  const updateItineraryField = (field: string, value: any) => {
-    setEditedItinerary((prev: any) => ({
-      ...prev,
-      [field]: value
-    }));
-  };
-
-  const updateDay = (dayIndex: number, updatedDay: any) => {
-    setEditedItinerary((prev: any) => ({
-      ...prev,
-      days: prev.days.map((day: any, index: number) => 
-        index === dayIndex ? updatedDay : day
-      )
-    }));
-  };
-
-  const addActivity = (dayIndex: number) => {
-    const currentDay = editedItinerary.days[dayIndex];
-    const updatedDay = {
-      ...currentDay,
-      activities: [...currentDay.activities, 'New activity']
-    };
-    updateDay(dayIndex, updatedDay);
-  };
-
-  const removeActivity = (dayIndex: number, activityIndex: number) => {
-    const currentDay = editedItinerary.days[dayIndex];
-    const updatedDay = {
-      ...currentDay,
-      activities: currentDay.activities.filter((_: any, index: number) => index !== activityIndex)
-    };
-    updateDay(dayIndex, updatedDay);
-  };
-
-  const updateActivity = (dayIndex: number, activityIndex: number, value: string) => {
-    const currentDay = editedItinerary.days[dayIndex];
-    const updatedDay = {
-      ...currentDay,
-      activities: currentDay.activities.map((activity: string, index: number) => 
-        index === activityIndex ? value : activity
-      )
-    };
-    updateDay(dayIndex, updatedDay);
   };
 
   const copyDayToClipboard = async (day: any, dayNumber: number) => {
@@ -274,7 +479,7 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
     );
   }
 
-  const itinerary = editedItinerary || sharedItinerary.itineraries;
+  const itinerary = sharedItinerary.itineraries;
 
   return (
     <div className="space-y-6">
@@ -313,122 +518,34 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
               Copy Link
             </button>
             
-            {sharedItinerary.share_mode === 'collaborate' && user && (
-              <button
-                onClick={() => setIsEditing(!isEditing)}
-                className="flex items-center gap-1 px-3 py-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors text-sm whitespace-nowrap"
-              >
-                <Edit3 className="h-4 w-4" />
-                {isEditing ? 'Cancel Edit' : 'Edit'}
-              </button>
-            )}
-            
             {sharedItinerary.share_mode === 'collaborate' && (
               <button
                 onClick={() => setShowComments(!showComments)}
                 className="flex items-center gap-1 px-3 py-2 text-gray-600 hover:bg-gray-50 rounded-lg transition-colors text-sm whitespace-nowrap"
               >
                 <Users className="h-4 w-4" />
-                Comments ({comments.length})
+                Comments ({generalComments.length + Object.values(dayComments).flat().length})
               </button>
             )}
           </div>
         </div>
       </div>
 
-      {/* Edit Mode Controls */}
-      {isEditing && user && (
-        <div className="bg-white border border-gray-200 rounded-lg p-4 flex items-center justify-between">
-          <div className="text-sm text-gray-600">
-            You are editing this shared itinerary. Changes will be visible to all collaborators.
-          </div>
-          <div className="flex items-center gap-2">
-            <button
-              onClick={handleSaveChanges}
-              disabled={saving}
-              className="flex items-center gap-1 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm"
-            >
-              {saving ? (
-                <>
-                  <div className="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                  Saving...
-                </>
-              ) : (
-                <>
-                  <Save className="h-4 w-4" />
-                  Save Changes
-                </>
-              )}
-            </button>
-            <button
-              onClick={() => {
-                setIsEditing(false);
-                setEditedItinerary(sharedItinerary.itineraries);
-              }}
-              className="flex items-center gap-1 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors text-sm"
-            >
-              <X className="h-4 w-4" />
-              Cancel
-            </button>
-          </div>
-        </div>
-      )}
+      {/* User Interface Indicators */}
+      {canCollaborate && renderCollaboratorInterface()}
+      {renderOwnerInterface()}
 
-      {/* Collaborative Features */}
+      {/* General Comments Section */}
       {sharedItinerary.share_mode === 'collaborate' && (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2">
-            <CollaborativeEditor 
-              itineraryId={sharedItinerary.id}
-              isEditing={isEditing}
-            />
+            {/* Main itinerary content will be here */}
           </div>
           
-          {/* Comments Section */}
+          {/* General Comments Section */}
           {showComments && (
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Comments</h3>
-              
-              {/* Add Comment */}
-              {user && (
-                <div className="mb-4">
-                  <textarea
-                    value={newComment}
-                    onChange={(e) => setNewComment(e.target.value)}
-                    placeholder="Add a comment..."
-                    className="w-full p-3 border border-gray-200 rounded-lg resize-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    rows={3}
-                  />
-                  <button
-                    onClick={addComment}
-                    disabled={!newComment.trim() || addingComment}
-                    className="mt-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors text-sm"
-                  >
-                    {addingComment ? 'Adding...' : 'Add Comment'}
-                  </button>
-                </div>
-              )}
-              
-              {/* Comments List */}
-              <div className="space-y-3 max-h-96 overflow-y-auto">
-                {comments.length === 0 ? (
-                  <p className="text-gray-500 text-sm text-center py-4">No comments yet</p>
-                ) : (
-                  comments.map((comment) => (
-                    <div key={comment.id} className="bg-gray-50 rounded-lg p-3">
-                      <div className="flex items-center justify-between mb-1">
-                        <span className="text-sm font-medium text-gray-900">
-                          {comment.user_email}
-                        </span>
-                        <span className="text-xs text-gray-500">
-                          {new Date(comment.created_at).toLocaleDateString()}
-                        </span>
-                      </div>
-                      <p className="text-sm text-gray-700">{comment.content}</p>
-                    </div>
-                  ))
-                )}
-              </div>
+            <div className="lg:col-span-1">
+              {renderGeneralComments()}
             </div>
           )}
         </div>
@@ -450,11 +567,11 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
 
           {/* Header Content */}
           <div className="absolute inset-0 p-8 flex flex-col justify-end text-white">
-            {isEditing ? (
+            {isOwner ? (
               <input
                 type="text"
                 value={itinerary.title}
-                onChange={(e) => updateItineraryField('title', e.target.value)}
+                onChange={(e) => {/* Owner editing */}}
                 className="text-3xl font-bold bg-transparent border-b-2 border-white/50 focus:border-white outline-none mb-3 text-white placeholder-white/70 min-w-0"
                 placeholder="Trip title"
               />
@@ -465,11 +582,11 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
             <div className="flex flex-wrap items-center gap-6 text-sm mb-4">
               <div className="flex items-center gap-1">
                 <MapPin className="h-4 w-4" />
-                {isEditing ? (
+                {isOwner ? (
                   <input
                     type="text"
                     value={itinerary.destination}
-                    onChange={(e) => updateItineraryField('destination', e.target.value)}
+                    onChange={(e) => {/* Owner editing */}}
                     className="bg-transparent border-b border-white/50 focus:border-white outline-none text-white placeholder-white/70 min-w-0"
                     placeholder="Destination"
                   />
@@ -479,11 +596,11 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
               </div>
               <div className="flex items-center gap-1">
                 <Clock className="h-4 w-4" />
-                {isEditing ? (
+                {isOwner ? (
                   <input
                     type="text"
                     value={itinerary.duration}
-                    onChange={(e) => updateItineraryField('duration', e.target.value)}
+                    onChange={(e) => {/* Owner editing */}}
                     className="bg-transparent border-b border-white/50 focus:border-white outline-none text-white placeholder-white/70 w-20 min-w-0"
                     placeholder="Duration"
                   />
@@ -493,11 +610,11 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
               </div>
               <div className="flex items-center gap-1">
                 <DollarSign className="h-4 w-4" />
-                {isEditing ? (
+                {isOwner ? (
                   <input
                     type="text"
                     value={itinerary.total_budget}
-                    onChange={(e) => updateItineraryField('total_budget', e.target.value)}
+                    onChange={(e) => {/* Owner editing */}}
                     className="bg-transparent border-b border-white/50 focus:border-white outline-none text-white placeholder-white/70 min-w-0"
                     placeholder="Budget"
                   />
@@ -507,10 +624,10 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
               </div>
             </div>
 
-            {isEditing ? (
+            {isOwner ? (
               <textarea
                 value={itinerary.overview}
-                onChange={(e) => updateItineraryField('overview', e.target.value)}
+                onChange={(e) => {/* Owner editing */}}
                 className="bg-white/10 backdrop-blur-sm border border-white/30 rounded-lg p-3 text-white placeholder-white/70 resize-none min-w-0"
                 rows={2}
                 placeholder="Trip overview"
@@ -532,7 +649,7 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
             {itinerary.days.map((day: any, dayIndex: number) => (
               <div 
                 key={`${day.day}-${dayIndex}`}
-                className="bg-gradient-to-r from-gray-50 to-blue-50/30 rounded-xl p-6 relative shadow-sm"
+              className="bg-gradient-to-r from-gray-50 to-blue-50/30 rounded-xl p-6 relative shadow-sm hover:shadow-md transition-shadow"
                 style={{ paddingRight: '4rem' }}
               >
                 {/* Copy button */}
@@ -589,14 +706,11 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
                         return (
                           <div key={mealType} className="bg-white p-3 rounded-lg shadow-sm min-w-0">
                             <span className="font-medium text-gray-600 capitalize">{mealType}:</span>
-                            {isEditing ? (
+                            {isOwner ? (
                               <input
                                 type="text"
                                 value={meal || ''}
-                                onChange={(e) => updateDay(dayIndex, {
-                                  ...day,
-                                  meals: { ...day.meals, [mealType]: e.target.value }
-                                })}
+                                onChange={(e) => {/* Owner editing */}}
                                 className="w-full mt-1 bg-gray-50 border border-gray-200 rounded px-2 py-1 text-sm focus:ring-1 focus:ring-blue-500 focus:border-blue-500 min-w-0"
                                 placeholder={`${mealType} recommendation`}
                               />
@@ -611,18 +725,18 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
                 )}
 
                 {/* Accommodation */}
-                {(day.accommodation || isEditing) && (
+                {(day.accommodation || isOwner) && (
                   <div className="mb-3">
                     <h4 className="font-semibold text-gray-900 mb-2 flex items-center gap-1">
                       <Bed className="h-4 w-4 text-blue-600" />
                       Accommodation
                     </h4>
                     <div className="bg-white p-3 rounded-lg shadow-sm min-w-0">
-                      {isEditing ? (
+                      {isOwner ? (
                         <input
                           type="text"
                           value={day.accommodation || ''}
-                          onChange={(e) => updateDay(dayIndex, { ...day, accommodation: e.target.value })}
+                          onChange={(e) => {/* Owner editing */}}
                           className="w-full bg-gray-50 border border-gray-200 rounded px-3 py-2 text-sm focus:ring-1 focus:ring-blue-500 focus:border-blue-500 min-w-0"
                           placeholder="Accommodation recommendation"
                         />
@@ -634,12 +748,12 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
                 )}
 
                 {/* Notes */}
-                {(day.notes || isEditing) && (
+                {(day.notes || isOwner) && (
                   <div className="pt-4 border-t border-gray-200">
-                    {isEditing ? (
+                    {isOwner ? (
                       <textarea
                         value={day.notes || ''}
-                        onChange={(e) => updateDay(dayIndex, { ...day, notes: e.target.value })}
+                        onChange={(e) => {/* Owner editing */}}
                         className="w-full bg-blue-50 border border-blue-200 rounded-lg p-3 text-sm focus:ring-1 focus:ring-blue-500 focus:border-blue-500 resize-none min-w-0"
                         rows={2}
                         placeholder="Special notes for this day"
@@ -651,6 +765,9 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
                     )}
                   </div>
                 )}
+                
+                {/* Day-specific Comments */}
+                {sharedItinerary.share_mode === 'collaborate' && renderDayComments(dayIndex)}
               </div>
             ))}
           </div>

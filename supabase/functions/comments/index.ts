@@ -11,9 +11,11 @@ interface CommentRequest {
   shareId: string;
   commentId?: string;
   userId?: string;
+  dayIndex?: number | null;
   data?: {
     user_email: string;
     content: string;
+    day_index?: number | null;
   };
 }
 
@@ -60,18 +62,32 @@ Deno.serve(async (req) => {
           .insert({
             share_id: shareId,
             user_email: data.user_email,
-            content: data.content
+            content: data.content,
+            day_index: data.day_index || null
           })
           .select()
           .single()
         break;
 
       case 'list':
-        result = await supabaseClient
+        // If dayIndex is provided, filter by it; otherwise get all comments
+        let query = supabaseClient
           .from('itinerary_comments')
           .select('*')
           .eq('share_id', shareId)
           .order('created_at', { ascending: true })
+        
+        if (dayIndex !== undefined) {
+          if (dayIndex === null) {
+            // Get general comments (where day_index is NULL)
+            query = query.is('day_index', null)
+          } else {
+            // Get comments for specific day
+            query = query.eq('day_index', dayIndex)
+          }
+        }
+        
+        result = await query
         break;
 
       case 'delete':

@@ -168,18 +168,22 @@ export const shareApi = {
  * Comments API calls
  */
 export const commentsApi = {
-  create: async (shareId: string, commentData: any) => {
+  create: async (shareId: string, commentData: any, dayIndex?: number | null) => {
     return apiCall('comments', {
       action: 'create',
       shareId,
-      data: commentData
+      data: {
+        ...commentData,
+        day_index: dayIndex
+      }
     });
   },
 
-  list: async (shareId: string) => {
+  list: async (shareId: string, dayIndex?: number | null) => {
     return apiCall('comments', {
       action: 'list',
-      shareId
+      shareId,
+      dayIndex
     });
   },
 

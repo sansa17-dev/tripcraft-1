@@ -496,6 +496,8 @@ function App() {
               onToggleEdit={() => setIsEditingItinerary(!isEditingItinerary)}
               savedItineraryId={currentSavedItineraryId}
               onShare={currentSavedItineraryId ? handleShareItinerary : undefined}
+              shareId={currentSavedItineraryId}
+              showComments={!!currentSavedItineraryId}
             />
           ) : currentView === 'saved' ? (
             /* Saved Itineraries */
