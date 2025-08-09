@@ -8,7 +8,7 @@ import {
   Plane, MapPin, Clock, Users, Star, Compass, Globe, Zap, 
   Shield, Heart, ArrowRight, CheckCircle, Quote, Sparkles,
   Calendar, DollarSign, Camera, Mountain, Play, ChevronDown,
-  Award, TrendingUp, Smartphone, Laptop, Tablet
+  Award, TrendingUp, Smartphone, Laptop, Tablet, Waves, TreePine, ShoppingBag
 } from 'lucide-react';
 import { InteractiveDemo } from './InteractiveDemo';
 
@@ -39,6 +39,129 @@ const useRealTimeStats = () => {
   }, []);
 
   return stats;
+};
+
+// Live scrolling locations with themes
+const THEMED_LOCATIONS = [
+  {
+    theme: 'Adventure',
+    locations: [
+      { name: 'Manali', country: 'India', image: 'https://images.pexels.com/photos/1562/italian-landscape-mountains-nature.jpg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop', icon: Mountain },
+      { name: 'Nepal Himalayas', country: 'Nepal', image: 'https://images.pexels.com/photos/691668/pexels-photo-691668.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop', icon: Mountain },
+      { name: 'Ladakh', country: 'India', image: 'https://images.pexels.com/photos/417074/pexels-photo-417074.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop', icon: Mountain },
+      { name: 'Patagonia', country: 'Chile', image: 'https://images.pexels.com/photos/1433052/pexels-photo-1433052.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop', icon: Mountain },
+      { name: 'Swiss Alps', country: 'Switzerland', image: 'https://images.pexels.com/photos/1366919/pexels-photo-1366919.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop', icon: Mountain }
+    ]
+  },
+  {
+    theme: 'Leisure',
+    locations: [
+      { name: 'Maldives', country: 'Indian Ocean', image: 'https://images.pexels.com/photos/1287460/pexels-photo-1287460.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop', icon: Waves },
+      { name: 'Santorini', country: 'Greece', image: 'https://images.pexels.com/photos/161815/santorini-oia-greece-water-161815.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop', icon: Waves },
+      { name: 'Bali Beaches', country: 'Indonesia', image: 'https://images.pexels.com/photos/2474690/pexels-photo-2474690.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop', icon: Waves },
+      { name: 'Goa', country: 'India', image: 'https://images.pexels.com/photos/1320684/pexels-photo-1320684.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop', icon: Waves },
+      { name: 'Seychelles', country: 'Africa', image: 'https://images.pexels.com/photos/457882/pexels-photo-457882.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop', icon: Waves }
+    ]
+  },
+  {
+    theme: 'Markets',
+    locations: [
+      { name: 'Marrakech Souks', country: 'Morocco', image: 'https://images.pexels.com/photos/2166553/pexels-photo-2166553.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop', icon: ShoppingBag },
+      { name: 'Istanbul Bazaar', country: 'Turkey', image: 'https://images.pexels.com/photos/1659438/pexels-photo-1659438.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop', icon: ShoppingBag },
+      { name: 'Bangkok Markets', country: 'Thailand', image: 'https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop', icon: ShoppingBag },
+      { name: 'Delhi Chandni Chowk', country: 'India', image: 'https://images.pexels.com/photos/1007426/pexels-photo-1007426.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop', icon: ShoppingBag },
+      { name: 'Florence Markets', country: 'Italy', image: 'https://images.pexels.com/photos/1797161/pexels-photo-1797161.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop', icon: ShoppingBag }
+    ]
+  },
+  {
+    theme: 'Spiritual',
+    locations: [
+      { name: 'Kyoto Temples', country: 'Japan', image: 'https://images.pexels.com/photos/2070033/pexels-photo-2070033.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop', icon: TreePine },
+      { name: 'Rishikesh', country: 'India', image: 'https://images.pexels.com/photos/1051449/pexels-photo-1051449.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop', icon: TreePine },
+      { name: 'Ubud Forests', country: 'Bali', image: 'https://images.pexels.com/photos/1450353/pexels-photo-1450353.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop', icon: TreePine },
+      { name: 'Bhutan Monasteries', country: 'Bhutan', image: 'https://images.pexels.com/photos/1366630/pexels-photo-1366630.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop', icon: TreePine },
+      { name: 'Tibet Temples', country: 'Tibet', image: 'https://images.pexels.com/photos/1366919/pexels-photo-1366919.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop', icon: TreePine }
+    ]
+  }
+];
+
+// Live scrolling component
+const LiveScrollingLocations = () => {
+  const [currentTheme, setCurrentTheme] = useState(0);
+  
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentTheme(prev => (prev + 1) % THEMED_LOCATIONS.length);
+    }, 4000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const currentLocations = THEMED_LOCATIONS[currentTheme];
+  const ThemeIcon = currentLocations.locations[0].icon;
+
+  return (
+    <div className="bg-gradient-to-r from-indigo-600/10 to-purple-600/10 rounded-2xl p-6 border border-indigo-200/50 backdrop-blur-sm">
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-2">
+          <ThemeIcon className="h-5 w-5 text-indigo-600" />
+          <span className="text-indigo-800 font-semibold text-sm">
+            {currentLocations.theme} Destinations
+          </span>
+        </div>
+        <div className="flex gap-1">
+          {THEMED_LOCATIONS.map((_, index) => (
+            <div
+              key={index}
+              className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                index === currentTheme ? 'bg-indigo-600' : 'bg-indigo-300'
+              }`}
+            />
+          ))}
+        </div>
+      </div>
+      
+      <div className="overflow-hidden">
+        <div 
+          className="flex gap-4 transition-transform duration-1000 ease-in-out"
+          style={{ transform: `translateX(-${currentTheme * 100}%)` }}
+        >
+          {THEMED_LOCATIONS.map((theme, themeIndex) => (
+            <div key={themeIndex} className="flex gap-4 min-w-full">
+              {theme.locations.slice(0, 3).map((location, index) => (
+                <div
+                  key={index}
+                  className="flex-1 group cursor-pointer hover:scale-105 transition-all duration-300"
+                >
+                  <div className="relative overflow-hidden rounded-xl aspect-[4/3]">
+                    <img
+                      src={location.image}
+                      alt={location.name}
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                    <div className="absolute bottom-3 left-3 text-white">
+                      <div className="text-sm font-semibold">{location.name}</div>
+                      <div className="text-xs opacity-80">{location.country}</div>
+                    </div>
+                    <div className="absolute top-3 right-3">
+                      <location.icon className="h-4 w-4 text-white/80" />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
+      
+      <div className="mt-4 text-center">
+        <button className="text-indigo-600 hover:text-indigo-800 text-sm font-medium flex items-center gap-1 mx-auto group">
+          Explore {currentLocations.theme} Trips
+          <ArrowRight className="h-3 w-3 group-hover:translate-x-1 transition-transform" />
+        </button>
+      </div>
+    </div>
+  );
 };
 
 const TRUST_LOGOS = [
@@ -286,6 +409,11 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
                 </span>
                 <ArrowRight className="h-3 w-3 text-white/70 group-hover:translate-x-1 transition-transform" />
               </button>
+            </div>
+
+            {/* Live Scrolling Locations */}
+            <div className="mb-8 max-w-4xl mx-auto">
+              <LiveScrollingLocations />
             </div>
 
             {/* Trust Indicators */}
