@@ -460,6 +460,7 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
               className={`bg-gradient-to-r from-gray-50 to-blue-50/30 rounded-xl p-6 relative shadow-sm hover:shadow-md transition-all ${
                 isEditing ? 'border-2 border-dashed border-gray-200 hover:border-blue-300' : ''
               }`}
+              style={{ paddingRight: '4rem' }}
               draggable={isEditing}
               onDragStart={() => handleDragStart(dayIndex)}
               onDragOver={handleDragOver}
@@ -475,7 +476,7 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
               {/* Copy button */}
               <button
                 onClick={() => copyDayToClipboard(day, day.day)}
-                className="absolute top-4 right-4 p-2 text-gray-400 hover:text-gray-600 hover:bg-white rounded-lg transition-colors shadow-sm"
+                className="absolute top-4 right-4 p-2 text-gray-400 hover:text-gray-600 hover:bg-white rounded-lg transition-colors shadow-sm z-10"
                 title="Copy day to clipboard"
               >
                 {copiedDays.has(day.day) ? (
@@ -486,19 +487,19 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
               </button>
 
               {/* Day header */}
-              <div className="flex items-center gap-2 mb-3 ml-6">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-3 ml-6 pr-8">
                 <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-sm font-semibold px-4 py-2 rounded-full shadow-md">
                   Day {day.day}
                 </div>
-                <span className="text-sm text-gray-600 font-medium">{day.date}</span>
+                <span className="text-sm text-gray-600 font-medium break-words">{day.date}</span>
                 {day.estimatedCost && (
-                  <span className="text-sm text-green-600 font-semibold ml-auto bg-green-50 px-3 py-1 rounded-full">
+                  <span className="text-sm text-green-600 font-semibold sm:ml-auto bg-green-50 px-3 py-1 rounded-full whitespace-nowrap">
                     {isEditing ? (
                       <input
                         type="text"
                         value={day.estimatedCost}
                         onChange={(e) => updateDay(dayIndex, { ...day, estimatedCost: e.target.value })}
-                        className="bg-transparent text-green-600 outline-none w-24"
+                        className="bg-transparent text-green-600 outline-none w-20 min-w-0"
                       />
                     ) : (
                       day.estimatedCost
