@@ -3,7 +3,7 @@
  * Uses Supabase client directly instead of Edge Functions
  */
 import { supabase } from './supabase';
-import { sql } from '@supabase/supabase-js';
+import { sql } from '@supabase/postgrest-js';
 import { TravelPreferences, GeneratedItinerary } from '../types';
 
 interface ApiResponse<T = any> {
