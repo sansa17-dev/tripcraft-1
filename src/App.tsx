@@ -7,8 +7,8 @@
  * Enhanced with professional styling and user data persistence via Supabase.
  */
 
-import React, { useState } from 'react';
-import { Plane, AlertTriangle, RefreshCw, User, LogOut, Save, BookOpen, ArrowRight } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Plane, AlertTriangle, RefreshCw, User, LogOut, Save, BookOpen, ArrowRight, Share2 } from 'lucide-react';
 import { TravelPreferences, GeneratedItinerary } from './types';
 import { generateItinerary, generateDemoItinerary } from './services/itineraryService';
 import { saveItinerary } from './services/itineraryStorageService';
@@ -49,7 +49,6 @@ function App() {
   const [savingItinerary, setSavingItinerary] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [isEditingItinerary, setIsEditingItinerary] = useState(false);
-  const [sharedItineraryId, setSharedItineraryId] = useState<string | null>(null);
   const [currentSavedItineraryId, setCurrentSavedItineraryId] = useState<string | null>(null);
   const [showShareModal, setShowShareModal] = useState(false);
   const [sharedItineraryId, setSharedItineraryId] = useState<string | null>(null);
@@ -208,7 +207,6 @@ function App() {
     setShowShareModal(true);
   };
 
-  /**
   if (authLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 flex items-center justify-center">
