@@ -1,12 +1,12 @@
 /**
- * Enhanced homepage with modern design, better UX, and no duplicates
- * Features clean layout, engaging animations, and intuitive user flow
+ * Redesigned homepage with modern UX, no duplicates, and smart user flow
+ * Features progressive disclosure, micro-interactions, and conversion optimization
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
-  ArrowRight, CheckCircle, Play, ChevronLeft, ChevronRight,
-  Mountain, Heart, Palmtree, ShoppingBag, Building, Users, Star, Zap, Globe
+  ArrowRight, CheckCircle, Play, ChevronDown, Sparkles, Zap, Globe, Users, 
+  Star, Heart, Clock, Shield, Mic, MessageCircle, Calendar, MapPin, DollarSign
 } from 'lucide-react';
 import { VoiceChatModal } from './VoiceChatModal';
 
@@ -16,364 +16,216 @@ interface HomePageProps {
   isAuthenticated: boolean;
 }
 
-const TRAVEL_THEMES = [
-  {
-    id: 'adventure',
-    name: 'Adventure',
-    icon: Mountain,
-    color: 'from-orange-500 to-red-600',
-    bgColor: 'bg-orange-50',
-    description: 'Thrilling experiences and outdoor adventures',
-    destinations: [
-      {
-        name: 'Ladakh, India',
-        image: 'https://images.pexels.com/photos/1562058/pexels-photo-1562058.jpeg?auto=compress&cs=tinysrgb&w=500&h=350&fit=crop',
-        description: 'High-altitude desert adventures with stunning monasteries',
-        highlight: 'Motorcycle expeditions',
-        rating: '4.9'
-      },
-      {
-        name: 'Rishikesh, India',
-        image: 'https://images.pexels.com/photos/3408744/pexels-photo-3408744.jpeg?auto=compress&cs=tinysrgb&w=500&h=350&fit=crop',
-        description: 'White water rafting and bungee jumping capital',
-        highlight: 'River adventures',
-        rating: '4.8'
-      },
-      {
-        name: 'Manali, India',
-        image: 'https://images.pexels.com/photos/1586298/pexels-photo-1586298.jpeg?auto=compress&cs=tinysrgb&w=500&h=350&fit=crop',
-        description: 'Himalayan trekking and paragliding paradise',
-        highlight: 'Mountain sports',
-        rating: '4.7'
-      },
-      {
-        name: 'Andaman Islands',
-        image: 'https://images.pexels.com/photos/1287460/pexels-photo-1287460.jpeg?auto=compress&cs=tinysrgb&w=500&h=350&fit=crop',
-        description: 'Scuba diving and pristine coral reefs',
-        highlight: 'Underwater exploration',
-        rating: '4.9'
-      }
-    ]
-  },
-  {
-    id: 'spiritual',
-    name: 'Spiritual',
-    icon: Heart,
-    color: 'from-purple-500 to-indigo-600',
-    bgColor: 'bg-purple-50',
-    description: 'Sacred places and spiritual journeys',
-    destinations: [
-      {
-        name: 'Varanasi, India',
-        image: 'https://images.pexels.com/photos/3581368/pexels-photo-3581368.jpeg?auto=compress&cs=tinysrgb&w=500&h=350&fit=crop',
-        description: 'Ancient spiritual capital on the sacred Ganges',
-        highlight: 'River ceremonies',
-        rating: '4.8'
-      },
-      {
-        name: 'Dharamshala, India',
-        image: 'https://images.pexels.com/photos/2070033/pexels-photo-2070033.jpeg?auto=compress&cs=tinysrgb&w=500&h=350&fit=crop',
-        description: 'Tibetan Buddhist culture in the Himalayas',
-        highlight: 'Meditation retreats',
-        rating: '4.7'
-      },
-      {
-        name: 'Pushkar, India',
-        image: 'https://images.pexels.com/photos/3581368/pexels-photo-3581368.jpeg?auto=compress&cs=tinysrgb&w=500&h=350&fit=crop',
-        description: 'Sacred lake town with ancient temples',
-        highlight: 'Holy pilgrimage',
-        rating: '4.6'
-      },
-      {
-        name: 'Amritsar, India',
-        image: 'https://images.pexels.com/photos/3581368/pexels-photo-3581368.jpeg?auto=compress&cs=tinysrgb&w=500&h=350&fit=crop',
-        description: 'Golden Temple and Sikh heritage',
-        highlight: 'Sacred architecture',
-        rating: '4.9'
-      }
-    ]
-  },
-  {
-    id: 'leisure',
-    name: 'Leisure',
-    icon: Palmtree,
-    color: 'from-teal-500 to-cyan-600',
-    bgColor: 'bg-teal-50',
-    description: 'Relaxation and luxury experiences',
-    destinations: [
-      {
-        name: 'Goa, India',
-        image: 'https://images.pexels.com/photos/2474690/pexels-photo-2474690.jpeg?auto=compress&cs=tinysrgb&w=500&h=350&fit=crop',
-        description: 'Pristine beaches and Portuguese heritage',
-        highlight: 'Beach resorts',
-        rating: '4.8'
-      },
-      {
-        name: 'Kerala Backwaters',
-        image: 'https://images.pexels.com/photos/2474690/pexels-photo-2474690.jpeg?auto=compress&cs=tinysrgb&w=500&h=350&fit=crop',
-        description: 'Houseboat cruises through tropical canals',
-        highlight: 'Ayurvedic spas',
-        rating: '4.9'
-      },
-      {
-        name: 'Udaipur, India',
-        image: 'https://images.pexels.com/photos/161815/santorini-oia-greece-water-161815.jpeg?auto=compress&cs=tinysrgb&w=500&h=350&fit=crop',
-        description: 'City of lakes with royal palaces',
-        highlight: 'Luxury heritage hotels',
-        rating: '4.7'
-      },
-      {
-        name: 'Coorg, India',
-        image: 'https://images.pexels.com/photos/417074/pexels-photo-417074.jpeg?auto=compress&cs=tinysrgb&w=500&h=350&fit=crop',
-        description: 'Coffee plantations and misty hills',
-        highlight: 'Wellness retreats',
-        rating: '4.6'
-      }
-    ]
-  },
-  {
-    id: 'culture',
-    name: 'Culture & Heritage',
-    icon: Building,
-    color: 'from-amber-500 to-orange-600',
-    bgColor: 'bg-amber-50',
-    description: 'Rich history and architectural marvels',
-    destinations: [
-      {
-        name: 'Rajasthan, India',
-        image: 'https://images.pexels.com/photos/1603650/pexels-photo-1603650.jpeg?auto=compress&cs=tinysrgb&w=500&h=350&fit=crop',
-        description: 'Majestic forts and desert palaces',
-        highlight: 'Royal architecture',
-        rating: '4.9'
-      },
-      {
-        name: 'Hampi, India',
-        image: 'https://images.pexels.com/photos/1603650/pexels-photo-1603650.jpeg?auto=compress&cs=tinysrgb&w=500&h=350&fit=crop',
-        description: 'Ancient Vijayanagara Empire ruins',
-        highlight: 'UNESCO World Heritage',
-        rating: '4.8'
-      },
-      {
-        name: 'Khajuraho, India',
-        image: 'https://images.pexels.com/photos/1603650/pexels-photo-1603650.jpeg?auto=compress&cs=tinysrgb&w=500&h=350&fit=crop',
-        description: 'Intricate temple sculptures and art',
-        highlight: 'Medieval architecture',
-        rating: '4.7'
-      },
-      {
-        name: 'Mysore, India',
-        image: 'https://images.pexels.com/photos/1603650/pexels-photo-1603650.jpeg?auto=compress&cs=tinysrgb&w=500&h=350&fit=crop',
-        description: 'Royal palaces and silk heritage',
-        highlight: 'Cultural festivals',
-        rating: '4.6'
-      }
-    ]
-  }
+const POPULAR_DESTINATIONS = [
+  { name: 'Goa Beaches', emoji: '🏖️', color: 'from-orange-400 to-pink-500' },
+  { name: 'Rajasthan Palaces', emoji: '🏰', color: 'from-purple-400 to-indigo-500' },
+  { name: 'Kerala Backwaters', emoji: '🌴', color: 'from-green-400 to-teal-500' },
+  { name: 'Himachal Mountains', emoji: '🏔️', color: 'from-blue-400 to-cyan-500' },
+  { name: 'Agra Taj Mahal', emoji: '🕌', color: 'from-yellow-400 to-orange-500' },
+  { name: 'Andaman Islands', emoji: '🌊', color: 'from-cyan-400 to-blue-500' },
+  { name: 'Hampi Ruins', emoji: '🏛️', color: 'from-amber-400 to-red-500' },
+  { name: 'Jim Corbett Safari', emoji: '🦌', color: 'from-emerald-400 to-green-500' }
 ];
 
-const FEATURES = [
+const SMART_FEATURES = [
   {
     icon: Zap,
-    title: 'AI-Powered Planning',
-    description: 'Get personalized itineraries in seconds with our advanced AI that understands your preferences'
+    title: 'AI-Powered Intelligence',
+    description: 'Advanced AI analyzes 1M+ travel patterns to craft your perfect itinerary in under 60 seconds',
+    metric: '60s',
+    color: 'from-yellow-400 to-orange-500'
   },
   {
     icon: Globe,
-    title: 'Global Destinations',
-    description: 'Explore 200+ destinations worldwide with local insights and hidden gems'
+    title: 'Global Expertise',
+    description: 'Access to 500+ destinations with real-time local insights and hidden gems from travel experts',
+    metric: '500+',
+    color: 'from-blue-400 to-cyan-500'
   },
   {
     icon: Users,
-    title: 'Community Driven',
-    description: 'Join 50,000+ travelers sharing experiences and recommendations'
+    title: 'Community Wisdom',
+    description: 'Powered by experiences from 100K+ travelers and continuously learning from user feedback',
+    metric: '100K+',
+    color: 'from-purple-400 to-pink-500'
   }
 ];
 
 const TESTIMONIALS = [
   {
     name: 'Priya Sharma',
+    role: 'Travel Blogger',
     location: 'Mumbai',
-    text: 'TripCraft planned my perfect Rajasthan trip! Every detail was spot-on.',
+    text: 'TripCraft\'s AI understood my travel style perfectly. The Rajasthan itinerary was flawless - every recommendation was spot-on!',
     rating: 5,
-    avatar: 'https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop'
+    avatar: 'https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop',
+    trip: 'Rajasthan Heritage Tour'
   },
   {
     name: 'Arjun Patel',
+    role: 'Software Engineer',
     location: 'Bangalore',
-    text: 'The AI suggestions were incredible. Saved me hours of research!',
+    text: 'Voice chat feature is revolutionary! Planned my entire Kerala trip just by talking. Saved me 10+ hours of research.',
     rating: 5,
-    avatar: 'https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop'
+    avatar: 'https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop',
+    trip: 'Kerala Backwaters'
   },
   {
     name: 'Sneha Gupta',
+    role: 'Marketing Manager',
     location: 'Delhi',
-    text: 'Voice chat feature is amazing! Planning trips has never been easier.',
+    text: 'The personalization is incredible. It knew I prefer boutique hotels and suggested perfect hidden gems in Goa.',
     rating: 5,
-    avatar: 'https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop'
+    avatar: 'https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop',
+    trip: 'Goa Beach Getaway'
   }
 ];
 
-export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePageProps) {
-  const [activeTheme, setActiveTheme] = useState(0);
-  const [showVoiceChat, setShowVoiceChat] = useState(false);
+const TRUST_INDICATORS = [
+  { metric: '100K+', label: 'Happy Travelers', icon: Users },
+  { metric: '500+', label: 'Destinations', icon: Globe },
+  { metric: '4.9★', label: 'User Rating', icon: Star },
+  { metric: '99.9%', label: 'Uptime', icon: Shield }
+];
 
-  const scrollDestinations = (direction: 'left' | 'right') => {
-    const container = document.getElementById(`destinations-${TRAVEL_THEMES[activeTheme].id}`);
-    if (container) {
-      const scrollAmount = 320;
-      container.scrollBy({
-        left: direction === 'left' ? -scrollAmount : scrollAmount,
-        behavior: 'smooth'
-      });
-    }
-  };
+export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePageProps) {
+  const [showVoiceChat, setShowVoiceChat] = useState(false);
+  const [activeFeature, setActiveFeature] = useState(0);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    setIsVisible(true);
+    
+    // Auto-rotate features
+    const interval = setInterval(() => {
+      setActiveFeature((prev) => (prev + 1) % SMART_FEATURES.length);
+    }, 4000);
+    
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <div className="space-y-0 font-body overflow-hidden">
-      {/* Hero Section - Modernized */}
+      {/* Hero Section - Redesigned with Smart UX */}
       <section className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-teal-600 via-cyan-700 to-teal-800 -mx-4 sm:-mx-6 lg:-mx-8 -mt-8">
-        {/* Animated Background */}
+        {/* Dynamic Background */}
         <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute inset-0 bg-[url('https://images.pexels.com/photos/1287460/pexels-photo-1287460.jpeg?auto=compress&cs=tinysrgb&w=1600&h=900&fit=crop')] bg-cover bg-center opacity-15"></div>
+          <div className="absolute inset-0 bg-[url('https://images.pexels.com/photos/1287460/pexels-photo-1287460.jpeg?auto=compress&cs=tinysrgb&w=1600&h=900&fit=crop')] bg-cover bg-center opacity-10"></div>
           <div className="absolute inset-0 bg-gradient-to-br from-teal-600/95 via-cyan-700/95 to-teal-800/95"></div>
           
-          {/* Floating Orbs */}
-          <div className="absolute top-20 left-20 w-72 h-72 bg-cyan-400/25 rounded-full blur-3xl animate-pulse"></div>
-          <div className="absolute bottom-20 right-20 w-96 h-96 bg-teal-400/25 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
-          <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-turquoise-400/25 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '4s' }}></div>
+          {/* Animated Orbs */}
+          <div className="absolute top-20 left-20 w-72 h-72 bg-cyan-400/20 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute bottom-20 right-20 w-96 h-96 bg-teal-400/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
+          <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-turquoise-400/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '4s' }}></div>
         </div>
 
         {/* Content */}
-        <div className="relative z-10 px-4 sm:px-6 lg:px-8 text-center max-w-6xl mx-auto">
+        <div className={`relative z-10 px-4 sm:px-6 lg:px-8 text-center max-w-7xl mx-auto transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+          
           {/* Scrolling Destinations Banner */}
           <div className="mb-12 overflow-hidden">
-            <div className="flex items-center justify-center mb-4">
-              <div className="bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full border border-white/20">
-                <span className="text-cyan-200 text-sm font-medium">✈️ Popular Destinations</span>
+            <div className="flex items-center justify-center mb-6">
+              <div className="bg-white/10 backdrop-blur-sm px-6 py-3 rounded-full border border-white/20 shadow-lg">
+                <span className="text-cyan-200 text-sm font-medium flex items-center gap-2">
+                  <Sparkles className="h-4 w-4" />
+                  Trending Destinations
+                </span>
               </div>
             </div>
             
-            {/* Scrolling Container */}
-            <div className="relative h-16 overflow-hidden rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10">
+            <div className="relative h-20 overflow-hidden rounded-3xl bg-white/5 backdrop-blur-sm border border-white/10 shadow-2xl">
               <div className="absolute inset-0 flex items-center">
-                <div className="animate-scroll-destinations flex items-center gap-8 whitespace-nowrap">
+                <div className="animate-scroll-destinations flex items-center gap-6 whitespace-nowrap">
                   {/* First Set */}
-                  <div className="flex items-center gap-2 px-4 py-2 bg-white/10 rounded-full">
-                    <span className="text-2xl">🏖️</span>
-                    <span className="text-white font-medium">Goa Beaches</span>
-                  </div>
-                  <div className="flex items-center gap-2 px-4 py-2 bg-white/10 rounded-full">
-                    <span className="text-2xl">🏰</span>
-                    <span className="text-white font-medium">Rajasthan Palaces</span>
-                  </div>
-                  <div className="flex items-center gap-2 px-4 py-2 bg-white/10 rounded-full">
-                    <span className="text-2xl">🌴</span>
-                    <span className="text-white font-medium">Kerala Backwaters</span>
-                  </div>
-                  <div className="flex items-center gap-2 px-4 py-2 bg-white/10 rounded-full">
-                    <span className="text-2xl">🏔️</span>
-                    <span className="text-white font-medium">Himachal Mountains</span>
-                  </div>
-                  <div className="flex items-center gap-2 px-4 py-2 bg-white/10 rounded-full">
-                    <span className="text-2xl">🕌</span>
-                    <span className="text-white font-medium">Agra Taj Mahal</span>
-                  </div>
-                  <div className="flex items-center gap-2 px-4 py-2 bg-white/10 rounded-full">
-                    <span className="text-2xl">🌊</span>
-                    <span className="text-white font-medium">Andaman Islands</span>
-                  </div>
-                  <div className="flex items-center gap-2 px-4 py-2 bg-white/10 rounded-full">
-                    <span className="text-2xl">🏛️</span>
-                    <span className="text-white font-medium">Hampi Ruins</span>
-                  </div>
-                  <div className="flex items-center gap-2 px-4 py-2 bg-white/10 rounded-full">
-                    <span className="text-2xl">🦌</span>
-                    <span className="text-white font-medium">Jim Corbett Safari</span>
-                  </div>
+                  {POPULAR_DESTINATIONS.map((dest, index) => (
+                    <div key={`first-${index}`} className={`flex items-center gap-3 px-6 py-3 bg-gradient-to-r ${dest.color} rounded-full shadow-lg hover:scale-105 transition-transform`}>
+                      <span className="text-2xl">{dest.emoji}</span>
+                      <span className="text-white font-semibold">{dest.name}</span>
+                    </div>
+                  ))}
                   
                   {/* Duplicate Set for Seamless Loop */}
-                  <div className="flex items-center gap-2 px-4 py-2 bg-white/10 rounded-full">
-                    <span className="text-2xl">🏖️</span>
-                    <span className="text-white font-medium">Goa Beaches</span>
-                  </div>
-                  <div className="flex items-center gap-2 px-4 py-2 bg-white/10 rounded-full">
-                    <span className="text-2xl">🏰</span>
-                    <span className="text-white font-medium">Rajasthan Palaces</span>
-                  </div>
-                  <div className="flex items-center gap-2 px-4 py-2 bg-white/10 rounded-full">
-                    <span className="text-2xl">🌴</span>
-                    <span className="text-white font-medium">Kerala Backwaters</span>
-                  </div>
-                  <div className="flex items-center gap-2 px-4 py-2 bg-white/10 rounded-full">
-                    <span className="text-2xl">🏔️</span>
-                    <span className="text-white font-medium">Himachal Mountains</span>
-                  </div>
-                  <div className="flex items-center gap-2 px-4 py-2 bg-white/10 rounded-full">
-                    <span className="text-2xl">🕌</span>
-                    <span className="text-white font-medium">Agra Taj Mahal</span>
-                  </div>
-                  <div className="flex items-center gap-2 px-4 py-2 bg-white/10 rounded-full">
-                    <span className="text-2xl">🌊</span>
-                    <span className="text-white font-medium">Andaman Islands</span>
-                  </div>
-                  <div className="flex items-center gap-2 px-4 py-2 bg-white/10 rounded-full">
-                    <span className="text-2xl">🏛️</span>
-                    <span className="text-white font-medium">Hampi Ruins</span>
-                  </div>
-                  <div className="flex items-center gap-2 px-4 py-2 bg-white/10 rounded-full">
-                    <span className="text-2xl">🦌</span>
-                    <span className="text-white font-medium">Jim Corbett Safari</span>
-                  </div>
+                  {POPULAR_DESTINATIONS.map((dest, index) => (
+                    <div key={`second-${index}`} className={`flex items-center gap-3 px-6 py-3 bg-gradient-to-r ${dest.color} rounded-full shadow-lg hover:scale-105 transition-transform`}>
+                      <span className="text-2xl">{dest.emoji}</span>
+                      <span className="text-white font-semibold">{dest.name}</span>
+                    </div>
+                  ))}
                 </div>
               </div>
               
-              {/* Gradient Overlays for Fade Effect */}
-              <div className="absolute left-0 top-0 bottom-0 w-20 bg-gradient-to-r from-teal-800 to-transparent pointer-events-none"></div>
-              <div className="absolute right-0 top-0 bottom-0 w-20 bg-gradient-to-l from-teal-800 to-transparent pointer-events-none"></div>
+              {/* Gradient Overlays */}
+              <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-teal-800 to-transparent pointer-events-none"></div>
+              <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-teal-800 to-transparent pointer-events-none"></div>
             </div>
           </div>
 
-          {/* Main Headline */}
-          <div className="mb-8">
-            <h1 className="font-display text-6xl md:text-7xl lg:text-8xl font-bold text-white mb-6 leading-tight tracking-tight">
-              <span className="bg-gradient-to-r from-cyan-300 via-teal-200 to-blue-300 bg-clip-text text-transparent">
-                Craft Your
+          {/* Main Headline with Smart Typography */}
+          <div className="mb-12">
+            <h1 className="font-display text-6xl md:text-7xl lg:text-8xl font-bold text-white mb-8 leading-tight tracking-tight">
+              <span className="bg-gradient-to-r from-cyan-300 via-teal-200 to-blue-300 bg-clip-text text-transparent animate-gradient">
+                Your AI Travel
               </span>
               <br />
-              <span className="text-white">Perfect Journey</span>
+              <span className="text-white">Companion</span>
             </h1>
             
-            <p className="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto leading-relaxed mb-12">
-              Transform your travel dreams into detailed, personalized itineraries with AI. 
-              <span className="text-cyan-300 font-semibold"> Every destination, perfectly planned in minutes.</span>
+            <p className="text-xl md:text-2xl text-gray-300 max-w-4xl mx-auto leading-relaxed mb-8">
+              Transform your travel dreams into <span className="text-cyan-300 font-semibold">personalized itineraries</span> in seconds. 
+              Every destination, perfectly planned with AI intelligence.
             </p>
+
+            {/* Value Proposition Pills */}
+            <div className="flex flex-wrap justify-center gap-4 mb-12">
+              <div className="bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full border border-white/20">
+                <span className="text-cyan-200 text-sm font-medium flex items-center gap-2">
+                  <Clock className="h-4 w-4" />
+                  60-second planning
+                </span>
+              </div>
+              <div className="bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full border border-white/20">
+                <span className="text-cyan-200 text-sm font-medium flex items-center gap-2">
+                  <Shield className="h-4 w-4" />
+                  100% Free to start
+                </span>
+              </div>
+              <div className="bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full border border-white/20">
+                <span className="text-cyan-200 text-sm font-medium flex items-center gap-2">
+                  <Users className="h-4 w-4" />
+                  100K+ travelers
+                </span>
+              </div>
+            </div>
           </div>
 
-          {/* Primary Action Buttons */}
+          {/* Smart CTA Section */}
           <div className="flex flex-col lg:flex-row items-center justify-center gap-6 mb-16">
-            {/* Meet Your AI Companion */}
+            {/* Primary CTA */}
             <button
               onClick={onGetStarted}
-              className="group relative flex items-center justify-between w-full lg:w-80 px-8 py-5 bg-gradient-to-r from-amber-400 via-orange-500 to-red-500 text-white rounded-2xl hover:from-amber-500 hover:via-orange-600 hover:to-red-600 transition-all duration-300 shadow-2xl hover:shadow-3xl hover:scale-105 font-display overflow-hidden"
+              className="group relative flex items-center justify-between w-full lg:w-96 px-10 py-6 bg-gradient-to-r from-amber-400 via-orange-500 to-red-500 text-white rounded-2xl hover:from-amber-500 hover:via-orange-600 hover:to-red-600 transition-all duration-300 shadow-2xl hover:shadow-3xl hover:scale-105 font-display overflow-hidden"
             >
               <div className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg animate-bounce">
-                Try Free
+                Start Free
               </div>
               
               <div className="flex items-center gap-4">
                 <div className="bg-white/20 p-3 rounded-xl backdrop-blur-sm">
-                  <Zap className="w-6 h-6" />
+                  <Calendar className="w-6 h-6" />
                 </div>
-                <span className="font-semibold text-lg">Meet Your AI Companion</span>
+                <div className="text-left">
+                  <div className="font-semibold text-lg">Plan My Trip</div>
+                  <div className="text-sm opacity-90">AI-powered itinerary</div>
+                </div>
               </div>
               
               <ArrowRight className="h-6 w-6 group-hover:translate-x-2 transition-transform flex-shrink-0" />
             </button>
 
-            {/* Voice Chat with AI */}
+            {/* Voice Chat CTA */}
             <button
               onClick={() => setShowVoiceChat(true)}
-              className="group relative flex items-center justify-between w-full lg:w-80 px-8 py-5 bg-gradient-to-r from-teal-500 via-cyan-600 to-blue-600 text-white rounded-2xl hover:from-teal-600 hover:via-cyan-700 hover:to-blue-700 transition-all duration-300 shadow-2xl hover:shadow-3xl hover:scale-105 font-display overflow-hidden"
+              className="group relative flex items-center justify-between w-full lg:w-96 px-10 py-6 bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 text-white rounded-2xl hover:from-purple-700 hover:via-indigo-700 hover:to-blue-700 transition-all duration-300 shadow-2xl hover:shadow-3xl hover:scale-105 font-display overflow-hidden"
             >
               <div className="absolute -top-2 -right-2 bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg animate-pulse">
                 NEW
@@ -381,217 +233,148 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
               
               <div className="flex items-center gap-4">
                 <div className="bg-white/20 p-3 rounded-xl backdrop-blur-sm">
-                  <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12 1c-4.97 0-9 4.03-9 9v7c0 1.66 1.34 3 3 3h3v-8H5v-2c0-3.87 3.13-7 7-7s7 3.13 7 7v2h-4v8h3c1.66 0 3-1.34 3-3v-7c0-4.97-4.03-9-9-9z"/>
-                  </svg>
+                  <Mic className="w-6 h-6" />
                 </div>
-                <span className="font-semibold text-lg">Voice Chat with AI</span>
+                <div className="text-left">
+                  <div className="font-semibold text-lg">Voice Planning</div>
+                  <div className="text-sm opacity-90">Just speak your dreams</div>
+                </div>
               </div>
               
               <div className="flex items-center gap-1 flex-shrink-0">
-                <Star className="w-4 h-4 animate-pulse" />
-                <Star className="w-3 h-3 animate-pulse" style={{ animationDelay: '0.5s' }} />
-              </div>
-            </button>
-
-            {/* See Live Demo */}
-            <button
-              onClick={() => {/* Live demo functionality */}}
-              className="group flex items-center justify-between w-full lg:w-80 px-8 py-5 bg-gradient-to-r from-teal-700 via-teal-800 to-cyan-900 text-white rounded-2xl hover:from-teal-800 hover:via-teal-900 hover:to-cyan-950 transition-all duration-300 shadow-2xl hover:shadow-3xl hover:scale-105 font-display border border-teal-600"
-            >
-              <div className="flex items-center gap-4">
-                <div className="bg-white/10 p-3 rounded-xl backdrop-blur-sm">
-                  <Play className="w-6 h-6" />
-                </div>
-                <span className="font-semibold text-lg">See Live Demo</span>
-              </div>
-              
-              <div className="bg-white/10 p-2 rounded-lg flex-shrink-0">
-                <Play className="h-4 w-4" />
+                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" style={{ animationDelay: '0.5s' }}></div>
+                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" style={{ animationDelay: '1s' }}></div>
               </div>
             </button>
           </div>
 
           {/* Trust Indicators */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-3xl mx-auto">
-            <div className="text-center">
-              <div className="text-3xl md:text-4xl font-bold text-white mb-2 font-display">50K+</div>
-              <div className="text-gray-400 text-sm">Happy Travelers</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl md:text-4xl font-bold text-white mb-2 font-display">200+</div>
-              <div className="text-gray-400 text-sm">Destinations</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl md:text-4xl font-bold text-white mb-2 font-display">4.9★</div>
-              <div className="text-gray-400 text-sm">User Rating</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl md:text-4xl font-bold text-white mb-2 font-display">95%</div>
-              <div className="text-cyan-200 text-sm">Satisfaction</div>
-            </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto">
+            {TRUST_INDICATORS.map((indicator, index) => {
+              const IconComponent = indicator.icon;
+              return (
+                <div key={index} className="text-center group">
+                  <div className="flex items-center justify-center mb-2">
+                    <IconComponent className="h-6 w-6 text-cyan-300 mr-2 group-hover:scale-110 transition-transform" />
+                    <div className="text-3xl md:text-4xl font-bold text-white font-display">{indicator.metric}</div>
+                  </div>
+                  <div className="text-gray-400 text-sm">{indicator.label}</div>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
 
-      {/* Features Section - New */}
-      <section className="py-24 bg-gradient-to-br from-teal-50 to-cyan-50">
+      {/* Smart Features Section - Interactive */}
+      <section className="py-24 bg-gradient-to-br from-teal-50 to-cyan-50 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-teal-100/50 to-cyan-100/50"></div>
+        
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="font-display text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+              Why 100K+ Travelers Choose TripCraft
+            </h2>
+            <p className="text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed">
+              Experience the future of travel planning with our cutting-edge AI technology that learns and adapts to your preferences
+            </p>
+          </div>
+
+          {/* Interactive Feature Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {SMART_FEATURES.map((feature, index) => {
+              const IconComponent = feature.icon;
+              const isActive = activeFeature === index;
+              
+              return (
+                <div 
+                  key={index} 
+                  className={`group relative p-8 rounded-3xl transition-all duration-500 cursor-pointer ${
+                    isActive 
+                      ? 'bg-gradient-to-br from-white to-cyan-50 border-2 border-cyan-200 shadow-2xl scale-105' 
+                      : 'bg-gradient-to-br from-white to-teal-50 border border-teal-100 hover:shadow-xl hover:-translate-y-2'
+                  }`}
+                  onClick={() => setActiveFeature(index)}
+                >
+                  {/* Animated Background */}
+                  {isActive && (
+                    <div className={`absolute inset-0 bg-gradient-to-r ${feature.color} opacity-5 rounded-3xl animate-pulse`}></div>
+                  )}
+                  
+                  <div className="relative z-10">
+                    <div className={`bg-gradient-to-r ${feature.color} w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform shadow-lg`}>
+                      <IconComponent className="h-8 w-8 text-white" />
+                    </div>
+                    
+                    <div className="text-center mb-4">
+                      <div className={`text-3xl font-bold bg-gradient-to-r ${feature.color} bg-clip-text text-transparent mb-2`}>
+                        {feature.metric}
+                      </div>
+                      <h3 className="font-display text-xl font-semibold text-gray-900">{feature.title}</h3>
+                    </div>
+                    
+                    <p className="text-gray-600 leading-relaxed text-center">{feature.description}</p>
+                    
+                    {isActive && (
+                      <div className="mt-6 flex justify-center">
+                        <div className="bg-gradient-to-r from-teal-600 to-cyan-600 w-12 h-1 rounded-full"></div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* Social Proof Section - Enhanced */}
+      <section className="py-24 bg-gradient-to-br from-white to-teal-50 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="font-display text-4xl font-bold text-gray-900 mb-6">
-              Why Choose TripCraft?
+            <h2 className="font-display text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+              Real Stories, Real Adventures
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Experience the future of travel planning with our cutting-edge AI technology
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {FEATURES.map((feature, index) => {
-              const IconComponent = feature.icon;
-              return (
-                <div key={index} className="group text-center p-8 rounded-3xl bg-gradient-to-br from-white to-cyan-50 border border-cyan-100 hover:shadow-2xl hover:-translate-y-2 transition-all duration-300">
-                  <div className="bg-gradient-to-r from-teal-600 to-cyan-600 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform">
-                    <IconComponent className="h-8 w-8 text-white" />
-                  </div>
-                  <h3 className="font-display text-xl font-semibold text-gray-900 mb-4">{feature.title}</h3>
-                  <p className="text-gray-600 leading-relaxed">{feature.description}</p>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* Themed Destinations Section - Enhanced */}
-      <section className="py-24 bg-gradient-to-br from-cyan-50 to-teal-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="font-display text-4xl font-bold text-gray-900 mb-6">
-              Discover by Theme
-            </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
-              Explore curated destinations tailored to your travel style and interests
-            </p>
-          </div>
-
-          {/* Theme Selector */}
-          <div className="flex flex-wrap justify-center gap-4 mb-12">
-            {TRAVEL_THEMES.map((theme, index) => {
-              const IconComponent = theme.icon;
-              return (
-                <button
-                  key={theme.id}
-                  onClick={() => setActiveTheme(index)}
-                  className={`group flex items-center gap-3 px-8 py-4 rounded-2xl font-medium transition-all duration-300 ${
-                    activeTheme === index
-                      ? `bg-gradient-to-r ${theme.color} text-white shadow-xl scale-105`
-                      : 'bg-white text-gray-600 hover:bg-cyan-50 shadow-lg hover:shadow-xl hover:scale-105'
-                  }`}
-                >
-                  <IconComponent className={`h-5 w-5 ${
-                    activeTheme === index ? 'text-white' : 'text-gray-500'
-                  } group-hover:scale-110 transition-transform`} />
-                  <span className="font-display font-semibold">{theme.name}</span>
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Destinations Carousel */}
-          <div className="relative">
-            <button
-              onClick={() => scrollDestinations('left')}
-              className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white/95 backdrop-blur-sm p-4 rounded-full shadow-xl hover:bg-white transition-all duration-200 hover:scale-110"
-            >
-              <ChevronLeft className="h-6 w-6 text-gray-600" />
-            </button>
-            <button
-              onClick={() => scrollDestinations('right')}
-              className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white/95 backdrop-blur-sm p-4 rounded-full shadow-xl hover:bg-white transition-all duration-200 hover:scale-110"
-            >
-              <ChevronRight className="h-6 w-6 text-gray-600" />
-            </button>
-
-            <div
-              id={`destinations-${TRAVEL_THEMES[activeTheme].id}`}
-              className="flex gap-6 overflow-x-auto pb-4 scrollbar-hide scroll-smooth px-16"
-            >
-              {TRAVEL_THEMES[activeTheme].destinations.map((destination, index) => (
-                <div 
-                  key={`${destination.name}-${index}`}
-                  className="group bg-white rounded-3xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-500 flex-shrink-0 w-80 hover:-translate-y-3"
-                >
-                  <div className="relative h-48 overflow-hidden">
-                    <img 
-                      src={destination.image}
-                      alt={destination.name}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                    
-                    <div className={`absolute top-4 right-4 bg-gradient-to-r ${TRAVEL_THEMES[activeTheme].color} text-white px-3 py-1 rounded-full text-sm font-medium shadow-lg`}>
-                      {destination.highlight}
-                    </div>
-
-                    <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-full text-sm font-medium flex items-center gap-1">
-                      <Star className="h-3 w-3 text-yellow-500 fill-current" />
-                      <span>{destination.rating}</span>
-                    </div>
-                  </div>
-
-                  <div className="p-6">
-                    <h3 className="font-display text-xl font-bold text-gray-900 mb-3 group-hover:text-purple-600 transition-colors">
-                      {destination.name}
-                    </h3>
-                    <p className="text-gray-600 leading-relaxed mb-6">
-                      {destination.description}
-                    </p>
-                    
-                    <button 
-                      onClick={onGetStarted}
-                      className={`w-full py-3 px-4 rounded-xl font-semibold transition-all duration-200 bg-gradient-to-r ${TRAVEL_THEMES[activeTheme].color} text-white hover:shadow-lg hover:scale-105`}
-                    >
-                      Plan This Trip
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Testimonials Section - New */}
-      <section className="py-24 bg-gradient-to-br from-white to-teal-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="font-display text-4xl font-bold text-gray-900 mb-6">
-              What Our Travelers Say
-            </h2>
-            <p className="text-lg text-gray-600">
-              Join thousands of happy travelers who've crafted their perfect journeys
+              Join thousands of travelers who've discovered their perfect journeys with TripCraft
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {TESTIMONIALS.map((testimonial, index) => (
-              <div key={index} className="bg-gradient-to-br from-teal-50 to-cyan-50 p-8 rounded-3xl border border-teal-100 hover:shadow-xl transition-all duration-300">
-                <div className="flex items-center gap-1 mb-4">
-                  {[...Array(testimonial.rating)].map((_, i) => (
-                    <Star key={i} className="h-5 w-5 text-yellow-500 fill-current" />
-                  ))}
-                </div>
-                <p className="text-gray-700 mb-6 leading-relaxed italic">"{testimonial.text}"</p>
-                <div className="flex items-center gap-3">
-                  <img 
-                    src={testimonial.avatar} 
-                    alt={testimonial.name}
-                    className="w-12 h-12 rounded-full object-cover"
-                  />
-                  <div>
-                    <div className="font-semibold text-gray-900">{testimonial.name}</div>
-                    <div className="text-sm text-gray-600">{testimonial.location}</div>
+              <div key={index} className="group bg-gradient-to-br from-teal-50 to-cyan-50 p-8 rounded-3xl border border-teal-100 hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 relative overflow-hidden">
+                {/* Background Pattern */}
+                <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-teal-200/20 to-cyan-200/20 rounded-full -translate-y-16 translate-x-16"></div>
+                
+                <div className="relative z-10">
+                  {/* Rating */}
+                  <div className="flex items-center gap-1 mb-4">
+                    {[...Array(testimonial.rating)].map((_, i) => (
+                      <Star key={i} className="h-5 w-5 text-yellow-500 fill-current" />
+                    ))}
+                  </div>
+                  
+                  {/* Quote */}
+                  <p className="text-gray-700 mb-6 leading-relaxed italic text-lg">"{testimonial.text}"</p>
+                  
+                  {/* Trip Badge */}
+                  <div className="bg-gradient-to-r from-teal-600 to-cyan-600 text-white px-4 py-2 rounded-full text-sm font-medium mb-6 inline-block">
+                    {testimonial.trip}
+                  </div>
+                  
+                  {/* Author */}
+                  <div className="flex items-center gap-4">
+                    <img 
+                      src={testimonial.avatar} 
+                      alt={testimonial.name}
+                      className="w-14 h-14 rounded-full object-cover shadow-lg"
+                    />
+                    <div>
+                      <div className="font-semibold text-gray-900 text-lg">{testimonial.name}</div>
+                      <div className="text-sm text-teal-600 font-medium">{testimonial.role}</div>
+                      <div className="text-sm text-gray-600">{testimonial.location}</div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -600,41 +383,51 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
         </div>
       </section>
 
-      {/* Final CTA Section - Enhanced */}
+      {/* Final CTA Section - Conversion Optimized */}
       <section className="py-24 bg-gradient-to-r from-teal-800 via-cyan-800 to-teal-900 -mx-4 sm:-mx-6 lg:-mx-8 relative overflow-hidden">
+        {/* Animated Background */}
         <div className="absolute inset-0">
-          <div className="absolute top-20 left-20 w-72 h-72 bg-cyan-400/25 rounded-full blur-3xl animate-pulse"></div>
-          <div className="absolute bottom-20 right-20 w-96 h-96 bg-teal-400/25 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
+          <div className="absolute top-20 left-20 w-72 h-72 bg-cyan-400/20 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute bottom-20 right-20 w-96 h-96 bg-teal-400/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
+          <div className="absolute top-1/2 left-1/2 w-80 h-80 bg-turquoise-400/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '4s' }}></div>
         </div>
 
-        <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="font-display text-5xl font-bold text-white mb-8">
-            Ready to Start Your Adventure?
+        <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="font-display text-5xl md:text-6xl font-bold text-white mb-8">
+            Your Adventure Starts Now
           </h2>
-          <p className="text-xl text-cyan-200 mb-12 max-w-2xl mx-auto leading-relaxed">
-            Create your personalized itinerary in minutes, not hours. Every journey begins with a single step.
+          <p className="text-xl text-cyan-200 mb-12 max-w-3xl mx-auto leading-relaxed">
+            Join 100,000+ travelers who've discovered their perfect journeys. 
+            <span className="text-white font-semibold"> Create your personalized itinerary in under 60 seconds.</span>
           </p>
 
+          {/* Primary CTA */}
           <button
             onClick={onGetStarted}
-            className="group inline-flex items-center gap-4 px-12 py-6 bg-gradient-to-r from-amber-400 via-orange-500 to-red-500 text-white rounded-2xl hover:from-amber-500 hover:via-orange-600 hover:to-red-600 transition-all duration-300 shadow-2xl hover:shadow-3xl font-semibold text-xl hover:scale-105 font-display"
+            className="group inline-flex items-center gap-4 px-12 py-6 bg-gradient-to-r from-amber-400 via-orange-500 to-red-500 text-white rounded-2xl hover:from-amber-500 hover:via-orange-600 hover:to-red-600 transition-all duration-300 shadow-2xl hover:shadow-3xl font-semibold text-xl hover:scale-105 font-display mb-8"
           >
-            Start Planning Free
+            <Calendar className="h-6 w-6" />
+            Start Planning Your Dream Trip
             <ArrowRight className="h-6 w-6 group-hover:translate-x-2 transition-transform" />
           </button>
 
-          <div className="mt-12 flex flex-wrap items-center justify-center gap-8 text-cyan-200 text-sm">
+          {/* Trust Indicators */}
+          <div className="flex flex-wrap items-center justify-center gap-8 text-cyan-200 text-sm">
             <div className="flex items-center gap-2">
               <CheckCircle className="h-5 w-5 text-green-400" />
               No credit card required
             </div>
             <div className="flex items-center gap-2">
               <CheckCircle className="h-5 w-5 text-green-400" />
-              Instant AI-powered results
+              60-second setup
             </div>
             <div className="flex items-center gap-2">
               <CheckCircle className="h-5 w-5 text-green-400" />
-              50,000+ satisfied travelers
+              100K+ happy travelers
+            </div>
+            <div className="flex items-center gap-2">
+              <CheckCircle className="h-5 w-5 text-green-400" />
+              4.9★ rating
             </div>
           </div>
         </div>
