@@ -227,17 +227,20 @@ export const shareApi = {
           *,
           itineraries (*)
         `)
-        .eq('share_id', shareId)
-        .single();
+        .eq('share_id', shareId);
 
-      if (error || !data) {
+      if (error) {
+        throw error;
+      }
+
+      if (!data || data.length === 0) {
         return {
           success: false,
           error: 'Shared itinerary not found'
         };
       }
 
-      return { success: true, data };
+      return { success: true, data: data[0] };
     } catch (error) {
       console.error('Error getting shared itinerary:', error);
       return {
