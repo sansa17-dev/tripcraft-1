@@ -13,6 +13,7 @@ import {
 import { InteractiveDemo } from './InteractiveDemo';
 import { VoiceChatModal } from './VoiceChatModal';
 import { ARPreviewModal } from './ARPreviewModal';
+import { ARPreviewModal } from './ARPreviewModal';
 
 interface HomePageProps {
   onGetStarted: () => void;
@@ -397,7 +398,7 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
               >
                 <Camera className="h-5 w-5 group-hover:scale-110 transition-transform duration-300" />
                 AR Preview Destinations
-                <Eye className="h-4 w-4 group-hover:rotate-12 transition-transform duration-300" />
+                <div className="h-4 w-4 group-hover:rotate-12 transition-transform duration-300">👁️</div>
                 
                 {/* Revolutionary badge */}
                 <div className="absolute -top-2 -right-2 bg-purple-500 text-white text-xs px-2 py-1 rounded-full animate-pulse">
@@ -695,7 +696,7 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
                   <div className="flex items-center justify-between">
                     <span className="text-white/80 text-sm">{destination.duration}</span>
                     <div className="flex items-center gap-1 bg-white/20 backdrop-blur-sm rounded-full px-3 py-1">
-                      <Eye className="h-3 w-3" />
+                      <div className="h-3 w-3">👁️</div>
                       <span className="text-xs">AR Preview</span>
                     </div>
                   </div>
@@ -715,7 +716,7 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
             >
               <Camera className="h-4 w-4" />
               Preview All 247 Destinations in AR
-              <Eye className="h-4 w-4" />
+              <div className="h-4 w-4">👁️</div>
             </button>
           </div>
         </div>

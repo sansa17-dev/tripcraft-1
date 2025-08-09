@@ -7,7 +7,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { 
   X, Camera, RotateCcw, Maximize2, Volume2, VolumeX, 
   MapPin, Star, Clock, Users, Eye, Smartphone, 
-  Play, Pause, SkipForward, SkipBack, Compass,
+  Play, Pause, SkipForward, SkipBack, Compass, CheckCircle,
   Mountain, Waves, Building, TreePine, Sparkles
 } from 'lucide-react';
 
