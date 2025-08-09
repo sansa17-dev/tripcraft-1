@@ -75,7 +75,6 @@ export function SharedItineraryView({ shareId }: SharedItineraryViewProps) {
       
       if (result.success && result.data) {
         setSharedItinerary(result.data);
-        setEditedItinerary(result.data.itineraries);
         
         // Increment view count
         await shareApi.incrementView(shareId);
