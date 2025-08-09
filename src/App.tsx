@@ -48,6 +48,7 @@ function App() {
   const [savingItinerary, setSavingItinerary] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [isEditingItinerary, setIsEditingItinerary] = useState(false);
+  const [generatedPreferences, setGeneratedPreferences] = useState<TravelPreferences | null>(null);
 
   /**
    * Handles form submission and itinerary generation
@@ -93,6 +94,7 @@ function App() {
 
       if (result.success && result.data) {
         setItinerary(result.data);
+        setGeneratedPreferences(preferences);
         setCurrentView('results');
       } else {
         throw new Error(result.error || 'Failed to generate itinerary');
@@ -110,13 +112,13 @@ function App() {
    * Handles saving the current itinerary
    */
   const handleSaveItinerary = async () => {
-    if (!user || !itinerary) return;
+    if (!user || !itinerary || !generatedPreferences) return;
 
     setSavingItinerary(true);
     setSaveSuccess(false);
 
     try {
-      const result = await saveItinerary(itinerary, preferences, user.id);
+      const result = await saveItinerary(itinerary, generatedPreferences, user.id);
       if (result.success) {
         setSaveSuccess(true);
         setTimeout(() => setSaveSuccess(false), 3000);
@@ -149,6 +151,7 @@ function App() {
    */
   const handleReset = () => {
     setItinerary(null);
+    setGeneratedPreferences(null);
     setError(null);
     setShowApiKeyNotice(false);
     setSaveSuccess(false);
@@ -160,6 +163,7 @@ function App() {
    */
   const handleSelectSavedItinerary = (savedItinerary: GeneratedItinerary) => {
     setItinerary(savedItinerary);
+    setGeneratedPreferences(null); // Clear since this is a loaded itinerary
     setCurrentView('results');
   };
 
