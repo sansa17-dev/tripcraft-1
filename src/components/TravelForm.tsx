@@ -6,6 +6,7 @@
 import React from 'react';
 import { Calendar, MapPin, Users, Wallet, Heart, Home, FileText } from 'lucide-react';
 import { TravelPreferences } from '../types';
+import { GooglePlacesAutocomplete } from './GooglePlacesAutocomplete';
 
 interface TravelFormProps {
   preferences: TravelPreferences;
@@ -69,36 +70,22 @@ export function TravelForm({ preferences, onPreferencesChange, onSubmit, isGener
 
       <form onSubmit={onSubmit} className="space-y-6 relative z-10">
         {/* Origin */}
-        <div>
-          <label htmlFor="origin" className="block text-sm font-medium text-gray-700 mb-2">
-            Where are you travelling from? *
-          </label>
-          <input
-            type="text"
-            id="origin"
-            required
-            value={preferences.origin}
-            onChange={(e) => updateField('origin', e.target.value)}
-            placeholder="e.g., Mumbai, Delhi, Bangalore"
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
-          />
-        </div>
+        <GooglePlacesAutocomplete
+          value={preferences.origin}
+          onChange={(value) => updateField('origin', value)}
+          placeholder="e.g., Mumbai, Delhi, Bangalore"
+          label="Where are you travelling from?"
+          required={true}
+        />
 
         {/* Destination */}
-        <div>
-          <label htmlFor="destination" className="block text-sm font-medium text-gray-700 mb-2">
-            Where would you like to go? *
-          </label>
-          <input
-            type="text"
-            id="destination"
-            required
-            value={preferences.destination}
-            onChange={(e) => updateField('destination', e.target.value)}
-            placeholder="e.g., Goa, Kerala, Rajasthan"
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
-          />
-        </div>
+        <GooglePlacesAutocomplete
+          value={preferences.destination}
+          onChange={(value) => updateField('destination', value)}
+          placeholder="e.g., Goa, Kerala, Rajasthan"
+          label="Where would you like to go?"
+          required={true}
+        />
 
         {/* Dates */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
