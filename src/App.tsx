@@ -185,11 +185,16 @@ function App() {
   };
 
   /**
-   * Handles updating an edited itinerary
+   * Handles updating an edited itinerary and saves it as new version
    */
   const handleUpdateItinerary = (updatedItinerary: GeneratedItinerary) => {
     setItinerary(updatedItinerary);
-    // If this is a saved itinerary, we could update it in the database here
+    setGeneratedPreferences(preferences); // Ensure we have preferences for saving
+    
+    // Auto-save the refined itinerary as a new version
+    if (user) {
+      handleSaveItinerary();
+    }
   };
 
   if (authLoading) {

@@ -14,7 +14,6 @@ interface AIChatModalProps {
   itinerary: GeneratedItinerary;
   preferences: TravelPreferences;
   onItineraryUpdate: (updatedItinerary: GeneratedItinerary) => void;
-  onRedirectToItinerary?: () => void;
 }
 
 export function AIChatModal({ isOpen, onClose, itinerary, preferences, onItineraryUpdate }: AIChatModalProps) {
@@ -80,7 +79,7 @@ export function AIChatModal({ isOpen, onClose, itinerary, preferences, onItinera
         setMessages(prev => [...prev, assistantMessage]);
         
         // Show change summary if provided
-        if (result.changeSummary) {
+        if ('changeSummary' in result && result.changeSummary) {
           const summaryMessage: ChatMessage = {
             id: (Date.now() + 2).toString(),
             role: 'assistant',
@@ -92,12 +91,9 @@ export function AIChatModal({ isOpen, onClose, itinerary, preferences, onItinera
         
         onItineraryUpdate(result.data);
         
-        // Auto-close modal and redirect to updated itinerary after 2 seconds
+        // Auto-close modal after showing changes
         setTimeout(() => {
           onClose();
-          if (onRedirectToItinerary) {
-            onRedirectToItinerary();
-          }
         }, 2000);
       } else {
         throw new Error(result.error || 'Failed to process your request');

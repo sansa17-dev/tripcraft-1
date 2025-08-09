@@ -615,14 +615,7 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
           onClose={() => setShowAIChat(false)}
           itinerary={editedItinerary}
           preferences={preferences}
-          onItineraryUpdate={(updatedItinerary) => {
-            setEditedItinerary(updatedItinerary);
-            onSave(updatedItinerary);
-          }}
-          onRedirectToItinerary={() => {
-            // This will ensure the user sees the updated itinerary
-            setShowAIChat(false);
-          }}
+          onItineraryUpdate={onSave}
         />
       )}
     </div>
