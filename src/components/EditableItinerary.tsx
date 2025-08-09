@@ -18,7 +18,6 @@ interface EditableItineraryProps {
   isEditing: boolean;
   onToggleEdit: () => void;
   savedItineraryId?: string;
-  onShare?: () => void;
 }
 
 export function EditableItinerary({ 
@@ -27,7 +26,6 @@ export function EditableItinerary({
   isEditing, 
   onToggleEdit, 
   savedItineraryId,
-  onShare 
 }: EditableItineraryProps) {
   const [editedItinerary, setEditedItinerary] = useState<GeneratedItinerary>(itinerary);
   const [copiedDays, setCopiedDays] = useState<Set<number>>(new Set());

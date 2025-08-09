@@ -147,10 +147,11 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
                     window.location.href = `/shared/${id}`;
                   }
                 }}
-                className="flex items-center gap-2 px-6 py-3 bg-white/20 backdrop-blur-sm text-white rounded-xl hover:bg-white/30 transition-all duration-200 shadow-lg hover:shadow-xl font-medium border border-white/30"
+                className="flex items-center gap-2 px-6 py-3 bg-white/20 backdrop-blur-sm text-white rounded-xl hover:bg-white/30 transition-all duration-200 shadow-lg hover:shadow-xl font-medium border border-white/30 opacity-50 cursor-not-allowed"
+                disabled
               >
                 <Share2 className="h-5 w-5" />
-                View Shared Trip
+                View Shared Trip (Coming Soon)
               </button>
             </div>
 

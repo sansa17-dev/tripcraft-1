@@ -19,8 +19,6 @@ import { AuthModal } from './components/AuthModal';
 import { SavedItineraries } from './components/SavedItineraries';
 import { HomePage } from './components/HomePage';
 import { LoadingSpinner } from './components/LoadingSpinner';
-import { ShareModal } from './components/ShareModal';
-import { SharedItineraryView } from './components/SharedItineraryView';
 import { Edit3 } from 'lucide-react';
 
 function App() {
@@ -51,23 +49,6 @@ function App() {
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [isEditingItinerary, setIsEditingItinerary] = useState(false);
   const [currentSavedItineraryId, setCurrentSavedItineraryId] = useState<string | null>(null);
-  const [showShareModal, setShowShareModal] = useState(false);
-  const [sharedItineraryId, setSharedItineraryId] = useState<string | null>(null);
-
-  /**
-   * Handles accessing a shared itinerary via URL
-   */
-  useEffect(() => {
-    // Check if URL contains a shared itinerary ID
-    const urlPath = window.location.pathname;
-    const sharedMatch = urlPath.match(/^\/shared\/([a-f0-9-]+)$/);
-    
-    if (sharedMatch) {
-      const shareId = sharedMatch[1];
-      setSharedItineraryId(shareId);
-      setCurrentView('shared');
-    }
-  }, []);
 
   /**
    * Handles form submission and itinerary generation
@@ -181,7 +162,6 @@ function App() {
     setError(null);
     setShowApiKeyNotice(false);
     setSaveSuccess(false);
-    setSharedItineraryId(null);
     setCurrentView('home');
   };
 
@@ -203,13 +183,6 @@ function App() {
    */
   const handleUpdateItinerary = (updatedItinerary: GeneratedItinerary) => {
     setItinerary(updatedItinerary);
-  };
-
-  /**
-   * Handles sharing an itinerary
-   */
-  const handleShareItinerary = async () => {
-    setShowShareModal(true);
   };
 
   if (authLoading) {
@@ -266,28 +239,6 @@ function App() {
                   >
                     <BookOpen className="h-4 w-4" />
                     Saved
-                  </button>
-                  <button
-                    onClick={() => {
-                      const shareId = prompt('Enter shared itinerary ID or paste the full URL:');
-                      if (shareId) {
-                        // Extract ID from URL if full URL is provided
-                        const match = shareId.match(/\/shared\/([a-f0-9-]+)/);
-                        const id = match ? match[1] : shareId;
-                        setSharedItineraryId(id);
-                        setCurrentView('shared');
-                        // Update URL without page reload
-                        window.history.pushState({}, '', `/shared/${id}`);
-                      }
-                    }}
-                    className={`flex items-center gap-1 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
-                      currentView === 'shared'
-                        ? 'bg-blue-100 text-blue-700'
-                        : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
-                    }`}
-                  >
-                    <Share2 className="h-4 w-4" />
-                    View Shared
                   </button>
                 </div>
               )}
@@ -381,24 +332,13 @@ function App() {
             </button>
             
             <div className="flex items-center gap-3">
-              {/* Share Button */}
-              {currentSavedItineraryId && (
-                <button
-                  onClick={handleShareItinerary}
-                  className="flex items-center gap-2 px-4 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 shadow-lg hover:shadow-xl font-medium"
-                >
-                  <Share2 className="h-4 w-4" />
-                  Share
-                </button>
-              )}
-              
               {/* Edit Button */}
               <button
                 onClick={() => setIsEditingItinerary(!isEditingItinerary)}
                 className="flex items-center gap-2 px-4 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 shadow-lg hover:shadow-xl font-medium"
               >
                 <Edit3 className="h-4 w-4" />
-                <span className="hidden sm:inline">{currentSavedItineraryId ? 'Edit & Collaborate' : 'Edit Itinerary'}</span>
+                <span className="hidden sm:inline">Edit Itinerary</span>
                 <span className="sm:hidden">Edit</span>
               </button>
             </div>
@@ -500,9 +440,6 @@ function App() {
           ) : currentView === 'saved' ? (
             /* Saved Itineraries */
             <SavedItineraries onSelectItinerary={handleSelectSavedItinerary} />
-          ) : currentView === 'shared' && sharedItineraryId ? (
-            /* Shared Itinerary View */
-            <SharedItineraryView shareId={sharedItineraryId} />
           ) : null}
 
           {/* Auth Prompt for Non-Users */}
@@ -547,15 +484,6 @@ function App() {
         onModeChange={setAuthMode}
       />
 
-      {/* Share Modal */}
-      {currentSavedItineraryId && itinerary && (
-        <ShareModal
-          isOpen={showShareModal}
-          onClose={() => setShowShareModal(false)}
-          itineraryId={currentSavedItineraryId}
-          itineraryTitle={itinerary.title}
-        />
-      )}
     </div>
   );
 }
