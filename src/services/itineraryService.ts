@@ -374,7 +374,7 @@ export async function generateItinerary(preferences: TravelPreferences): Promise
       console.log('Falling back to demo itinerary due to parsing error');
       return {
         success: false,
-        error: \`API parsing failed: ${parseError instanceof Error ? parseError.message : 'Unknown error'}. Using demo itinerary.`
+        error: `API parsing failed: ${parseError instanceof Error ? parseError.message : 'Unknown error'}. Using demo itinerary.`
       };
     }
 
