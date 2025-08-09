@@ -20,6 +20,7 @@ import { SavedItineraries } from './components/SavedItineraries';
 import { HomePage } from './components/HomePage';
 import { LoadingSpinner } from './components/LoadingSpinner';
 import { ShareModal } from './components/ShareModal';
+import { SharedItineraryView } from './components/SharedItineraryView';
 
 function App() {
   const { user, signOut, loading: authLoading } = useAuth();
@@ -51,6 +52,22 @@ function App() {
   const [sharedItineraryId, setSharedItineraryId] = useState<string | null>(null);
   const [currentSavedItineraryId, setCurrentSavedItineraryId] = useState<string | null>(null);
   const [showShareModal, setShowShareModal] = useState(false);
+  const [sharedItineraryId, setSharedItineraryId] = useState<string | null>(null);
+
+  /**
+   * Handles accessing a shared itinerary via URL
+   */
+  useEffect(() => {
+    // Check if URL contains a shared itinerary ID
+    const urlPath = window.location.pathname;
+    const sharedMatch = urlPath.match(/^\/shared\/([a-f0-9-]+)$/);
+    
+    if (sharedMatch) {
+      const shareId = sharedMatch[1];
+      setSharedItineraryId(shareId);
+      setCurrentView('shared');
+    }
+  }, []);
 
   /**
    * Handles form submission and itinerary generation
@@ -192,13 +209,6 @@ function App() {
   };
 
   /**
-   * Handles viewing a shared itinerary
-   */
-  const handleViewSharedItinerary = (shareId: string) => {
-    setSharedItineraryId(shareId);
-    setCurrentView('shared');
-  };
-  
   if (authLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 flex items-center justify-center">
@@ -253,6 +263,28 @@ function App() {
                   >
                     <BookOpen className="h-4 w-4" />
                     Saved
+                  </button>
+                  <button
+                    onClick={() => {
+                      const shareId = prompt('Enter shared itinerary ID or paste the full URL:');
+                      if (shareId) {
+                        // Extract ID from URL if full URL is provided
+                        const match = shareId.match(/\/shared\/([a-f0-9-]+)/);
+                        const id = match ? match[1] : shareId;
+                        setSharedItineraryId(id);
+                        setCurrentView('shared');
+                        // Update URL without page reload
+                        window.history.pushState({}, '', `/shared/${id}`);
+                      }
+                    }}
+                    className={`flex items-center gap-1 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                      currentView === 'shared'
+                        ? 'bg-blue-100 text-blue-700'
+                        : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                    }`}
+                  >
+                    <Share2 className="h-4 w-4" />
+                    View Shared
                   </button>
                 </div>
               )}
