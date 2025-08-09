@@ -202,6 +202,11 @@ export function SharedItineraryView({ shareId }: SharedItineraryViewProps) {
             {/* Add comment for collaborators */}
             {canCollaborate && (
               <div className="bg-blue-50 rounded-lg p-3">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="text-sm font-medium text-blue-900">
+                    Commenting as: {user?.email || 'Anonymous User'}
+                  </span>
+                </div>
                 <textarea
                   value={newDayComments[dayIndex] || ''}
                   onChange={(e) => setNewDayComments(prev => ({ 
@@ -658,7 +663,7 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
             {itinerary.days.map((day: any, dayIndex: number) => (
               <div 
                 key={`${day.day}-${dayIndex}`}
-              className="bg-gradient-to-r from-gray-50 to-blue-50/30 rounded-xl p-6 relative shadow-sm hover:shadow-md transition-shadow"
+                className="bg-gradient-to-r from-gray-50 to-blue-50/30 rounded-xl p-6 relative shadow-sm hover:shadow-md transition-shadow"
                 style={{ paddingRight: '4rem' }}
               >
                 {/* Copy button */}
