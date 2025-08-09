@@ -230,7 +230,12 @@ export const shareApi = {
         .eq('share_id', shareId)
         .single();
 
-      if (error) throw error;
+      if (error || !data) {
+        return {
+          success: false,
+          error: 'Shared itinerary not found'
+        };
+      }
 
       return { success: true, data };
     } catch (error) {
