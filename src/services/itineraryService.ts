@@ -105,6 +105,121 @@ Make sure all recommendations match the ${budget} budget level (per traveler per
 }
 
 /**
+ * Get persona description for better LLM understanding
+ */
+function getPersonaDescription(category: string, value: string): string {
+  const descriptions: Record<string, Record<string, string>> = {
+    timePreference: {
+      'early-bird': '(prefers morning activities, sunrise experiences, early starts)',
+      'night-owl': '(prefers late starts, evening/night activities, sunset experiences)',
+      'flexible': '(adaptable to destination rhythm, balanced schedule)'
+    },
+    socialStyle: {
+      'social': '(enjoys meeting locals, group activities, social experiences)',
+      'intimate': '(prefers small groups, meaningful connections, quiet moments)',
+      'solo-friendly': '(enjoys independent exploration, peaceful activities, self-guided experiences)'
+    },
+    culturalInterest: {
+      'high': '(loves museums, historical sites, cultural immersion, learning)',
+      'moderate': '(enjoys some culture mixed with other activities)',
+      'low': '(prefers experiences over educational/cultural sites)'
+    },
+    foodAdventure: {
+      'adventurous': '(loves trying new foods, street food, local specialties, exotic dishes)',
+      'moderate': '(enjoys some local dishes but also familiar options)',
+      'familiar': '(prefers familiar cuisines, safe food choices, international options)'
+    },
+    planningStyle: {
+      'structured': '(likes detailed schedules, advance bookings, organized itineraries)',
+      'flexible': '(wants key highlights planned but room for spontaneity)',
+      'spontaneous': '(prefers minimal planning, day-by-day decisions, freedom to explore)'
+    }
+  };
+  
+  return descriptions[category]?.[value] || '';
+}
+
+/**
+ * Get specific instructions based on time preference
+ */
+function getTimePreferenceInstructions(timePreference: string): string {
+  switch (timePreference) {
+    case 'early-bird':
+      return 'Schedule key activities in the morning (7-11 AM), include sunrise experiences, morning markets, and peaceful temple visits. Suggest earlier dinner times (6-7 PM) and mention best morning photo opportunities.';
+    case 'night-owl':
+      return 'Plan relaxed mornings with late starts (10 AM+), focus on afternoon and evening activities, include sunset viewpoints, night markets, evening cultural shows, and vibrant nightlife options.';
+    case 'flexible':
+      return 'Create a balanced schedule that can be adapted, mention both morning and evening options for key activities, and provide timing alternatives for major attractions.';
+    default:
+      return 'Create a balanced daily schedule with activities throughout the day.';
+  }
+}
+
+/**
+ * Get specific instructions based on social style
+ */
+function getSocialStyleInstructions(socialStyle: string): string {
+  switch (socialStyle) {
+    case 'social':
+      return 'Include group tours, cooking classes, local meetups, community events, shared dining experiences, and opportunities to interact with locals. Suggest social accommodations like hostels or guesthouses.';
+    case 'intimate':
+      return 'Focus on small group experiences, private tours, quiet cafes, romantic restaurants, peaceful gardens, and meaningful cultural exchanges. Avoid crowded tourist traps.';
+    case 'solo-friendly':
+      return 'Emphasize self-guided activities, peaceful locations, solo-friendly restaurants with counter seating, libraries, parks, and independent exploration opportunities. Include safety tips for solo travelers.';
+    default:
+      return 'Include a mix of social and independent activities to suit different preferences.';
+  }
+}
+
+/**
+ * Get specific instructions based on cultural interest level
+ */
+function getCulturalInterestInstructions(culturalInterest: string): string {
+  switch (culturalInterest) {
+    case 'high':
+      return 'Prioritize museums, historical sites, cultural centers, traditional performances, heritage walks, local festivals, and educational experiences. Include detailed historical context and cultural significance for each recommendation.';
+    case 'moderate':
+      return 'Include some key cultural sites mixed with other activities. Balance museums with outdoor activities, food experiences, and entertainment. Provide cultural context but keep it engaging.';
+    case 'low':
+      return 'Focus on experiential activities over educational sites. Emphasize food, nature, entertainment, shopping, and adventure activities. Include cultural elements naturally within experiences rather than dedicated cultural visits.';
+    default:
+      return 'Include a balanced mix of cultural and experiential activities.';
+  }
+}
+
+/**
+ * Get specific instructions based on food adventure level
+ */
+function getFoodAdventureInstructions(foodAdventure: string): string {
+  switch (foodAdventure) {
+    case 'adventurous':
+      return 'Recommend street food, local markets, hole-in-the-wall restaurants, regional specialties, exotic dishes, food tours, cooking classes, and unique dining experiences. Include specific dishes to try and food safety tips.';
+    case 'moderate':
+      return 'Mix local specialties with familiar options. Suggest reputable local restaurants alongside international cuisine. Include some adventurous dishes but also comfort food options.';
+    case 'familiar':
+      return 'Focus on international restaurants, hotel dining, familiar cuisines, and well-known food chains. Include some mild local dishes that are similar to familiar foods. Prioritize food safety and hygiene.';
+    default:
+      return 'Include a variety of dining options from local to international cuisine.';
+  }
+}
+
+/**
+ * Get specific instructions based on planning style
+ */
+function getPlanningStyleInstructions(planningStyle: string): string {
+  switch (planningStyle) {
+    case 'structured':
+      return 'Provide detailed time schedules, specific addresses, booking information, advance reservation requirements, and step-by-step daily plans. Include backup options and contingency plans.';
+    case 'flexible':
+      return 'Outline key highlights and must-see attractions but leave room for spontaneous discoveries. Provide time ranges rather than specific times, and suggest optional activities for extra time.';
+    case 'spontaneous':
+      return 'Focus on general areas to explore, provide multiple options for each time period, emphasize walk-in friendly venues, and include tips for last-minute bookings and discoveries.';
+    default:
+      return 'Provide a structured framework with flexibility for personal preferences.';
+  }
+}
+
+/**
  * Calls ChatGPT API to generate travel itinerary
  */
 export async function generateItinerary(preferences: TravelPreferences): Promise<ApiResponse> {
