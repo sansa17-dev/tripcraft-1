@@ -676,11 +676,13 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
         </div>
       </section>
     </div>
+
       {/* Interactive Demo Section */}
       <section className="py-24 bg-gradient-to-br from-gray-50 to-blue-50">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <InteractiveDemo onStartPlanning={onGetStarted} />
         </div>
       </section>
+    </div>
   );
 }
