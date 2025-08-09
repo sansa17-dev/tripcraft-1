@@ -206,7 +206,7 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
               className="group relative flex items-center justify-between w-full lg:w-96 px-10 py-6 bg-gradient-to-r from-amber-400 via-orange-500 to-red-500 text-white rounded-2xl hover:from-amber-500 hover:via-orange-600 hover:to-red-600 transition-all duration-300 shadow-2xl hover:shadow-3xl hover:scale-105 font-display overflow-hidden"
             >
               <div className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg animate-bounce">
-                Start Free
+              Meet Your AI Travel Companion
               </div>
               
               <div className="flex items-center gap-4">
@@ -214,8 +214,8 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
                   <Calendar className="w-6 h-6" />
                 </div>
                 <div className="text-left">
-                  <div className="font-semibold text-lg">Plan My Trip</div>
-                  <div className="text-sm opacity-90">AI-powered itinerary</div>
+                  <div className="font-semibold text-lg">Meet Your AI Companion</div>
+                  <div className="text-sm opacity-90">Your personalized travel assistant</div>
                 </div>
               </div>
               
@@ -236,8 +236,8 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
                   <Mic className="w-6 h-6" />
                 </div>
                 <div className="text-left">
-                  <div className="font-semibold text-lg">Voice Planning</div>
-                  <div className="text-sm opacity-90">Just speak your dreams</div>
+                  <div className="font-semibold text-lg">Voice Chat with AI</div>
+                  <div className="text-sm opacity-90">Speak to plan your trip</div>
                 </div>
               </div>
               
