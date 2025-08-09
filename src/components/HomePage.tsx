@@ -124,9 +124,7 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
         <div className="relative z-10 px-4 sm:px-6 lg:px-8 py-24 text-center">
           <div className="max-w-4xl mx-auto">
             <h1 className="text-5xl md:text-6xl font-bold text-white mb-6 leading-tight">
-              <span className="bg-gradient-to-r from-yellow-300 to-orange-300 bg-clip-text text-transparent">
-                Travel Plans Made Easy
-              </span>
+              <span className="bg-gradient-to-r from-yellow-300 to-orange-300 bg-clip-text text-transparent">Travel Plans Made Easy</span>
             </h1>
             
             <p className="text-xl md:text-2xl text-blue-100 max-w-3xl mx-auto leading-relaxed mb-8">
