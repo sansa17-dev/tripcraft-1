@@ -220,11 +220,11 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
               type="text"
               value={editedItinerary.title}
               onChange={(e) => updateItineraryField('title', e.target.value)}
-              className="text-3xl font-bold bg-transparent border-b-2 border-white/50 focus:border-white outline-none mb-3 text-white placeholder-white/70"
+              className="text-3xl font-bold bg-transparent border-b-2 border-white/50 focus:border-white outline-none mb-3 text-white placeholder-white/70 min-w-0"
               placeholder="Trip title"
             />
           ) : (
-            <h2 className="text-3xl font-bold mb-3">{editedItinerary.title}</h2>
+            <h2 className="text-3xl font-bold mb-3 break-words">{editedItinerary.title}</h2>
           )}
           
           <div className="flex flex-wrap items-center gap-6 text-sm mb-4">
@@ -235,11 +235,11 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
                   type="text"
                   value={editedItinerary.destination}
                   onChange={(e) => updateItineraryField('destination', e.target.value)}
-                  className="bg-transparent border-b border-white/50 focus:border-white outline-none text-white placeholder-white/70"
+                  className="bg-transparent border-b border-white/50 focus:border-white outline-none text-white placeholder-white/70 min-w-0"
                   placeholder="Destination"
                 />
               ) : (
-                editedItinerary.destination
+                <span className="break-words">{editedItinerary.destination}</span>
               )}
             </div>
             <div className="flex items-center gap-1">
@@ -249,7 +249,7 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
                   type="text"
                   value={editedItinerary.duration}
                   onChange={(e) => updateItineraryField('duration', e.target.value)}
-                  className="bg-transparent border-b border-white/50 focus:border-white outline-none text-white placeholder-white/70 w-20"
+                  className="bg-transparent border-b border-white/50 focus:border-white outline-none text-white placeholder-white/70 w-20 min-w-0"
                   placeholder="Duration"
                 />
               ) : (
@@ -263,11 +263,11 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
                   type="text"
                   value={editedItinerary.totalBudget}
                   onChange={(e) => updateItineraryField('totalBudget', e.target.value)}
-                  className="bg-transparent border-b border-white/50 focus:border-white outline-none text-white placeholder-white/70"
+                  className="bg-transparent border-b border-white/50 focus:border-white outline-none text-white placeholder-white/70 min-w-0"
                   placeholder="Budget"
                 />
               ) : (
-                editedItinerary.totalBudget
+                <span className="break-words">{editedItinerary.totalBudget}</span>
               )}
             </div>
           </div>
@@ -276,12 +276,12 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
             <textarea
               value={editedItinerary.overview}
               onChange={(e) => updateItineraryField('overview', e.target.value)}
-              className="bg-white/10 backdrop-blur-sm border border-white/30 rounded-lg p-3 text-white placeholder-white/70 resize-none"
+              className="bg-white/10 backdrop-blur-sm border border-white/30 rounded-lg p-3 text-white placeholder-white/70 resize-none w-full min-w-0"
               rows={2}
               placeholder="Trip overview"
             />
           ) : (
-            <p className="leading-relaxed text-lg">{editedItinerary.overview}</p>
+            <p className="leading-relaxed text-lg break-words">{editedItinerary.overview}</p>
           )}
         </div>
 
@@ -398,7 +398,7 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
                 </div>
                 <ul className="space-y-2">
                   {day.activities.map((activity, actIndex) => (
-                    <li key={actIndex} className="text-gray-700 pl-5 relative flex items-start gap-2">
+                    <li key={actIndex} className="text-gray-700 pl-5 relative flex items-start gap-2 min-w-0">
                       <span className="absolute left-0 top-2.5 w-2.5 h-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full flex-shrink-0"></span>
                       {isEditing ? (
                         <div className="flex-1 flex items-center gap-2">
@@ -406,17 +406,17 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
                             type="text"
                             value={activity}
                             onChange={(e) => updateActivity(dayIndex, actIndex, e.target.value)}
-                            className="flex-1 bg-white border border-gray-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            className="flex-1 min-w-0 bg-white border border-gray-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                           />
                           <button
                             onClick={() => removeActivity(dayIndex, actIndex)}
-                            className="p-1 text-red-600 hover:bg-red-50 rounded transition-colors"
+                            className="p-1 text-red-600 hover:bg-red-50 rounded transition-colors flex-shrink-0"
                           >
                             <Trash2 className="h-3 w-3" />
                           </button>
                         </div>
                       ) : (
-                        activity
+                        <span className="break-words">{activity}</span>
                       )}
                     </li>
                   ))}
@@ -430,13 +430,13 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
                     <Utensils className="h-4 w-4 text-blue-600" />
                     Meals
                   </h4>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-sm">
                     {['breakfast', 'lunch', 'dinner'].map((mealType) => {
                       const meal = day.meals[mealType as keyof typeof day.meals];
                       if (!meal && !isEditing) return null;
                       
                       return (
-                        <div key={mealType} className="bg-white p-3 rounded-lg shadow-sm">
+                        <div key={mealType} className="bg-white p-3 rounded-lg shadow-sm min-w-0">
                           <span className="font-medium text-gray-600 capitalize">{mealType}:</span>
                           {isEditing ? (
                             <input
@@ -446,11 +446,11 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
                                 ...day,
                                 meals: { ...day.meals, [mealType]: e.target.value }
                               })}
-                              className="w-full mt-1 bg-gray-50 border border-gray-200 rounded px-2 py-1 text-sm focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                              className="w-full mt-1 bg-gray-50 border border-gray-200 rounded px-2 py-1 text-sm focus:ring-1 focus:ring-blue-500 focus:border-blue-500 min-w-0"
                               placeholder={`${mealType} recommendation`}
                             />
                           ) : (
-                            <p className="text-gray-700 mt-1">{meal}</p>
+                            <p className="text-gray-700 mt-1 break-words">{meal}</p>
                           )}
                         </div>
                       );
@@ -466,17 +466,17 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
                     <Bed className="h-4 w-4 text-blue-600" />
                     Accommodation
                   </h4>
-                  <div className="bg-white p-3 rounded-lg shadow-sm">
+                  <div className="bg-white p-3 rounded-lg shadow-sm min-w-0">
                     {isEditing ? (
                       <input
                         type="text"
                         value={day.accommodation || ''}
                         onChange={(e) => updateDay(dayIndex, { ...day, accommodation: e.target.value })}
-                        className="w-full bg-gray-50 border border-gray-200 rounded px-3 py-2 text-sm focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                        className="w-full bg-gray-50 border border-gray-200 rounded px-3 py-2 text-sm focus:ring-1 focus:ring-blue-500 focus:border-blue-500 min-w-0"
                         placeholder="Accommodation recommendation"
                       />
                     ) : (
-                      <p className="text-gray-700 text-sm">{day.accommodation}</p>
+                      <p className="text-gray-700 text-sm break-words">{day.accommodation}</p>
                     )}
                   </div>
                 </div>
@@ -489,13 +489,13 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
                     <textarea
                       value={day.notes || ''}
                       onChange={(e) => updateDay(dayIndex, { ...day, notes: e.target.value })}
-                      className="w-full bg-blue-50 border border-blue-200 rounded-lg p-3 text-sm focus:ring-1 focus:ring-blue-500 focus:border-blue-500 resize-none"
+                      className="w-full bg-blue-50 border border-blue-200 rounded-lg p-3 text-sm focus:ring-1 focus:ring-blue-500 focus:border-blue-500 resize-none min-w-0"
                       rows={2}
                       placeholder="Special notes for this day"
                     />
                   ) : (
                     day.notes && (
-                      <p className="text-gray-600 text-sm italic bg-blue-50 p-3 rounded-lg">{day.notes}</p>
+                      <p className="text-gray-600 text-sm italic bg-blue-50 p-3 rounded-lg break-words">{day.notes}</p>
                     )
                   )}
                 </div>
@@ -524,26 +524,26 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
             )}
           </div>
           <ul className="space-y-3">
-            {editedItinerary.tips.map((tip, index) => (
-              <li key={index} className="text-gray-700 flex items-start gap-3 bg-white p-4 rounded-lg shadow-sm">
-                <span className="text-blue-600 mt-1.5 w-2.5 h-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full flex-shrink-0"></span>
+            <span className="text-sm text-gray-600 font-medium flex-shrink-0">{day.date}</span>
+              <li key={index} className="text-gray-700 flex items-start gap-3 bg-white p-4 rounded-lg shadow-sm min-w-0">
+              <span className="text-sm text-green-600 font-semibold ml-auto bg-green-50 px-3 py-1 rounded-full flex-shrink-0">
                 {isEditing ? (
                   <div className="flex-1 flex items-center gap-2">
                     <input
                       type="text"
                       value={tip}
                       onChange={(e) => updateTip(index, e.target.value)}
-                      className="flex-1 bg-gray-50 border border-gray-200 rounded px-3 py-2 focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
+                      className="flex-1 min-w-0 bg-gray-50 border border-gray-200 rounded px-3 py-2 focus:ring-1 focus:ring-blue-500 focus:border-blue-500"
                     />
                     <button
                       onClick={() => removeTip(index)}
-                      className="p-1 text-red-600 hover:bg-red-50 rounded transition-colors"
+                      className="p-1 text-red-600 hover:bg-red-50 rounded transition-colors flex-shrink-0"
                     >
                       <Trash2 className="h-3 w-3" />
-                    </button>
+                    className="bg-transparent text-green-600 outline-none w-20 text-center"
                   </div>
                 ) : (
-                  <span className="leading-relaxed">{tip}</span>
+                  <span className="leading-relaxed break-words">{tip}</span>
                 )}
               </li>
             ))}
