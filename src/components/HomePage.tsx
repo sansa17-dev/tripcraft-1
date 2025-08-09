@@ -231,16 +231,16 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
   return (
     <div className="space-y-0 font-body overflow-hidden">
       {/* Hero Section - Modernized */}
-      <section className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 -mx-4 sm:-mx-6 lg:-mx-8 -mt-8">
+      <section className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-teal-600 via-cyan-700 to-teal-800 -mx-4 sm:-mx-6 lg:-mx-8 -mt-8">
         {/* Animated Background */}
         <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute inset-0 bg-[url('https://images.pexels.com/photos/1371360/pexels-photo-1371360.jpeg?auto=compress&cs=tinysrgb&w=1600&h=900&fit=crop')] bg-cover bg-center opacity-10"></div>
-          <div className="absolute inset-0 bg-gradient-to-br from-slate-900/90 via-purple-900/90 to-slate-900/90"></div>
+          <div className="absolute inset-0 bg-[url('https://images.pexels.com/photos/1287460/pexels-photo-1287460.jpeg?auto=compress&cs=tinysrgb&w=1600&h=900&fit=crop')] bg-cover bg-center opacity-15"></div>
+          <div className="absolute inset-0 bg-gradient-to-br from-teal-600/95 via-cyan-700/95 to-teal-800/95"></div>
           
           {/* Floating Orbs */}
-          <div className="absolute top-20 left-20 w-72 h-72 bg-purple-500/20 rounded-full blur-3xl animate-pulse"></div>
-          <div className="absolute bottom-20 right-20 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
-          <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-pink-500/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '4s' }}></div>
+          <div className="absolute top-20 left-20 w-72 h-72 bg-cyan-400/25 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute bottom-20 right-20 w-96 h-96 bg-teal-400/25 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
+          <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-turquoise-400/25 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '4s' }}></div>
         </div>
 
         {/* Content */}
@@ -248,7 +248,7 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
           {/* Main Headline */}
           <div className="mb-8">
             <h1 className="font-display text-6xl md:text-7xl lg:text-8xl font-bold text-white mb-6 leading-tight tracking-tight">
-              <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-cyan-300 via-teal-200 to-blue-300 bg-clip-text text-transparent">
                 Craft Your
               </span>
               <br />
@@ -257,7 +257,7 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
             
             <p className="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto leading-relaxed mb-12">
               Transform your travel dreams into detailed, personalized itineraries with AI. 
-              <span className="text-purple-400 font-semibold"> Every destination, perfectly planned in minutes.</span>
+              <span className="text-cyan-300 font-semibold"> Every destination, perfectly planned in minutes.</span>
             </p>
           </div>
 
@@ -285,7 +285,7 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
             {/* Voice Chat with AI */}
             <button
               onClick={() => setShowVoiceChat(true)}
-              className="group relative flex items-center justify-between w-full lg:w-80 px-8 py-5 bg-gradient-to-r from-purple-500 via-purple-600 to-indigo-600 text-white rounded-2xl hover:from-purple-600 hover:via-purple-700 hover:to-indigo-700 transition-all duration-300 shadow-2xl hover:shadow-3xl hover:scale-105 font-display overflow-hidden"
+              className="group relative flex items-center justify-between w-full lg:w-80 px-8 py-5 bg-gradient-to-r from-teal-500 via-cyan-600 to-blue-600 text-white rounded-2xl hover:from-teal-600 hover:via-cyan-700 hover:to-blue-700 transition-all duration-300 shadow-2xl hover:shadow-3xl hover:scale-105 font-display overflow-hidden"
             >
               <div className="absolute -top-2 -right-2 bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg animate-pulse">
                 NEW
@@ -309,7 +309,7 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
             {/* See Live Demo */}
             <button
               onClick={() => {/* Live demo functionality */}}
-              className="group flex items-center justify-between w-full lg:w-80 px-8 py-5 bg-gradient-to-r from-slate-700 via-slate-800 to-slate-900 text-white rounded-2xl hover:from-slate-800 hover:via-slate-900 hover:to-black transition-all duration-300 shadow-2xl hover:shadow-3xl hover:scale-105 font-display border border-slate-600"
+              className="group flex items-center justify-between w-full lg:w-80 px-8 py-5 bg-gradient-to-r from-teal-700 via-teal-800 to-cyan-900 text-white rounded-2xl hover:from-teal-800 hover:via-teal-900 hover:to-cyan-950 transition-all duration-300 shadow-2xl hover:shadow-3xl hover:scale-105 font-display border border-teal-600"
             >
               <div className="flex items-center gap-4">
                 <div className="bg-white/10 p-3 rounded-xl backdrop-blur-sm">
@@ -340,14 +340,14 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
             </div>
             <div className="text-center">
               <div className="text-3xl md:text-4xl font-bold text-white mb-2 font-display">95%</div>
-              <div className="text-gray-400 text-sm">Satisfaction</div>
+              <div className="text-cyan-200 text-sm">Satisfaction</div>
             </div>
           </div>
         </div>
       </section>
 
       {/* Features Section - New */}
-      <section className="py-24 bg-white">
+      <section className="py-24 bg-gradient-to-br from-teal-50 to-cyan-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="font-display text-4xl font-bold text-gray-900 mb-6">
@@ -362,8 +362,8 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
             {FEATURES.map((feature, index) => {
               const IconComponent = feature.icon;
               return (
-                <div key={index} className="group text-center p-8 rounded-3xl bg-gradient-to-br from-gray-50 to-white border border-gray-100 hover:shadow-2xl hover:-translate-y-2 transition-all duration-300">
-                  <div className="bg-gradient-to-r from-purple-600 to-indigo-600 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform">
+                <div key={index} className="group text-center p-8 rounded-3xl bg-gradient-to-br from-white to-cyan-50 border border-cyan-100 hover:shadow-2xl hover:-translate-y-2 transition-all duration-300">
+                  <div className="bg-gradient-to-r from-teal-600 to-cyan-600 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform">
                     <IconComponent className="h-8 w-8 text-white" />
                   </div>
                   <h3 className="font-display text-xl font-semibold text-gray-900 mb-4">{feature.title}</h3>
@@ -376,7 +376,7 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
       </section>
 
       {/* Themed Destinations Section - Enhanced */}
-      <section className="py-24 bg-gradient-to-br from-gray-50 to-blue-50/30">
+      <section className="py-24 bg-gradient-to-br from-cyan-50 to-teal-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="font-display text-4xl font-bold text-gray-900 mb-6">
@@ -398,7 +398,7 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
                   className={`group flex items-center gap-3 px-8 py-4 rounded-2xl font-medium transition-all duration-300 ${
                     activeTheme === index
                       ? `bg-gradient-to-r ${theme.color} text-white shadow-xl scale-105`
-                      : 'bg-white text-gray-600 hover:bg-gray-50 shadow-lg hover:shadow-xl hover:scale-105'
+                      : 'bg-white text-gray-600 hover:bg-cyan-50 shadow-lg hover:shadow-xl hover:scale-105'
                   }`}
                 >
                   <IconComponent className={`h-5 w-5 ${
@@ -475,7 +475,7 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
       </section>
 
       {/* Testimonials Section - New */}
-      <section className="py-24 bg-white">
+      <section className="py-24 bg-gradient-to-br from-white to-teal-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="font-display text-4xl font-bold text-gray-900 mb-6">
@@ -488,7 +488,7 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {TESTIMONIALS.map((testimonial, index) => (
-              <div key={index} className="bg-gradient-to-br from-purple-50 to-indigo-50 p-8 rounded-3xl border border-purple-100 hover:shadow-xl transition-all duration-300">
+              <div key={index} className="bg-gradient-to-br from-teal-50 to-cyan-50 p-8 rounded-3xl border border-teal-100 hover:shadow-xl transition-all duration-300">
                 <div className="flex items-center gap-1 mb-4">
                   {[...Array(testimonial.rating)].map((_, i) => (
                     <Star key={i} className="h-5 w-5 text-yellow-500 fill-current" />
@@ -513,10 +513,10 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
       </section>
 
       {/* Final CTA Section - Enhanced */}
-      <section className="py-24 bg-gradient-to-r from-purple-900 via-indigo-900 to-purple-900 -mx-4 sm:-mx-6 lg:-mx-8 relative overflow-hidden">
+      <section className="py-24 bg-gradient-to-r from-teal-800 via-cyan-800 to-teal-900 -mx-4 sm:-mx-6 lg:-mx-8 relative overflow-hidden">
         <div className="absolute inset-0">
-          <div className="absolute top-20 left-20 w-72 h-72 bg-purple-500/20 rounded-full blur-3xl animate-pulse"></div>
-          <div className="absolute bottom-20 right-20 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
+          <div className="absolute top-20 left-20 w-72 h-72 bg-cyan-400/25 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute bottom-20 right-20 w-96 h-96 bg-teal-400/25 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
         </div>
 
         <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -524,6 +524,7 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
             Ready to Start Your Adventure?
           </h2>
           <p className="text-xl text-purple-200 mb-12 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-xl text-cyan-200 mb-12 max-w-2xl mx-auto leading-relaxed">
             Create your personalized itinerary in minutes, not hours. Every journey begins with a single step.
           </p>
 
@@ -536,6 +537,7 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
           </button>
 
           <div className="mt-12 flex flex-wrap items-center justify-center gap-8 text-purple-200 text-sm">
+          <div className="mt-12 flex flex-wrap items-center justify-center gap-8 text-cyan-200 text-sm">
             <div className="flex items-center gap-2">
               <CheckCircle className="h-5 w-5 text-green-400" />
               No credit card required
