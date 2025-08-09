@@ -8,7 +8,7 @@
  */
 
 import React, { useState } from 'react';
-import { Plane, AlertTriangle, RefreshCw, User, LogOut, Save, BookOpen } from 'lucide-react';
+import { Plane, AlertTriangle, RefreshCw, User, LogOut, Save, BookOpen, ArrowRight } from 'lucide-react';
 import { TravelPreferences, GeneratedItinerary } from './types';
 import { generateItinerary, generateDemoItinerary } from './services/itineraryService';
 import { saveItinerary } from './services/itineraryStorageService';
@@ -17,8 +17,7 @@ import { TravelForm } from './components/TravelForm';
 import { EditableItinerary } from './components/EditableItinerary';
 import { AuthModal } from './components/AuthModal';
 import { SavedItineraries } from './components/SavedItineraries';
-import { BrandedHeader } from './components/BrandedHeader';
-import { TravelGallery } from './components/TravelGallery';
+import { HomePage } from './components/HomePage';
 import { LoadingSpinner } from './components/LoadingSpinner';
 
 function App() {
@@ -44,7 +43,7 @@ function App() {
   const [showApiKeyNotice, setShowApiKeyNotice] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [authMode, setAuthMode] = useState<'signin' | 'signup'>('signin');
-  const [currentView, setCurrentView] = useState<'form' | 'results' | 'saved'>('form');
+  const [currentView, setCurrentView] = useState<'home' | 'planner' | 'results' | 'saved'>('home');
   const [savingItinerary, setSavingItinerary] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [isEditingItinerary, setIsEditingItinerary] = useState(false);
@@ -146,7 +145,7 @@ function App() {
   const handleSignOut = async () => {
     try {
       await signOut();
-      setCurrentView('form');
+      setCurrentView('home');
       handleReset();
     } catch (err) {
       console.error('Error signing out:', err);
@@ -161,7 +160,7 @@ function App() {
     setError(null);
     setShowApiKeyNotice(false);
     setSaveSuccess(false);
-    setCurrentView('form');
+    setCurrentView('home');
   };
 
   /**
@@ -194,21 +193,35 @@ function App() {
       <header className="bg-white/80 backdrop-blur-sm shadow-sm border-b border-gray-200 sticky top-0 z-40">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
-            <BrandedHeader />
+            {/* Logo */}
+            <button
+              onClick={() => setCurrentView('home')}
+              className="flex items-center gap-3 hover:opacity-80 transition-opacity"
+            >
+              <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-2.5 rounded-xl shadow-lg">
+                <Plane className="h-6 w-6 text-white" />
+              </div>
+              <div>
+                <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                  TripCraft
+                </h1>
+                <p className="text-sm text-gray-600">AI-Powered Travel Planning</p>
+              </div>
+            </button>
             
             <div className="flex items-center gap-3">
               {/* Navigation */}
               {user && (
                 <div className="flex items-center gap-2">
                   <button
-                    onClick={() => setCurrentView('form')}
+                    onClick={() => setCurrentView('planner')}
                     className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
-                      currentView === 'form'
+                      currentView === 'planner'
                         ? 'bg-blue-100 text-blue-700'
                         : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
                     }`}
                   >
-                    New Trip
+                    Plan Trip
                   </button>
                   <button
                     onClick={() => setCurrentView('saved')}
@@ -242,16 +255,32 @@ function App() {
                   </button>
                 </div>
               ) : (
-                <button
-                  onClick={() => setShowAuthModal(true)}
-                  className="px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 shadow-md hover:shadow-lg font-medium"
-                >
-                  Sign In
-                </button>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => setShowAuthModal(true)}
+                    className="px-4 py-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors font-medium"
+                  >
+                    Sign In
+                  </button>
+                  <button
+                    onClick={() => {
+                      if (user) {
+                        setCurrentView('planner');
+                      } else {
+                        setAuthMode('signup');
+                        setShowAuthModal(true);
+                      }
+                    }}
+                    className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 shadow-md hover:shadow-lg font-medium"
+                  >
+                    Plan Your Trip
+                    <ArrowRight className="h-4 w-4" />
+                  </button>
+                </div>
               )}
 
               {/* Reset Button */}
-              {(itinerary || currentView !== 'form') && (
+              {(itinerary || currentView !== 'home') && currentView !== 'home' && (
                 <button
                   onClick={handleReset}
                   className="flex items-center gap-2 px-3 py-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
@@ -339,53 +368,54 @@ function App() {
 
         {/* Main Content */}
         <div className="space-y-8">
-          {currentView === 'form' && !itinerary ? (
-            <>
-              {/* Hero Section for New Users */}
-              {!user && (
-                <BrandedHeader 
-                  showHero={true}
-                  title="Craft Your Perfect Journey"
-                  subtitle="Transform your travel dreams into detailed, personalized itineraries with the power of AI. Every destination, every preference, perfectly planned."
-                />
-              )}
-
-              {/* Travel Gallery for Inspiration */}
-              {!user && <TravelGallery />}
-
-              {/* Travel Preferences Form */}
-              <div>
-                <div className="text-center mb-8">
-                  <h2 className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent mb-3">
-                    Create Your Perfect Travel Itinerary
-                  </h2>
-                  <p className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
-                    Tell us about your travel preferences and we'll generate a personalised day-by-day 
-                    itinerary with activities, dining recommendations, and local insights.
-                  </p>
-                </div>
-
-                <TravelForm
-                  preferences={preferences}
-                  onPreferencesChange={setPreferences}
-                  onSubmit={handleGenerateItinerary}
-                  isGenerating={isGenerating}
-                  isAuthenticated={!!user}
-                />
-
-                {/* Enhanced Loading State */}
-                {isGenerating && (
-                  <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
-                    <div className="bg-white rounded-2xl p-8 max-w-md mx-4 shadow-2xl">
-                      <LoadingSpinner 
-                        message="Analyzing your preferences and crafting the perfect itinerary..."
-                        showTravelIcons={true}
-                      />
-                    </div>
-                  </div>
-                )}
+          {currentView === 'home' ? (
+            <HomePage 
+              onGetStarted={() => {
+                if (user) {
+                  setCurrentView('planner');
+                } else {
+                  setAuthMode('signup');
+                  setShowAuthModal(true);
+                }
+              }}
+              onSignIn={() => {
+                setAuthMode('signin');
+                setShowAuthModal(true);
+              }}
+              isAuthenticated={!!user}
+            />
+          ) : currentView === 'planner' ? (
+            <div>
+              <div className="text-center mb-8">
+                <h2 className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent mb-3">
+                  Create Your Perfect Travel Itinerary
+                </h2>
+                <p className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed">
+                  Tell us about your travel preferences and we'll generate a personalised day-by-day 
+                  itinerary with activities, dining recommendations, and local insights.
+                </p>
               </div>
-            </>
+
+              <TravelForm
+                preferences={preferences}
+                onPreferencesChange={setPreferences}
+                onSubmit={handleGenerateItinerary}
+                isGenerating={isGenerating}
+                isAuthenticated={!!user}
+              />
+
+              {/* Enhanced Loading State */}
+              {isGenerating && (
+                <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
+                  <div className="bg-white rounded-2xl p-8 max-w-md mx-4 shadow-2xl">
+                    <LoadingSpinner 
+                      message="Analyzing your preferences and crafting the perfect itinerary..."
+                      showTravelIcons={true}
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
           ) : currentView === 'results' && itinerary ? (
             /* Generated Itinerary Results */
             <EditableItinerary 
@@ -423,7 +453,7 @@ function App() {
         </div>
 
         {/* Footer Info */}
-        {currentView === 'form' && !itinerary && (
+        {currentView === 'planner' && !itinerary && (
           <div className="mt-16 text-center text-sm text-gray-500">
             <p>
               TripCraft uses AI to create personalised travel itineraries based on your preferences. 
