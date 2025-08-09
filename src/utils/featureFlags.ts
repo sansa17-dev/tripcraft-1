@@ -14,7 +14,7 @@ interface FeatureFlags {
 
 // Default feature flags - can be overridden by environment variables
 const defaultFlags: FeatureFlags = {
-  FEATURE_VOICE_CHAT: false,
+  FEATURE_VOICE_CHAT: true, // Enable voice chat by default
   FEATURE_LIVE_DESTINATIONS: true, // Enable themed destinations
   FEATURE_ENHANCED_MAPS: false,
   FEATURE_PREMIUM_UI: true, // Enable premium UI by default

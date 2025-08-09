@@ -8,6 +8,7 @@ import {
   ArrowRight, CheckCircle, Play, ChevronLeft, ChevronRight,
   Mountain, Heart, Palmtree, ShoppingBag, Building, Users
 } from 'lucide-react';
+import { VoiceChatModal } from './VoiceChatModal';
 
 interface HomePageProps {
   onGetStarted: () => void;
@@ -159,6 +160,7 @@ const STATS = [
 
 export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePageProps) {
   const [activeTheme, setActiveTheme] = useState(0);
+  const [showVoiceChat, setShowVoiceChat] = useState(false);
 
   const scrollDestinations = (direction: 'left' | 'right') => {
     const container = document.getElementById(`destinations-${TRAVEL_THEMES[activeTheme].id}`);
@@ -237,7 +239,7 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
 
                 {/* Voice Chat with AI */}
                 <button
-                  onClick={() => {/* Voice chat functionality */}}
+                  onClick={() => setShowVoiceChat(true)}
                   className="group relative flex items-center justify-between w-full lg:w-80 px-6 py-4 bg-gradient-to-r from-purple-500 via-purple-600 to-indigo-600 text-white rounded-2xl hover:from-purple-600 hover:via-purple-700 hover:to-indigo-700 transition-all duration-300 shadow-xl hover:shadow-2xl hover:scale-105 font-display overflow-hidden"
                 >
                   {/* NEW Badge */}
@@ -451,6 +453,12 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
           </div>
         </div>
       </section>
+
+      {/* Voice Chat Modal */}
+      <VoiceChatModal
+        isOpen={showVoiceChat}
+        onClose={() => setShowVoiceChat(false)}
+      />
     </div>
   );
 }
