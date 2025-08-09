@@ -6,23 +6,27 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { 
   Calendar, MapPin, DollarSign, Clock, Utensils, Bed, Lightbulb, 
-  Copy, Check, Edit3, Save, X, Plus, Trash2, GripVertical, Download
+  Copy, Check, Edit3, Save, X, Plus, Trash2, GripVertical, Download, MessageCircle
 } from 'lucide-react';
-import { GeneratedItinerary, ItineraryDay } from '../types';
+import { GeneratedItinerary, ItineraryDay, TravelPreferences } from '../types';
 import { downloadItineraryAsPDF } from '../services/pdfService';
+import { AIChatModal } from './AIChatModal';
+import { isFeatureEnabled } from '../utils/featureFlags';
 
 interface EditableItineraryProps {
   itinerary: GeneratedItinerary;
+  preferences?: TravelPreferences;
   onSave: (updatedItinerary: GeneratedItinerary) => void;
   isEditing: boolean;
   onToggleEdit: () => void;
 }
 
-export function EditableItinerary({ itinerary, onSave, isEditing, onToggleEdit }: EditableItineraryProps) {
+export function EditableItinerary({ itinerary, preferences, onSave, isEditing, onToggleEdit }: EditableItineraryProps) {
   const [editedItinerary, setEditedItinerary] = useState<GeneratedItinerary>(itinerary);
   const [copiedDays, setCopiedDays] = useState<Set<number>>(new Set());
   const [draggedDay, setDraggedDay] = useState<number | null>(null);
   const [isDownloadingPDF, setIsDownloadingPDF] = useState(false);
+  const [showAIChat, setShowAIChat] = useState(false);
 
   // Update edited itinerary when prop changes
   useEffect(() => {
@@ -304,6 +308,18 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
 
         {/* Edit Controls */}
         <div className="absolute top-4 right-4 flex gap-2">
+          {/* AI Refinement Button */}
+          {isFeatureEnabled('FEATURE_CONVERSATIONAL_AI') && preferences && !isEditing && (
+            <button
+              onClick={() => setShowAIChat(true)}
+              className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-lg hover:from-purple-700 hover:to-indigo-700 transition-colors shadow-lg"
+              title="Refine with AI"
+            >
+              <MessageCircle className="h-4 w-4" />
+              Refine with AI
+            </button>
+          )}
+
           {/* Download PDF Button */}
           <button
             onClick={handleDownloadPDF}
@@ -590,6 +606,20 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
             ))}
           </ul>
         </div>
+      )}
+
+      {/* AI Chat Modal */}
+      {isFeatureEnabled('FEATURE_CONVERSATIONAL_AI') && preferences && (
+        <AIChatModal
+          isOpen={showAIChat}
+          onClose={() => setShowAIChat(false)}
+          itinerary={editedItinerary}
+          preferences={preferences}
+          onItineraryUpdate={(updatedItinerary) => {
+            setEditedItinerary(updatedItinerary);
+            onSave(updatedItinerary);
+          }}
+        />
       )}
     </div>
   );

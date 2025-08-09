@@ -5,8 +5,10 @@
 
 import React from 'react';
 import { Calendar, Users, Wallet, Heart, Home, FileText } from 'lucide-react';
-import { TravelPreferences } from '../types';
+import { TravelPreferences, TravelPersona } from '../types';
 import { LocationAutocomplete } from './LocationAutocomplete';
+import { TravelPersonaQuiz } from './TravelPersonaQuiz';
+import { isFeatureEnabled } from '../utils/featureFlags';
 
 interface TravelFormProps {
   preferences: TravelPreferences;
@@ -30,6 +32,8 @@ const INTEREST_OPTIONS = [
 ];
 
 export function TravelForm({ preferences, onPreferencesChange, onSubmit, isGenerating, isAuthenticated }: TravelFormProps) {
+  const [showPersonaQuiz, setShowPersonaQuiz] = React.useState(false);
+
   /**
    * Updates a single field in the preferences object
    */
@@ -52,6 +56,13 @@ export function TravelForm({ preferences, onPreferencesChange, onSubmit, isGener
       : [...currentInterests, interest];
     
     updateField('interests', newInterests);
+  };
+
+  /**
+   * Updates the travel persona
+   */
+  const updatePersona = (persona: TravelPersona) => {
+    updateField('travelPersona', persona);
   };
 
   return (
@@ -216,6 +227,24 @@ export function TravelForm({ preferences, onPreferencesChange, onSubmit, isGener
             ))}
           </div>
         </div>
+
+        {/* Travel Persona Quiz */}
+        {isFeatureEnabled('FEATURE_TRAVEL_PERSONA') && (
+          <TravelPersonaQuiz
+            persona={preferences.travelPersona || {
+              timePreference: 'flexible',
+              socialStyle: 'intimate',
+              activityLevel: 'moderate',
+              culturalInterest: 'moderate',
+              foodAdventure: 'moderate',
+              planningStyle: 'flexible'
+            }}
+            onPersonaChange={updatePersona}
+            isExpanded={showPersonaQuiz}
+            onToggleExpanded={() => setShowPersonaQuiz(!showPersonaQuiz)}
+          />
+        )}
+
         {/* Submit Button */}
         {!isAuthenticated ? (
           <div className="text-center p-6 bg-primary-50 rounded-2xl border border-primary-100">

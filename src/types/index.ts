@@ -28,6 +28,16 @@ export interface TravelPreferences {
   accommodationType: 'any' | 'hotel' | 'hostel' | 'airbnb' | 'resort' | 'villa' | 'mix';
   vacationPace: 'relaxed' | 'balanced' | 'action-packed';
   additionalNotes?: string;
+  travelPersona?: TravelPersona;
+}
+
+export interface TravelPersona {
+  timePreference: 'early-bird' | 'night-owl' | 'flexible';
+  socialStyle: 'social' | 'intimate' | 'solo-friendly';
+  activityLevel: 'low-key' | 'moderate' | 'high-energy';
+  culturalInterest: 'high' | 'moderate' | 'low';
+  foodAdventure: 'adventurous' | 'moderate' | 'familiar';
+  planningStyle: 'structured' | 'flexible' | 'spontaneous';
 }
 
 export interface ItineraryDay {
@@ -58,4 +68,17 @@ export interface ApiResponse {
   success: boolean;
   data?: GeneratedItinerary;
   error?: string;
+}
+
+export interface ChatMessage {
+  id: string;
+  role: 'user' | 'assistant';
+  content: string;
+  timestamp: Date;
+}
+
+export interface ItineraryRefinementRequest {
+  message: string;
+  itinerary: GeneratedItinerary;
+  preferences: TravelPreferences;
 }

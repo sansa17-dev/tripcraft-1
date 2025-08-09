@@ -8,6 +8,8 @@ interface FeatureFlags {
   FEATURE_LIVE_DESTINATIONS: boolean;
   FEATURE_ENHANCED_MAPS: boolean;
   FEATURE_PREMIUM_UI: boolean;
+  FEATURE_CONVERSATIONAL_AI: boolean;
+  FEATURE_TRAVEL_PERSONA: boolean;
 }
 
 // Default feature flags - can be overridden by environment variables
@@ -16,6 +18,8 @@ const defaultFlags: FeatureFlags = {
   FEATURE_LIVE_DESTINATIONS: false,
   FEATURE_ENHANCED_MAPS: false,
   FEATURE_PREMIUM_UI: true, // Enable premium UI by default
+  FEATURE_CONVERSATIONAL_AI: true, // Enable conversational AI by default
+  FEATURE_TRAVEL_PERSONA: true, // Enable travel persona by default
 };
 
 /**
@@ -37,6 +41,8 @@ export const featureFlags: FeatureFlags = {
   FEATURE_LIVE_DESTINATIONS: getFeatureFlag('FEATURE_LIVE_DESTINATIONS'),
   FEATURE_ENHANCED_MAPS: getFeatureFlag('FEATURE_ENHANCED_MAPS'),
   FEATURE_PREMIUM_UI: getFeatureFlag('FEATURE_PREMIUM_UI'),
+  FEATURE_CONVERSATIONAL_AI: getFeatureFlag('FEATURE_CONVERSATIONAL_AI'),
+  FEATURE_TRAVEL_PERSONA: getFeatureFlag('FEATURE_TRAVEL_PERSONA'),
 };
 
 /**
