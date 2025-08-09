@@ -43,10 +43,11 @@ function App() {
   const [showApiKeyNotice, setShowApiKeyNotice] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [authMode, setAuthMode] = useState<'signin' | 'signup'>('signin');
-  const [currentView, setCurrentView] = useState<'home' | 'planner' | 'results' | 'saved'>('home');
+  const [currentView, setCurrentView] = useState<'home' | 'planner' | 'results' | 'saved' | 'shared'>('home');
   const [savingItinerary, setSavingItinerary] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [isEditingItinerary, setIsEditingItinerary] = useState(false);
+  const [sharedItineraryId, setSharedItineraryId] = useState<string | null>(null);
 
   /**
    * Handles form submission and itinerary generation
@@ -160,6 +161,7 @@ function App() {
     setError(null);
     setShowApiKeyNotice(false);
     setSaveSuccess(false);
+    setSharedItineraryId(null);
     setCurrentView('home');
   };
 
@@ -179,6 +181,13 @@ function App() {
     // If this is a saved itinerary, we could update it in the database here
   };
 
+  /**
+   * Handles viewing a shared itinerary
+   */
+  const handleViewSharedItinerary = (shareId: string) => {
+    setSharedItineraryId(shareId);
+    setCurrentView('shared');
+  };
   if (authLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 flex items-center justify-center">
@@ -420,6 +429,9 @@ function App() {
           ) : currentView === 'saved' ? (
             /* Saved Itineraries */
             <SavedItineraries onSelectItinerary={handleSelectSavedItinerary} />
+          ) : currentView === 'shared' && sharedItineraryId ? (
+            /* Shared Itinerary View */
+            <SharedItineraryView shareId={sharedItineraryId} />
           ) : null}
 
           {/* Auth Prompt for Non-Users */}
