@@ -13,7 +13,9 @@ interface ApiResponse<T = any> {
   error?: string;
 }
 
-/**
+async function apiCall(endpoint: string, data: any): Promise<ApiResponse> {
+  try {
+    console.log(`🔧 API Call: ${endpoint}`, data);
     
     // Get the current session for authorization
     const { data: { session } } = await supabase.auth.getSession();
