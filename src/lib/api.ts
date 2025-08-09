@@ -6,6 +6,7 @@ import { supabase } from './supabase';
 import { SUPABASE_URL, SUPABASE_ANON_KEY } from './supabase';
 
 // API base URL using the same Supabase URL from supabase.ts
+// Ensure we're using the correct Edge Functions URL format
 const API_BASE_URL = `${SUPABASE_URL}/functions/v1`;
 
 interface ApiResponse<T = any> {
@@ -25,10 +26,10 @@ async function apiCall(endpoint: string, data: any): Promise<ApiResponse> {
     };
     
     const response = await fetch(`${API_BASE_URL}/${endpoint}`, {
-      method: 'POST',
+        'apikey': SUPABASE_ANON_KEY,
+        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
       headers,
       body: JSON.stringify(data),
-      mode: 'cors'
     });
 
     console.log(`✅ Response: ${endpoint}`, { status: response.status, ok: response.ok });
