@@ -20,24 +20,15 @@ async function apiCall(endpoint: string, data: any): Promise<ApiResponse> {
     
     const headers: Record<string, string> = {
       'Content-Type': 'application/json',
-      'apikey': SUPABASE_ANON_KEY,
+      'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+      'apikey': SUPABASE_ANON_KEY
     };
-    
-    // Get the current session for authorization
-    try {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session?.access_token) {
-        headers['Authorization'] = `Bearer ${session.access_token}`;
-      }
-    } catch (authError) {
-      console.warn('Could not get session for API call:', authError);
-      // Continue without auth header for public endpoints
-    }
     
     const response = await fetch(`${API_BASE_URL}/${endpoint}`, {
       method: 'POST',
       headers,
       body: JSON.stringify(data),
+      mode: 'cors'
     });
 
     console.log(`✅ Response: ${endpoint}`, { status: response.status, ok: response.ok });
