@@ -6,10 +6,10 @@ const corsHeaders = {
   'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
 }
 
-interface ItineraryRequest {
-  action: 'create' | 'read' | 'update' | 'delete' | 'list';
-  userId: string;
-  itineraryId?: string;
+interface ShareRequest {
+  action: 'create' | 'get' | 'update' | 'delete' | 'list' | 'view';
+  userId?: string;
+  shareId?: string;
   data?: any;
 }
 
@@ -26,71 +26,97 @@ Deno.serve(async (req) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     )
 
-    const { action, userId, itineraryId, data }: ItineraryRequest = await req.json()
-
-    if (!userId) {
-      throw new Error('User ID is required')
-    }
+    const { action, userId, shareId, data }: ShareRequest = await req.json()
 
     let result;
 
     switch (action) {
       case 'create':
-        if (!data) {
-          throw new Error('Itinerary data is required for creation')
+        if (!userId || !data) {
+          throw new Error('User ID and share data are required for creation')
         }
+        
+        // Generate unique share ID
+        const shareUuid = crypto.randomUUID()
+        
         result = await supabaseClient
-          .from('itineraries')
+          .from('shared_itineraries')
           .insert({
+            share_id: shareUuid,
             user_id: userId,
-            ...data
+            itinerary_id: data.itinerary_id,
+            title: data.title,
+            share_mode: data.share_mode || 'view',
+            is_public: data.is_public || false,
+            expires_at: data.expires_at,
+            view_count: 0
           })
           .select()
           .single()
         break;
 
-      case 'list':
+      case 'get':
+        if (!shareId) {
+          throw new Error('Share ID is required for getting shared itinerary')
+        }
+        
+        // Get shared itinerary with full itinerary data
         result = await supabaseClient
-          .from('itineraries')
+          .from('shared_itineraries')
+          .select(`
+            *,
+            itineraries (*)
+          `)
+          .eq('share_id', shareId)
+          .single()
+        break;
+
+      case 'list':
+        if (!userId) {
+          throw new Error('User ID is required for listing shares')
+        }
+        
+        result = await supabaseClient
+          .from('shared_itineraries')
           .select('*')
           .eq('user_id', userId)
           .order('created_at', { ascending: false })
         break;
 
-      case 'read':
-        if (!itineraryId) {
-          throw new Error('Itinerary ID is required for reading')
-        }
-        result = await supabaseClient
-          .from('itineraries')
-          .select('*')
-          .eq('id', itineraryId)
-          .eq('user_id', userId)
-          .single()
-        break;
-
       case 'update':
-        if (!itineraryId || !data) {
-          throw new Error('Itinerary ID and data are required for updating')
+        if (!userId || !shareId || !data) {
+          throw new Error('User ID, share ID, and data are required for updating')
         }
+        
         result = await supabaseClient
-          .from('itineraries')
+          .from('shared_itineraries')
           .update(data)
-          .eq('id', itineraryId)
+          .eq('share_id', shareId)
           .eq('user_id', userId)
           .select()
           .single()
         break;
 
       case 'delete':
-        if (!itineraryId) {
-          throw new Error('Itinerary ID is required for deletion')
+        if (!userId || !shareId) {
+          throw new Error('User ID and share ID are required for deletion')
         }
+        
         result = await supabaseClient
-          .from('itineraries')
+          .from('shared_itineraries')
           .delete()
-          .eq('id', itineraryId)
+          .eq('share_id', shareId)
           .eq('user_id', userId)
+        break;
+
+      case 'view':
+        if (!shareId) {
+          throw new Error('Share ID is required for incrementing view count')
+        }
+        
+        // Increment view count
+        result = await supabaseClient
+          .rpc('increment_share_views', { share_uuid: shareId })
         break;
 
       default:

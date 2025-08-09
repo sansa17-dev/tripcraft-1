@@ -1,4 +1,4 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
+// No imports needed for this function
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -21,7 +21,7 @@ interface GenerateRequest {
   };
 }
 
-serve(async (req) => {
+Deno.serve(async (req) => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders })

@@ -6,7 +6,7 @@
 import React from 'react';
 import { 
   Plane, MapPin, Clock, Users, Star, Compass, Globe, Zap, 
-  Shield, Heart, ArrowRight, CheckCircle, Quote
+  Shield, Heart, ArrowRight, CheckCircle, Quote, Share2
 } from 'lucide-react';
 
 interface HomePageProps {
@@ -135,6 +135,22 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
               >
                 Plan Your Trip
                 <ArrowRight className="h-5 w-5" />
+              </button>
+              
+              <button
+                onClick={() => {
+                  const shareId = prompt('Enter shared itinerary ID or paste the full URL:');
+                  if (shareId) {
+                    // Extract ID from URL if full URL is provided
+                    const match = shareId.match(/\/shared\/([a-f0-9-]+)/);
+                    const id = match ? match[1] : shareId;
+                    window.location.href = `/shared/${id}`;
+                  }
+                }}
+                className="flex items-center gap-2 px-6 py-3 bg-white/20 backdrop-blur-sm text-white rounded-xl hover:bg-white/30 transition-all duration-200 shadow-lg hover:shadow-xl font-medium border border-white/30"
+              >
+                <Share2 className="h-5 w-5" />
+                View Shared Trip
               </button>
             </div>
 
