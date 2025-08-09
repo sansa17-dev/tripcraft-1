@@ -242,7 +242,6 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
                         </div>
                       </div>
                     </div>
-                    </div>
                   ))}
                 </div>
               </div>
