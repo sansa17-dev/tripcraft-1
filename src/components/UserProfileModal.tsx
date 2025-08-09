@@ -105,6 +105,10 @@ const PERSONA_LABELS = {
       if (result.success) {
         setSuccess('Profile saved successfully!');
         setIsEditing(false);
+        // Notify parent component of the updated persona
+        if (onPersonaLoad) {
+          onPersonaLoad(persona);
+        }
         setTimeout(() => setSuccess(null), 3000);
       } else {
         setError(result.error || 'Failed to save profile');

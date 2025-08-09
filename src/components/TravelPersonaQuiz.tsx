@@ -179,6 +179,15 @@ export function TravelPersonaQuiz({ persona, onPersonaChange, isExpanded, onTogg
         </div>
       </button>
 
+      {/* Load from Profile Button */}
+      {!isExpanded && (
+        <div className="px-6 pb-4">
+          <p className="text-xs text-gray-500 text-center">
+            💡 Tip: Complete your profile in the navigation bar to auto-fill these preferences for all future trips
+          </p>
+        </div>
+      )}
+
       {/* Quiz Content */}
       {isExpanded && (
         <div className="px-6 pb-6 space-y-8">
