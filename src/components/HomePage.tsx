@@ -53,11 +53,6 @@ const DESTINATIONS = [
     name: 'Bali, Indonesia',
     image: 'https://images.pexels.com/photos/2474690/pexels-photo-2474690.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop',
     trips: '4,293 trips planned'
-  },
-  {
-    name: 'Swiss Alps',
-    image: 'https://images.pexels.com/photos/417074/pexels-photo-417074.jpeg?auto=compress&cs=tinysrgb&w=400&h=300&fit=crop',
-    trips: '1,892 trips planned'
   }
 ];
 
@@ -214,7 +209,6 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
             {DESTINATIONS.map((destination, index) => (
               <div 
                 key={index}
