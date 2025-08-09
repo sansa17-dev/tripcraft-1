@@ -236,18 +236,22 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
 
         {/* Header Content */}
         <div className="absolute inset-0 p-8 flex flex-col justify-end text-white">
-          {isEditing ? (
-            <input
-              type="text"
-              value={editedItinerary.title}
-              onChange={(e) => updateItineraryField('title', e.target.value)}
-              className="text-3xl font-bold bg-transparent border-b-2 border-white/50 focus:border-white outline-none mb-3 text-white placeholder-white/70 min-w-0"
-              placeholder="Trip title"
-            />
-          ) : (
-            <h2 className="text-3xl font-bold mb-3 break-words">{editedItinerary.title}</h2>
-          )}
-          
+          {/* Trip Title */}
+          <div className="mb-6">
+            {isEditing ? (
+              <input
+                type="text"
+                value={editedItinerary.title}
+                onChange={(e) => updateItineraryField('title', e.target.value)}
+                className="text-4xl font-bold bg-transparent border-b-2 border-white/50 focus:border-white outline-none mb-3 text-white placeholder-white/70 min-w-0 w-full"
+                placeholder="Trip title"
+              />
+            ) : (
+              <h1 className="text-4xl font-bold mb-3 break-words">{editedItinerary.title}</h1>
+            )}
+          </div>
+
+          {/* Trip Details */}
           <div className="flex flex-wrap items-center gap-6 text-sm mb-4">
             <div className="flex items-center gap-1">
               <MapPin className="h-4 w-4" />
@@ -293,26 +297,36 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
             </div>
           </div>
 
+          {/* Trip Overview */}
           {isEditing ? (
             <textarea
               value={editedItinerary.overview}
               onChange={(e) => updateItineraryField('overview', e.target.value)}
-              className="bg-white/10 backdrop-blur-sm border border-white/30 rounded-lg p-3 text-white placeholder-white/70 resize-none w-full min-w-0"
+              className="bg-white/10 backdrop-blur-sm border border-white/30 rounded-lg p-4 text-white placeholder-white/70 resize-none w-full min-w-0"
               rows={2}
               placeholder="Trip overview"
             />
           ) : (
-            <p className="leading-relaxed text-lg break-words">{editedItinerary.overview}</p>
+            <p className="leading-relaxed text-lg break-words mt-4">{editedItinerary.overview}</p>
           )}
         </div>
 
-        {/* Edit Controls */}
-        <div className="absolute top-4 right-4 flex gap-2">
+        {/* Action Buttons - Positioned below the header */}
+      </div>
+
+      {/* Action Buttons Section */}
+      <div className="bg-white border-b border-gray-200 px-8 py-4">
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <div className="flex items-center gap-2 text-sm text-gray-600">
+            <span className="font-medium">Quick Actions:</span>
+          </div>
+          
+          <div className="flex flex-wrap items-center gap-3">
           {/* AI Refinement Button */}
           {isFeatureEnabled('FEATURE_CONVERSATIONAL_AI') && preferences && !isEditing && (
             <button
               onClick={() => setShowAIChat(true)}
-              className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-lg hover:from-purple-700 hover:to-indigo-700 transition-colors shadow-lg"
+              className="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-xl hover:from-purple-700 hover:to-indigo-700 transition-all duration-200 shadow-md hover:shadow-lg font-medium"
               title="Refine with AI"
             >
               <MessageCircle className="h-4 w-4" />
@@ -327,7 +341,7 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
             className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors shadow-lg ${
               isDownloadingPDF
                 ? 'bg-gray-400 text-white cursor-not-allowed'
-                : 'bg-green-600 text-white hover:bg-green-700'
+                : 'bg-green-600 text-white hover:bg-green-700 font-medium'
             }`}
             title="Download as PDF"
           >
@@ -348,14 +362,14 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
             <>
               <button
                 onClick={handleSave}
-                className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors shadow-lg"
+                className="flex items-center gap-2 px-4 py-2.5 bg-green-600 text-white rounded-xl hover:bg-green-700 transition-all duration-200 shadow-md hover:shadow-lg font-medium"
               >
                 <Save className="h-4 w-4" />
                 Save Changes
               </button>
               <button
                 onClick={handleCancel}
-                className="flex items-center gap-2 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors shadow-lg"
+                className="flex items-center gap-2 px-4 py-2.5 bg-gray-600 text-white rounded-xl hover:bg-gray-700 transition-all duration-200 shadow-md hover:shadow-lg font-medium"
               >
                 <X className="h-4 w-4" />
                 Cancel
@@ -364,12 +378,13 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
           ) : (
             <button
               onClick={onToggleEdit}
-              className="flex items-center gap-2 px-4 py-2 bg-white/20 backdrop-blur-sm text-white rounded-lg hover:bg-white/30 transition-colors shadow-lg"
+              className="flex items-center gap-2 px-4 py-2.5 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-all duration-200 shadow-md hover:shadow-lg font-medium"
             >
               <Edit3 className="h-4 w-4" />
               Edit Itinerary
             </button>
           )}
+          </div>
         </div>
       </div>
 
@@ -542,17 +557,28 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
               {/* Notes */}
               {(day.notes || isEditing) && (
                 <div className="pt-4 border-t border-gray-200 ml-6">
+                  <div className="flex items-center gap-2 mb-3">
+                    <div className="bg-gradient-to-r from-amber-500 to-orange-500 p-1.5 rounded-lg">
+                      <Lightbulb className="h-4 w-4 text-white" />
+                    </div>
+                    <h4 className="font-semibold text-amber-700 text-sm uppercase tracking-wide">Travel Hack</h4>
+                  </div>
                   {isEditing ? (
                     <textarea
                       value={day.notes || ''}
                       onChange={(e) => updateDay(dayIndex, { ...day, notes: e.target.value })}
-                      className="w-full bg-blue-50 border border-blue-200 rounded-lg p-3 text-sm focus:ring-1 focus:ring-blue-500 focus:border-blue-500 resize-none min-w-0"
+                      className="w-full bg-amber-50 border border-amber-200 rounded-lg p-3 text-sm focus:ring-2 focus:ring-amber-500 focus:border-amber-500 resize-none min-w-0"
                       rows={2}
-                      placeholder="Special notes for this day"
+                      placeholder="Add a travel hack or insider tip for this day"
                     />
                   ) : (
                     day.notes && (
-                      <p className="text-gray-600 text-sm italic bg-blue-50 p-3 rounded-lg break-words">{day.notes}</p>
+                      <div className="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-lg p-4 shadow-sm">
+                        <p className="text-amber-800 text-sm font-medium leading-relaxed break-words flex items-start gap-2">
+                          <span className="text-amber-600 font-bold text-base">💡</span>
+                          {day.notes}
+                        </p>
+                      </div>
                     )
                   )}
                 </div>
