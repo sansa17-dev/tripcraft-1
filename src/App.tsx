@@ -352,14 +352,14 @@ function App() {
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Save Itinerary Button */}
         {user && itinerary && currentView === 'results' && (
-          <div className="mb-6">
+          <div className="mb-6 relative z-10">
             <button
               onClick={handleSaveItinerary}
               disabled={savingItinerary}
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
+              className={`flex items-center gap-2 px-4 py-3 rounded-lg font-medium transition-all duration-200 shadow-lg ${
                 savingItinerary
                   ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                  : 'bg-gradient-to-r from-green-600 to-emerald-600 text-white hover:from-green-700 hover:to-emerald-700 shadow-md hover:shadow-lg'
+                  : 'bg-gradient-to-r from-green-600 to-emerald-600 text-white hover:from-green-700 hover:to-emerald-700 hover:shadow-xl'
               }`}
             >
               {savingItinerary ? (

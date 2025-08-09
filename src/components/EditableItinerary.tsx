@@ -303,20 +303,20 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
         </div>
 
         {/* Header Content */}
-        <div className="absolute inset-0 p-8 pb-20 flex flex-col justify-end text-white">
+        <div className="absolute inset-0 p-8 pb-24 flex flex-col justify-end text-white">
           {isEditing ? (
             <input
               type="text"
               value={editedItinerary.title}
               onChange={(e) => updateItineraryField('title', e.target.value)}
-              className="text-3xl font-bold bg-transparent border-b-2 border-white/50 focus:border-white outline-none mb-3 text-white placeholder-white/70 min-w-0 pr-96"
+              className="text-3xl font-bold bg-transparent border-b-2 border-white/50 focus:border-white outline-none mb-3 text-white placeholder-white/70 min-w-0 pr-[28rem]"
               placeholder="Trip title"
             />
           ) : (
-            <h2 className="text-3xl font-bold mb-3 break-words pr-96">{editedItinerary.title}</h2>
+            <h2 className="text-3xl font-bold mb-3 break-words pr-[28rem]">{editedItinerary.title}</h2>
           )}
           
-          <div className="flex flex-wrap items-center gap-6 text-sm mb-4 pr-96">
+          <div className="flex flex-wrap items-center gap-6 text-sm mb-4 pr-[28rem]">
             <div className="flex items-center gap-1">
               <MapPin className="h-4 w-4" />
               {isEditing ? (
@@ -365,17 +365,17 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
             <textarea
               value={editedItinerary.overview}
               onChange={(e) => updateItineraryField('overview', e.target.value)}
-              className="bg-white/10 backdrop-blur-sm border border-white/30 rounded-lg p-3 text-white placeholder-white/70 resize-none min-w-0 pr-96"
+              className="bg-white/10 backdrop-blur-sm border border-white/30 rounded-lg p-3 text-white placeholder-white/70 resize-none min-w-0 pr-[28rem]"
               rows={2}
               placeholder="Trip overview"
             />
           ) : (
-            <p className="leading-relaxed text-lg break-words pr-96">{editedItinerary.overview}</p>
+            <p className="leading-relaxed text-lg break-words pr-[28rem]">{editedItinerary.overview}</p>
           )}
         </div>
 
         {/* Edit Controls */}
-        <div className="absolute top-4 right-4 flex flex-wrap gap-2 max-w-96 justify-end">
+        <div className="absolute top-4 right-4 flex flex-wrap gap-2 max-w-[28rem] justify-end">
           {/* Share Button */}
           {onShare && (
             <button
