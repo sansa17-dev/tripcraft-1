@@ -295,12 +295,8 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
             {/* Primary CTA */}
             <button
               onClick={onGetStarted}
-              className="group relative flex items-center justify-between w-full lg:w-96 px-10 py-6 bg-gradient-to-r from-amber-400 via-orange-500 to-red-500 text-white rounded-2xl hover:from-amber-500 hover:via-orange-600 hover:to-red-600 transition-all duration-300 shadow-2xl hover:shadow-3xl hover:scale-105 font-display overflow-hidden"
+              className="group relative flex items-center justify-between w-full lg:w-80 px-8 py-5 bg-gradient-to-r from-teal-500 via-cyan-500 to-blue-500 text-white rounded-2xl hover:from-teal-600 hover:via-cyan-600 hover:to-blue-600 transition-all duration-300 shadow-2xl hover:shadow-3xl hover:scale-105 font-display"
             >
-              <div className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg animate-bounce">
-              Meet Your AI Travel Companion
-              </div>
-              
               <div className="flex items-center gap-4">
                 <div className="bg-white/20 p-3 rounded-xl backdrop-blur-sm">
                   <Calendar className="w-6 h-6" />
@@ -317,12 +313,8 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
             {/* Voice Chat CTA */}
             <button
               onClick={() => setShowVoiceChat(true)}
-              className="group relative flex items-center justify-between w-full lg:w-96 px-10 py-6 bg-gradient-to-r from-purple-600 via-indigo-600 to-blue-600 text-white rounded-2xl hover:from-purple-700 hover:via-indigo-700 hover:to-blue-700 transition-all duration-300 shadow-2xl hover:shadow-3xl hover:scale-105 font-display overflow-hidden"
+              className="group relative flex items-center justify-between w-full lg:w-80 px-8 py-5 bg-gradient-to-r from-purple-500 via-indigo-500 to-blue-500 text-white rounded-2xl hover:from-purple-600 hover:via-indigo-600 hover:to-blue-600 transition-all duration-300 shadow-2xl hover:shadow-3xl hover:scale-105 font-display"
             >
-              <div className="absolute -top-2 -right-2 bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg animate-pulse">
-                NEW
-              </div>
-              
               <div className="flex items-center gap-4">
                 <div className="bg-white/20 p-3 rounded-xl backdrop-blur-sm">
                   <Mic className="w-6 h-6" />
