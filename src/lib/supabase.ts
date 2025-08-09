@@ -1,75 +1,25 @@
 /**
- * Supabase client configuration
- * Handles database connection and authentication
+ * Supabase client configuration for frontend authentication
+ * Uses public anon key for secure client-side authentication
  */
 
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+// Get environment variables
+export const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
+export const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error('Missing Supabase environment variables. Please check your .env file.');
+// Validate configuration
+if (!SUPABASE_URL) {
+  console.error('VITE_SUPABASE_URL not configured. Please set up environment variables.');
 }
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+if (!SUPABASE_ANON_KEY) {
+  console.warn('VITE_SUPABASE_ANON_KEY not configured. Please set up environment variables.');
+}
 
-export type Database = {
-  public: {
-    Tables: {
-      itineraries: {
-        Row: {
-          id: string;
-          user_id: string;
-          title: string;
-          destination: string;
-          origin: string;
-          start_date: string;
-          end_date: string;
-          duration: string;
-          total_budget: string;
-          overview: string;
-          days: any[];
-          tips: string[];
-          preferences: any;
-          created_at: string;
-          updated_at: string;
-        };
-        Insert: {
-          id?: string;
-          user_id: string;
-          title: string;
-          destination: string;
-          origin: string;
-          start_date: string;
-          end_date: string;
-          duration: string;
-          total_budget: string;
-          overview: string;
-          days: any[];
-          tips: string[];
-          preferences: any;
-          created_at?: string;
-          updated_at?: string;
-        };
-        Update: {
-          id?: string;
-          user_id?: string;
-          title?: string;
-          destination?: string;
-          origin?: string;
-          start_date?: string;
-          end_date?: string;
-          duration?: string;
-          total_budget?: string;
-          overview?: string;
-          days?: any[];
-          tips?: string[];
-          preferences?: any;
-          created_at?: string;
-          updated_at?: string;
-        };
-      };
-    };
-  };
-};
+// Create and export Supabase client
+export const supabase = createClient(
+  SUPABASE_URL || 'http://localhost:54321',
+  SUPABASE_ANON_KEY || ''
+);

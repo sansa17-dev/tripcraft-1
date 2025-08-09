@@ -1,10 +1,10 @@
 /**
- * Service for managing itinerary storage in Supabase
- * Handles CRUD operations for saved itineraries
+ * Service for managing itinerary storage via secure backend API
+ * All database operations are handled server-side to keep credentials secure
  */
 
-import { supabase } from '../lib/supabase';
 import { GeneratedItinerary, TravelPreferences } from '../types';
+import { itineraryApi } from '../lib/api';
 
 export interface SavedItinerary {
   id: string;
@@ -32,31 +32,25 @@ export async function saveItinerary(
   userId: string
 ): Promise<{ success: boolean; error?: string; data?: SavedItinerary }> {
   try {
-    const { data, error } = await supabase
-      .from('itineraries')
-      .insert({
-        user_id: userId,
-        title: itinerary.title,
-        destination: itinerary.destination,
-        origin: preferences.origin,
-        start_date: preferences.startDate,
-        end_date: preferences.endDate,
-        duration: itinerary.duration,
-        total_budget: itinerary.totalBudget,
-        overview: itinerary.overview,
-        days: itinerary.days,
-        tips: itinerary.tips,
-        preferences: preferences,
-      })
-      .select()
-      .single();
+    const result = await itineraryApi.create(userId, {
+      title: itinerary.title,
+      destination: itinerary.destination,
+      origin: preferences.origin,
+      start_date: preferences.startDate,
+      end_date: preferences.endDate,
+      duration: itinerary.duration,
+      total_budget: itinerary.totalBudget,
+      overview: itinerary.overview,
+      days: itinerary.days,
+      tips: itinerary.tips,
+      preferences: preferences,
+    });
 
-    if (error) {
-      console.error('Error saving itinerary:', error);
-      return { success: false, error: error.message };
+    if (result.success && result.data) {
+      return { success: true, data: result.data };
+    } else {
+      return { success: false, error: result.error || 'Failed to save itinerary' };
     }
-
-    return { success: true, data };
   } catch (error) {
     console.error('Error saving itinerary:', error);
     return { 
@@ -75,18 +69,13 @@ export async function getUserItineraries(userId: string): Promise<{
   data?: SavedItinerary[];
 }> {
   try {
-    const { data, error } = await supabase
-      .from('itineraries')
-      .select('*')
-      .eq('user_id', userId)
-      .order('created_at', { ascending: false });
-
-    if (error) {
-      console.error('Error fetching itineraries:', error);
-      return { success: false, error: error.message };
+    const result = await itineraryApi.list(userId);
+    
+    if (result.success) {
+      return { success: true, data: result.data || [] };
+    } else {
+      return { success: false, error: result.error || 'Failed to fetch itineraries' };
     }
-
-    return { success: true, data: data || [] };
   } catch (error) {
     console.error('Error fetching itineraries:', error);
     return { 
@@ -105,19 +94,13 @@ export async function getItinerary(id: string, userId: string): Promise<{
   data?: SavedItinerary;
 }> {
   try {
-    const { data, error } = await supabase
-      .from('itineraries')
-      .select('*')
-      .eq('id', id)
-      .eq('user_id', userId)
-      .single();
-
-    if (error) {
-      console.error('Error fetching itinerary:', error);
-      return { success: false, error: error.message };
+    const result = await itineraryApi.get(userId, id);
+    
+    if (result.success && result.data) {
+      return { success: true, data: result.data };
+    } else {
+      return { success: false, error: result.error || 'Failed to fetch itinerary' };
     }
-
-    return { success: true, data };
   } catch (error) {
     console.error('Error fetching itinerary:', error);
     return { 
@@ -135,18 +118,13 @@ export async function deleteItinerary(id: string, userId: string): Promise<{
   error?: string;
 }> {
   try {
-    const { error } = await supabase
-      .from('itineraries')
-      .delete()
-      .eq('id', id)
-      .eq('user_id', userId);
-
-    if (error) {
-      console.error('Error deleting itinerary:', error);
-      return { success: false, error: error.message };
+    const result = await itineraryApi.delete(userId, id);
+    
+    if (result.success) {
+      return { success: true };
+    } else {
+      return { success: false, error: result.error || 'Failed to delete itinerary' };
     }
-
-    return { success: true };
   } catch (error) {
     console.error('Error deleting itinerary:', error);
     return { 
@@ -165,20 +143,13 @@ export async function updateItinerary(
   userId: string
 ): Promise<{ success: boolean; error?: string; data?: SavedItinerary }> {
   try {
-    const { data, error } = await supabase
-      .from('itineraries')
-      .update(updates)
-      .eq('id', id)
-      .eq('user_id', userId)
-      .select()
-      .single();
-
-    if (error) {
-      console.error('Error updating itinerary:', error);
-      return { success: false, error: error.message };
+    const result = await itineraryApi.update(userId, id, updates);
+    
+    if (result.success && result.data) {
+      return { success: true, data: result.data };
+    } else {
+      return { success: false, error: result.error || 'Failed to update itinerary' };
     }
-
-    return { success: true, data };
   } catch (error) {
     console.error('Error updating itinerary:', error);
     return { 

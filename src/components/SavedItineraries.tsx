@@ -10,7 +10,7 @@ import { useAuth } from '../hooks/useAuth';
 import { GeneratedItinerary } from '../types';
 
 interface SavedItinerariesProps {
-  onSelectItinerary: (itinerary: GeneratedItinerary) => void;
+  onSelectItinerary: (itinerary: GeneratedItinerary, savedItinerary: SavedItinerary) => void;
 }
 
 export function SavedItineraries({ onSelectItinerary }: SavedItinerariesProps) {
@@ -76,7 +76,7 @@ export function SavedItineraries({ onSelectItinerary }: SavedItinerariesProps) {
       days: savedItinerary.days,
       tips: savedItinerary.tips,
     };
-    onSelectItinerary(itinerary);
+    onSelectItinerary(itinerary, savedItinerary);
   };
 
   const formatDate = (dateString: string) => {
@@ -139,8 +139,8 @@ export function SavedItineraries({ onSelectItinerary }: SavedItinerariesProps) {
       <div className="divide-y divide-gray-200">
         {savedItineraries.map((itinerary) => (
           <div key={itinerary.id} className="p-6 hover:bg-gray-50 transition-colors">
-            <div className="flex items-start justify-between">
-              <div className="flex-1 min-w-0">
+            <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-4">
+              <div className="flex-1 min-w-0 pr-4">
                 <h3 className="text-lg font-medium text-gray-900 mb-2 truncate">
                   {itinerary.title}
                 </h3>
@@ -173,7 +173,7 @@ export function SavedItineraries({ onSelectItinerary }: SavedItinerariesProps) {
                 </div>
               </div>
 
-              <div className="flex items-center gap-2 ml-4">
+              <div className="flex items-center gap-2 flex-shrink-0">
                 <button
                   onClick={() => handleView(itinerary)}
                   className="flex items-center gap-1 px-3 py-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors text-sm font-medium"

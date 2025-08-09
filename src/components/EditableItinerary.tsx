@@ -6,21 +6,36 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { 
   Calendar, MapPin, DollarSign, Clock, Utensils, Bed, Lightbulb, 
-  Copy, Check, Edit3, Save, X, Plus, Trash2, GripVertical 
+  Copy, Check, Edit3, Save, X, Plus, Trash2, GripVertical, Share2, Users
 } from 'lucide-react';
 import { GeneratedItinerary, ItineraryDay } from '../types';
+import { updateItinerary } from '../services/itineraryStorageService';
+import { useAuth } from '../hooks/useAuth';
 
 interface EditableItineraryProps {
   itinerary: GeneratedItinerary;
   onSave: (updatedItinerary: GeneratedItinerary) => void;
   isEditing: boolean;
   onToggleEdit: () => void;
+  savedItineraryId?: string;
+  onShare?: () => void;
 }
 
-export function EditableItinerary({ itinerary, onSave, isEditing, onToggleEdit }: EditableItineraryProps) {
+export function EditableItinerary({ 
+  itinerary, 
+  onSave, 
+  isEditing, 
+  onToggleEdit, 
+  savedItineraryId,
+  onShare 
+}: EditableItineraryProps) {
   const [editedItinerary, setEditedItinerary] = useState<GeneratedItinerary>(itinerary);
   const [copiedDays, setCopiedDays] = useState<Set<number>>(new Set());
   const [draggedDay, setDraggedDay] = useState<number | null>(null);
+  const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
+
+  const { user } = useAuth();
 
   // Update edited itinerary when prop changes
   useEffect(() => {
@@ -30,9 +45,79 @@ export function EditableItinerary({ itinerary, onSave, isEditing, onToggleEdit }
   /**
    * Handles saving changes
    */
-  const handleSave = () => {
-    onSave(editedItinerary);
-    onToggleEdit();
+  const handleSave = async () => {
+    setSaving(true);
+    setSaveError(null);
+
+    try {
+      // If this is a saved itinerary, update it in the database
+      if (savedItineraryId && user) {
+        const result = await updateItinerary(savedItineraryId, {
+          title: editedItinerary.title,
+          destination: editedItinerary.destination,
+          duration: editedItinerary.duration,
+          total_budget: editedItinerary.totalBudget,
+          overview: editedItinerary.overview,
+          days: editedItinerary.days,
+          tips: editedItinerary.tips,
+        }, user.id);
+
+        if (!result.success) {
+          throw new Error(result.error || 'Failed to save changes');
+        }
+      }
+
+      // Update local state
+      onSave(editedItinerary);
+      onToggleEdit();
+    } catch (error) {
+      console.error('Error saving itinerary:', error);
+      setSaveError(error instanceof Error ? error.message : 'Failed to save changes');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  /**
+   * Handles real-time collaborative updates
+   */
+  const handleCollaborativeUpdate = (field: keyof GeneratedItinerary, value: any) => {
+    const updatedItinerary = {
+      ...editedItinerary,
+      [field]: value
+    };
+    setEditedItinerary(updatedItinerary);
+    
+    // Auto-save for collaborative editing if this is a saved itinerary
+    if (savedItineraryId && user && isEditing) {
+      debouncedSave(updatedItinerary);
+    }
+  };
+
+  // Debounced save for collaborative editing
+  const debouncedSave = useRef<NodeJS.Timeout>();
+  const performDebouncedSave = (updatedItinerary: GeneratedItinerary) => {
+    if (debouncedSave.current) {
+      clearTimeout(debouncedSave.current);
+    }
+    
+    debouncedSave.current = setTimeout(async () => {
+      if (savedItineraryId && user) {
+        try {
+          await updateItinerary(savedItineraryId, {
+            title: updatedItinerary.title,
+            destination: updatedItinerary.destination,
+            duration: updatedItinerary.duration,
+            total_budget: updatedItinerary.totalBudget,
+            overview: updatedItinerary.overview,
+            days: updatedItinerary.days,
+            tips: updatedItinerary.tips,
+          }, user.id);
+        } catch (error) {
+          console.error('Auto-save failed:', error);
+        }
+      }
+    }, 2000); // Auto-save after 2 seconds of inactivity
   };
 
   /**
@@ -47,10 +132,14 @@ export function EditableItinerary({ itinerary, onSave, isEditing, onToggleEdit }
    * Updates itinerary field
    */
   const updateItineraryField = (field: keyof GeneratedItinerary, value: any) => {
-    setEditedItinerary(prev => ({
-      ...prev,
-      [field]: value
-    }));
+    if (savedItineraryId && user && isEditing) {
+      handleCollaborativeUpdate(field, value);
+    } else {
+      setEditedItinerary(prev => ({
+        ...prev,
+        [field]: value
+      }));
+    }
   };
 
   /**
@@ -276,7 +365,7 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
             <textarea
               value={editedItinerary.overview}
               onChange={(e) => updateItineraryField('overview', e.target.value)}
-              className="bg-white/10 backdrop-blur-sm border border-white/30 rounded-lg p-3 text-white placeholder-white/70 resize-none w-full min-w-0"
+              className="bg-white/10 backdrop-blur-sm border border-white/30 rounded-lg p-3 text-white placeholder-white/70 resize-none min-w-0"
               rows={2}
               placeholder="Trip overview"
             />
@@ -285,39 +374,54 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
           )}
         </div>
 
-        {/* Edit Controls */}
-        <div className="absolute top-4 right-4 flex gap-2">
-          {isEditing ? (
-            <>
-              <button
-                onClick={handleSave}
-                className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors shadow-lg"
-              >
-                <Save className="h-4 w-4" />
-                Save Changes
-              </button>
-              <button
-                onClick={handleCancel}
-                className="flex items-center gap-2 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors shadow-lg"
-              >
-                <X className="h-4 w-4" />
-                Cancel
-              </button>
-            </>
-          ) : (
+        {/* Edit Mode Controls - Only show when editing */}
+        {isEditing && (
+          <div className="absolute -bottom-6 right-4 flex flex-wrap gap-2 max-w-80 justify-end bg-white/95 backdrop-blur-sm rounded-lg p-2 shadow-lg">
+            {/* Save Error */}
+            {saveError && (
+              <div className="absolute -top-16 right-0 bg-red-50 border border-red-200 rounded-lg p-2 text-red-700 text-sm max-w-xs z-20 break-words">
+                {saveError}
+              </div>
+            )}
+
             <button
-              onClick={onToggleEdit}
-              className="flex items-center gap-2 px-4 py-2 bg-white/20 backdrop-blur-sm text-white rounded-lg hover:bg-white/30 transition-colors shadow-lg"
+              onClick={handleSave}
+              disabled={saving}
+              className="flex items-center gap-1 px-3 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors shadow-md text-sm whitespace-nowrap"
             >
-              <Edit3 className="h-4 w-4" />
-              Edit Itinerary
+              {saving ? (
+                <>
+                  <div className="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                  Saving...
+                </>
+              ) : (
+                <>
+                  <Save className="h-4 w-4" />
+                  Save Changes
+                </>
+              )}
             </button>
-          )}
-        </div>
+            <button
+              onClick={handleCancel}
+              className="flex items-center gap-1 px-3 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors shadow-md text-sm whitespace-nowrap"
+            >
+              <X className="h-4 w-4" />
+              Cancel
+            </button>
+
+            {/* Collaborative Indicator */}
+            {savedItineraryId && (
+              <div className="flex items-center gap-1 px-2 py-2 bg-blue-600 text-white rounded-lg text-sm whitespace-nowrap">
+                <Users className="h-4 w-4" />
+                <span className="text-sm">Live</span>
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Daily Itinerary */}
-      <div className="p-8">
+      <div className="p-8 pt-12">
         <h3 className="text-xl font-semibold text-gray-900 mb-6 flex items-center gap-2">
           <Calendar className="h-5 w-5 text-blue-600" />
           Daily Itinerary
@@ -332,7 +436,7 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
           {editedItinerary.days.map((day, dayIndex) => (
             <div 
               key={`${day.day}-${dayIndex}`}
-              className={`bg-gradient-to-r from-gray-50 to-blue-50/30 rounded-xl p-6 relative shadow-sm hover:shadow-md transition-all ${
+              className={`bg-gradient-to-r from-gray-50 to-blue-50/30 rounded-xl p-6 pr-16 relative shadow-sm hover:shadow-md transition-all ${
                 isEditing ? 'border-2 border-dashed border-gray-200 hover:border-blue-300' : ''
               }`}
               draggable={isEditing}
@@ -350,7 +454,7 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
               {/* Copy button */}
               <button
                 onClick={() => copyDayToClipboard(day, day.day)}
-                className="absolute top-4 right-4 p-2 text-gray-400 hover:text-gray-600 hover:bg-white rounded-lg transition-colors shadow-sm"
+                className="absolute top-4 right-4 p-2 text-gray-400 hover:text-gray-600 hover:bg-white rounded-lg transition-colors shadow-sm z-10 bg-white/80 backdrop-blur-sm"
                 title="Copy day to clipboard"
               >
                 {copiedDays.has(day.day) ? (
@@ -361,19 +465,19 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
               </button>
 
               {/* Day header */}
-              <div className="flex items-center gap-2 mb-3 ml-6">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-3 ml-6 pr-12">
                 <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-sm font-semibold px-4 py-2 rounded-full shadow-md">
                   Day {day.day}
                 </div>
-                <span className="text-sm text-gray-600 font-medium">{day.date}</span>
+                <span className="text-sm text-gray-600 font-medium break-words">{day.date}</span>
                 {day.estimatedCost && (
-                  <span className="text-sm text-green-600 font-semibold ml-auto bg-green-50 px-3 py-1 rounded-full">
+                  <span className="text-sm text-green-600 font-semibold sm:ml-auto bg-green-50 px-3 py-1 rounded-full break-words max-w-48">
                     {isEditing ? (
                       <input
                         type="text"
                         value={day.estimatedCost}
                         onChange={(e) => updateDay(dayIndex, { ...day, estimatedCost: e.target.value })}
-                        className="bg-transparent text-green-600 outline-none w-24"
+                        className="bg-transparent text-green-600 outline-none w-full min-w-0 text-center"
                       />
                     ) : (
                       day.estimatedCost
@@ -436,7 +540,7 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
                       if (!meal && !isEditing) return null;
                       
                       return (
-                        <div key={mealType} className="bg-white p-3 rounded-lg shadow-sm min-w-0">
+                        <div key={mealType} className="bg-white p-3 rounded-lg shadow-sm min-w-0 break-words">
                           <span className="font-medium text-gray-600 capitalize">{mealType}:</span>
                           {isEditing ? (
                             <input
