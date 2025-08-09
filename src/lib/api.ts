@@ -1,12 +1,11 @@
 /**
  * API client for secure backend communication
- * All non-auth Supabase operations go through Edge Functions to keep credentials secure
+ * All operations go through Edge Functions where secrets are managed
  */
 import { supabase } from './supabase';
 
-const API_BASE_URL = import.meta.env.VITE_SUPABASE_URL 
-  ? `${import.meta.env.VITE_SUPABASE_URL}/functions/v1`
-  : 'http://localhost:54321/functions/v1';
+// Hardcoded API base URL - update with your actual Supabase project URL
+const API_BASE_URL = 'https://your-project-id.supabase.co/functions/v1';
 
 interface ApiResponse<T = any> {
   success: boolean;
@@ -15,11 +14,6 @@ interface ApiResponse<T = any> {
 }
 
 /**
- * Generic API call function
- */
-async function apiCall<T>(endpoint: string, data: any): Promise<ApiResponse<T>> {
-  try {
-    console.log(`🚀 API Call: ${endpoint}`, { url: `${API_BASE_URL}/${endpoint}`, data });
     
     // Get the current session for authorization
     const { data: { session } } = await supabase.auth.getSession();

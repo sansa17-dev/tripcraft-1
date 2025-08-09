@@ -51,7 +51,7 @@ export function EditableItinerary({
 
   // Load comments if shareId is provided
   useEffect(() => {
-    if (shareId && showComments && import.meta.env.VITE_SUPABASE_URL) {
+    if (shareId && showComments) {
       loadComments();
     }
   }, [shareId, showComments]);

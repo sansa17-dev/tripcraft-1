@@ -1,8 +1,8 @@
 # TripCraft - AI-Powered Travel Planning
 
-## 🔒 Secure Architecture
+## 🔒 Secure Architecture with Edge Functions
 
-TripCraft uses a secure backend architecture where all sensitive credentials (database keys, AI API keys) are kept server-side only. Users cannot access any sensitive information through the browser.
+TripCraft uses a secure backend architecture where all sensitive credentials are managed in Supabase Edge Function secrets. No environment variables or sensitive keys are exposed to the frontend.
 
 ## Quick Start
 
@@ -19,15 +19,8 @@ Transform your travel dreams into detailed, personalized itineraries with AI-pow
    npm install
    ```
 
-3. **Set up environment variables**
-   ```bash
-   cp .env.example .env
-   ```
-   Then edit `.env` with your Supabase project URL and anon key:
-   ```
-   VITE_SUPABASE_URL=https://your-project-id.supabase.co
-   VITE_SUPABASE_ANON_KEY=your-anon-key-here
-   ```
+3. **Update Supabase configuration**
+   Edit `src/lib/supabase.ts` and `src/lib/api.ts` with your actual Supabase project URL and anon key.
 
 4. **Start development server**
    ```bash
@@ -36,13 +29,7 @@ Transform your travel dreams into detailed, personalized itineraries with AI-pow
 
 ## Team Setup
 
-For secure backend setup, see [BACKEND_SETUP.md](./BACKEND_SETUP.md) for detailed instructions.
-
-**Team members only need:**
-- Supabase project URL (`VITE_SUPABASE_URL`) 
-- Supabase anon key (`VITE_SUPABASE_ANON_KEY`)
-- No service role keys or database credentials required
-- No AI API keys needed
+All sensitive credentials are managed in Supabase Edge Function secrets. Team members only need to update the hardcoded URLs in the source code with the actual project values.
 
 ## Features
 
@@ -61,21 +48,17 @@ For secure backend setup, see [BACKEND_SETUP.md](./BACKEND_SETUP.md) for detaile
 - **Build Tool**: Vite
 - **Security**: Server-side credential management
 
-## Environment Variables
+## Configuration
 
-**Frontend (.env file):**
-- `VITE_SUPABASE_URL`: Your Supabase project URL
-- `VITE_SUPABASE_ANON_KEY`: Your Supabase anon/public key
-
-**Backend (Supabase Edge Functions - auto-configured):**
+**Edge Function Secrets (configured in Supabase Dashboard):**
 - `SUPABASE_URL`: Auto-configured
 - `SUPABASE_SERVICE_ROLE_KEY`: Auto-configured  
-- `OPENROUTER_API_KEY`: Set in Supabase Dashboard → Edge Functions → Secrets
+- `OPENROUTER_API_KEY`: Manually set in Edge Functions → Secrets
 
 ## Security Features
 
-- ✅ No database credentials exposed to frontend
-- ✅ No AI API keys visible in browser
+- ✅ All credentials managed in Edge Function secrets
+- ✅ No environment variables required
 - ✅ All sensitive operations server-side only
 - ✅ Row Level Security (RLS) enforced
 - ✅ User data isolation and protection

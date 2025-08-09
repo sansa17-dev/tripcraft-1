@@ -1,6 +1,6 @@
 # Secure Backend Setup for TripCraft
 
-This document explains the secure backend architecture where all sensitive credentials are kept server-side only.
+This document explains the secure backend architecture where all sensitive credentials are managed in Supabase Edge Function secrets.
 
 ## Architecture Overview
 
@@ -10,8 +10,8 @@ Frontend (React) → Edge Functions (Deno) → Supabase Database
 ```
 
 **Key Security Features:**
-- ✅ No database credentials exposed to frontend users
-- ✅ No AI API keys visible in browser
+- ✅ All credentials managed in Edge Function secrets
+- ✅ No environment variables required
 - ✅ All sensitive operations handled server-side
 - ✅ Secure authentication flow
 - ✅ Row Level Security (RLS) enforced
@@ -33,50 +33,38 @@ Frontend (React) → Edge Functions (Deno) → Supabase Database
 - Processes AI responses securely
 - Falls back to demo data if API unavailable
 
-## Environment Variables (Server-Side Only)
+## Edge Function Secrets Configuration
 
-These should be configured in Supabase Dashboard → Edge Functions → Secrets:
+Configure these in Supabase Dashboard → Edge Functions → Secrets:
 
-```env
-SUPABASE_URL=your-project-url (auto-configured)
-SUPABASE_SERVICE_ROLE_KEY=your-service-role-key (auto-configured)
-OPENROUTER_API_KEY=your-openrouter-api-key
-```
+- `SUPABASE_URL`: Auto-configured by Supabase
+- `SUPABASE_SERVICE_ROLE_KEY`: Auto-configured by Supabase
+- `OPENROUTER_API_KEY`: Manually add your OpenRouter API key
 
-**Note**: `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` are automatically available in Edge Functions. You only need to manually add `OPENROUTER_API_KEY` in the Secrets section.
+**Note**: Only `OPENROUTER_API_KEY` needs to be manually configured.
 
 ## Team Setup Instructions
 
 ### For Team Lead/DevOps:
 
 1. **Set up Supabase Project:**
-   ```bash
-   # Create project at supabase.com
-   # Get project URL and service role key
-   ```
+   - Create project at supabase.com
+   - Note the project URL and anon key
 
 2. **Configure Edge Function Secrets:**
    - Go to Supabase Dashboard → Edge Functions → Secrets
    - Add `OPENROUTER_API_KEY` with your OpenRouter key
-   - `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` are auto-configured
 
-3. **Deploy Edge Functions:**
-   ```bash
-   # Functions are automatically deployed when you connect to Supabase
-   # No manual deployment needed
-   ```
+   - Other secrets are auto-configured
 
 ### For Team Members:
 
-1. **Get Project URL Only:**
-   ```env
-   # Only need this in your .env file:
-   VITE_SUPABASE_URL=https://your-project-id.supabase.co
-   ```
+1. **Update Source Code:**
+   - Edit `src/lib/supabase.ts` with actual project URL and anon key
+   - Edit `src/lib/api.ts` with actual project URL
 
-2. **No Other Credentials Needed:**
-   - No database keys required
-   - No AI API keys needed
+2. **No Environment Variables Needed:**
+   - No .env file required
    - All sensitive operations handled by backend
 
 ## Security Benefits
@@ -117,7 +105,7 @@ Body: { preferences: TravelPreferences }
 1. **Frontend Development:**
    - Work with the React app normally
    - All API calls go through `src/lib/api.ts`
-   - No direct database access needed
+   - Update hardcoded URLs with actual project values
 
 2. **Backend Changes:**
    - Modify Edge Functions in `/supabase/functions/`
@@ -136,9 +124,10 @@ Body: { preferences: TravelPreferences }
 1. **"Function not found" errors:**
    - Ensure Supabase project is connected
    - Check function names match exactly
+   - Verify project URL is correct in source code
 
 2. **Authentication failures:**
-   - Verify SUPABASE_URL is correct
+   - Verify project URL and anon key in source code
    - Check if functions are deployed
 
 3. **Database permission errors:**
@@ -165,4 +154,4 @@ Body: { preferences: TravelPreferences }
 3. **Database:** Managed by Supabase with automatic backups
 4. **Monitoring:** Built-in logs and metrics in Supabase Dashboard
 
-This architecture ensures maximum security while maintaining ease of development for the entire team.
+This architecture ensures maximum security with all credentials managed in Edge Function secrets.
