@@ -129,7 +129,7 @@ export function SharedItineraryView({ shareId }: SharedItineraryViewProps) {
       const result = await commentsApi.create(shareId, {
         user_email: user.email,
         content: newGeneralComment.trim()
-      }, dayIndex);
+      }, null);
 
       if (result.success) {
         setNewGeneralComment('');
