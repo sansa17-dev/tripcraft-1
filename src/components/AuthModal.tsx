@@ -57,6 +57,7 @@ export function AuthModal({ isOpen, onClose, mode, onModeChange }: AuthModalProp
       } else {
         const { error } = await signIn(email, password);
         if (error) {
+          console.error('🚨 Sign in error in modal:', error);
           setError(error);
           return;
         }

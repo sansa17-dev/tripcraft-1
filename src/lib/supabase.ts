@@ -11,3 +11,9 @@ export const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiO
 
 // Create and export Supabase client
 export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// Log configuration for debugging
+console.log('🔧 Supabase client initialized with:', {
+  url: SUPABASE_URL,
+  anonKeyPrefix: SUPABASE_ANON_KEY.substring(0, 20) + '...'
+});

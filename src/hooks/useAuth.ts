@@ -109,6 +109,7 @@ export function useAuth(): AuthState & AuthActions {
     setLoading(true);
     try {
       console.log('🔐 Signing in user:', email);
+      console.log('🔗 Using Supabase URL:', supabase.supabaseUrl);
       
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
@@ -116,7 +117,12 @@ export function useAuth(): AuthState & AuthActions {
       });
 
       if (error) {
-        console.error('❌ Signin failed:', error.message);
+        console.error('❌ Signin failed:', error);
+        console.error('❌ Error details:', {
+          message: error.message,
+          status: error.status,
+          statusText: error.statusText
+        });
         return { error: error.message };
       }
 
@@ -128,6 +134,13 @@ export function useAuth(): AuthState & AuthActions {
       return { error: null };
     } catch (error) {
       console.error('💥 Signin exception:', error);
+      
+      // Check if it's a network error
+      if (error instanceof TypeError && error.message === 'Failed to fetch') {
+        console.error('🌐 Network error - checking connection to Supabase');
+        return { error: 'Unable to connect to authentication service. Please check your internet connection and try again.' };
+      }
+      
       return { error: error instanceof Error ? error.message : 'Signin failed' };
     } finally {
       setLoading(false);
