@@ -6,7 +6,7 @@
 import React from 'react';
 import { 
   Plane, MapPin, Clock, Users, Star, Compass, Globe, Zap, 
-  Shield, Heart, ArrowRight, CheckCircle, Quote
+  Shield, Heart, ArrowRight, CheckCircle, Quote, Share2
 } from 'lucide-react';
 
 interface HomePageProps {
