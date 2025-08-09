@@ -26,10 +26,22 @@ Deno.serve(async (req) => {
   }
 
   try {
+    // Verify environment variables are set
+    const supabaseUrl = Deno.env.get('SUPABASE_URL')
+    const supabaseServiceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')
+    
+    if (!supabaseUrl) {
+      throw new Error('SUPABASE_URL environment variable is not set')
+    }
+    
+    if (!supabaseServiceRoleKey) {
+      throw new Error('SUPABASE_SERVICE_ROLE_KEY environment variable is not set')
+    }
+
     // Create Supabase client with service role key from Edge Function secrets
     const supabaseClient = createClient(
-      Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
+      supabaseUrl,
+      supabaseServiceRoleKey
     )
 
     const { action, shareId, commentId, userId, dayIndex, data }: CommentRequest = await req.json()
