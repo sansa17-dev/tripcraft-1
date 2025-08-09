@@ -288,7 +288,7 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
             {/* Primary CTA */}
             <button
               onClick={onGetStarted}
-             className="group relative flex items-center justify-between w-full lg:w-80 px-8 py-4 bg-gradient-to-r from-teal-500 via-cyan-500 to-blue-500 text-white rounded-2xl hover:from-teal-600 hover:via-cyan-600 hover:to-blue-600 transition-all duration-300 shadow-2xl hover:shadow-3xl hover:scale-105 font-display"
+             className="group relative flex items-center justify-between w-full lg:w-96 px-8 py-4 bg-gradient-to-r from-teal-500 via-cyan-500 to-blue-500 text-white rounded-2xl hover:from-teal-600 hover:via-cyan-600 hover:to-blue-600 transition-all duration-300 shadow-2xl hover:shadow-3xl hover:scale-105 font-display"
             >
               <div className="flex items-center gap-4">
                 <div className="bg-white/20 p-3 rounded-xl backdrop-blur-sm">
@@ -310,7 +310,7 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
             {/* Voice Chat CTA */}
             <button
               onClick={() => setShowVoiceChat(true)}
-              className="group relative flex items-center justify-between w-full lg:w-80 px-8 py-4 bg-gradient-to-r from-purple-500 via-indigo-500 to-blue-500 text-white rounded-2xl hover:from-purple-600 hover:via-indigo-600 hover:to-blue-600 transition-all duration-300 shadow-2xl hover:shadow-3xl hover:scale-105 font-display"
+             className="group relative flex items-center justify-between w-full lg:w-96 px-8 py-4 bg-gradient-to-r from-purple-500 via-indigo-500 to-blue-500 text-white rounded-2xl hover:from-purple-600 hover:via-indigo-600 hover:to-blue-600 transition-all duration-300 shadow-2xl hover:shadow-3xl hover:scale-105 font-display"
             >
               <div className="flex items-center gap-4">
                 <div className="bg-white/20 p-3 rounded-xl backdrop-blur-sm">
