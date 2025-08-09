@@ -65,8 +65,8 @@ export async function generateItinerary(preferences: TravelPreferences): Promise
     if (!apiKey) {
       console.log('No API key found, using demo itinerary');
       return {
-        success: false,
-        error: 'OpenRouter API key not configured. Please add VITE_OPENROUTER_API_KEY to your environment variables.'
+        success: true,
+        data: generateDemoItinerary(preferences)
       };
     }
 
@@ -112,18 +112,27 @@ export async function generateItinerary(preferences: TravelPreferences): Promise
         errorData = null;
       }
       
+      // Handle authentication errors by falling back to demo
+      if (response.status === 401 || (errorData?.error?.code === 401) || (errorData?.error?.message?.includes('auth'))) {
+        console.log('Authentication error detected, falling back to demo itinerary');
+        return {
+          success: true,
+          data: generateDemoItinerary(preferences)
+        };
+      }
+      
       // If it's a CORS or network error, fall back to demo
       if (response.status === 0 || errorText.includes('CORS') || errorText.includes('network')) {
         console.log('Network/CORS error detected, falling back to demo itinerary');
         return {
-          success: false,
-          error: 'Network connectivity issue detected. Using demo itinerary.'
+          success: true,
+          data: generateDemoItinerary(preferences)
         };
       }
       
       return {
-        success: false,
-        error: errorData?.error?.message || errorText || `API request failed: ${response.status} ${response.statusText}`
+        success: true,
+        data: generateDemoItinerary(preferences)
       };
     }
 
