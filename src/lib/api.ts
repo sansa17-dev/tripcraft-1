@@ -2,6 +2,7 @@
  * API client for secure backend communication
  * All non-auth Supabase operations go through Edge Functions to keep credentials secure
  */
+import { supabase } from './supabase';
 
 const API_BASE_URL = import.meta.env.VITE_SUPABASE_URL 
   ? `${import.meta.env.VITE_SUPABASE_URL}/functions/v1`
@@ -20,11 +21,21 @@ async function apiCall<T>(endpoint: string, data: any): Promise<ApiResponse<T>> 
   try {
     console.log(`🚀 API Call: ${endpoint}`, { url: `${API_BASE_URL}/${endpoint}`, data });
     
+    // Get the current session for authorization
+    const { data: { session } } = await supabase.auth.getSession();
+    
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+    };
+    
+    // Add authorization header if user is authenticated
+    if (session?.access_token) {
+      headers['Authorization'] = `Bearer ${session.access_token}`;
+    }
+    
     const response = await fetch(`${API_BASE_URL}/${endpoint}`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers,
       body: JSON.stringify(data),
     });
 
