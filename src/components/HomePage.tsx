@@ -32,16 +32,6 @@ const FEATURES = [
     description: 'Explore any destination worldwide with local insights, hidden gems, and authentic experiences.'
   },
   {
-    icon: Users,
-    title: 'Group-Friendly',
-    description: 'Perfect for solo travelers, couples, families, or groups. Customized for any travel party size.'
-  },
-  {
-    icon: Shield,
-    title: 'Reliable Recommendations',
-    description: 'Curated suggestions for accommodations, dining, and activities based on real traveler experiences.'
-  },
-  {
     icon: Heart,
     title: 'Fully Customizable',
     description: 'Edit, modify, and personalize every aspect of your itinerary to match your exact preferences.'
@@ -136,7 +126,7 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
             <h1 className="text-5xl md:text-6xl font-bold text-white mb-6 leading-tight">
             <div className="flex items-center justify-center gap-4 mb-8">
               <span className="block bg-gradient-to-r from-yellow-300 to-orange-300 bg-clip-text text-transparent">
-                Travel Journey
+                Travel Plans Made Easy
               </span>
             </div>
             </h1>
@@ -252,28 +242,6 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
                 </div>
               </div>
             ))}
-          </div>
-
-          {/* Quick Stats */}
-          <div className="bg-white rounded-2xl shadow-xl p-8 text-center">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-              <div>
-                <div className="text-3xl font-bold text-blue-600 mb-2">200+</div>
-                <div className="text-gray-600">Countries & Cities</div>
-              </div>
-              <div>
-                <div className="text-3xl font-bold text-indigo-600 mb-2">50K+</div>
-                <div className="text-gray-600">Happy Travelers</div>
-              </div>
-              <div>
-                <div className="text-3xl font-bold text-purple-600 mb-2">1M+</div>
-                <div className="text-gray-600">Activities Planned</div>
-              </div>
-              <div>
-                <div className="text-3xl font-bold text-green-600 mb-2">4.9★</div>
-                <div className="text-gray-600">Average Rating</div>
-              </div>
-            </div>
           </div>
         </div>
       </section>
