@@ -61,7 +61,7 @@ const TESTIMONIALS = [
     name: 'Sarah Chen',
     location: 'Singapore',
     rating: 5,
-    text: 'TripCraft planned our perfect 10-day European adventure. Every recommendation was spot-on, and the day-by-day structure made our trip stress-free and amazing!',
+    text: 'TripCraft planned our perfect 10-day European adventure. Every recommendation was spot-on and made our trip stress-free and amazing!',
     trip: '10-day Europe Tour'
   },
   {
