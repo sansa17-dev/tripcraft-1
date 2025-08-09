@@ -69,7 +69,7 @@ export function EditableItinerary({
       // Load day-specific comments
       const dayCommentsMap: { [dayIndex: number]: any[] } = {};
       for (let i = 0; i < editedItinerary.days.length; i++) {
-        const dayIndex = i + 1;
+        const dayIndex = i + 1; // Day numbers start from 1
         const dayResult = await commentsApi.list(shareId, dayIndex);
         if (dayResult.success && dayResult.data) {
           dayCommentsMap[dayIndex] = dayResult.data;
@@ -479,7 +479,7 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
             {/* Save Error */}
             {saveError && (
               <div className="absolute -top-16 right-0 bg-red-50 border border-red-200 rounded-lg p-2 text-red-700 text-sm max-w-xs z-20 break-words">
-                {saveError}
+                {renderDayComments(dayIndex + 1)}
               </div>
             )}
 

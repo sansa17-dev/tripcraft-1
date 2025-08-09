@@ -129,7 +129,7 @@ export function SharedItineraryView({ shareId }: SharedItineraryViewProps) {
       const result = await commentsApi.create(shareId, {
         user_email: user.email,
         content: newGeneralComment.trim()
-      }, null);
+      }, dayIndex);
 
       if (result.success) {
         setNewGeneralComment('');
@@ -766,7 +766,7 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
                 )}
                 
                 {/* Day-specific Comments */}
-                {sharedItinerary.share_mode === 'collaborate' && renderDayComments(dayIndex)}
+                {sharedItinerary.share_mode === 'collaborate' && renderDayComments(dayIndex + 1)}
               </div>
             ))}
           </div>
