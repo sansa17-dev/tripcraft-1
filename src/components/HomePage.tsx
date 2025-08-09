@@ -675,7 +675,6 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
           </div>
         </div>
       </section>
-    </div>
 
       {/* Interactive Demo Section */}
       <section className="py-24 bg-gradient-to-br from-gray-50 to-blue-50">
