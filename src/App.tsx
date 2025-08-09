@@ -198,6 +198,7 @@ function App() {
     setSharedItineraryId(shareId);
     setCurrentView('shared');
   };
+  
   if (authLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 flex items-center justify-center">
@@ -498,7 +499,7 @@ function App() {
         />
       )}
     </div>
-  onSelectItinerary: (itinerary: GeneratedItinerary, savedId?: string) => void;
+  );
 }
 
 export default App;
