@@ -263,14 +263,7 @@ function App() {
                     Sign In
                   </button>
                   <button
-                    onClick={() => {
-                      if (user) {
-                        setCurrentView('planner');
-                      } else {
-                        setAuthMode('signup');
-                        setShowAuthModal(true);
-                      }
-                    }}
+                    onClick={() => setCurrentView('planner')}
                     className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 shadow-md hover:shadow-lg font-medium"
                   >
                     Plan Your Trip

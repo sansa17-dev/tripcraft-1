@@ -274,7 +274,7 @@ export function TravelForm({ preferences, onPreferencesChange, onSubmit, isGener
             type="submit"
             className="w-full py-4 px-6 rounded-lg text-white font-medium transition-all duration-200 shadow-lg hover:shadow-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
           >
-            <span className="text-lg">Sign In to Generate Itinerary</span>
+            <span className="text-lg">Generate Itinerary</span>
           </button>
         )}
       </form>

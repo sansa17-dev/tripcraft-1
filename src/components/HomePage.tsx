@@ -151,7 +151,7 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
                 onClick={onGetStarted}
                 className="flex items-center gap-2 px-8 py-4 bg-white text-blue-600 rounded-xl hover:bg-blue-50 transition-all duration-200 shadow-xl hover:shadow-2xl font-semibold text-lg transform hover:scale-105"
               >
-                {isAuthenticated ? 'Plan Your Trip' : 'Get Started Free'}
+                Plan Your Trip
                 <ArrowRight className="h-5 w-5" />
               </button>
               
@@ -349,7 +349,7 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
               onClick={onGetStarted}
               className="flex items-center gap-2 px-8 py-4 bg-white text-blue-600 rounded-xl hover:bg-blue-50 transition-all duration-200 shadow-xl hover:shadow-2xl font-semibold text-lg transform hover:scale-105"
             >
-              {isAuthenticated ? 'Plan Your Trip Now' : 'Start Planning Free'}
+              Start Planning Free
               <ArrowRight className="h-5 w-5" />
             </button>
           </div>
