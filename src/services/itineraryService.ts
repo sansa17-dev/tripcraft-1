@@ -31,8 +31,7 @@ Travel Details:
 - Holiday pace: ${vacationPace}
 - Interests: ${userInterests.join(', ')}
 ${additionalNotes ? `- Additional notes: ${additionalNotes}` : ''}
-- Planning Style: ${preferences.travelPersona.planningStyle}
-` : ''}
+${preferences.travelPersona ? `- Planning Style: ${preferences.travelPersona.planningStyle}` : ''}
 
 IMPORTANT INSTRUCTIONS FOR CREATING AN AMAZING TRAVEL EXPERIENCE:
 
@@ -98,127 +97,13 @@ WRITING STYLE REQUIREMENTS:
 - Mention local customs, traditions, and etiquette
 - Include insider tips and hidden gems
 - Describe unique photo opportunities and Instagram-worthy moments
-- Explain the "why" behind each recommendation
+- Explain the "why\" behind each recommendation
 - Use vivid adjectives and engaging storytelling
 - Make travelers feel like they're getting exclusive, expert advice
 
 Make sure all recommendations match the ${budget} budget level (per traveler per day), match the ${vacationPace} holiday pace, and include practical details like opening hours considerations and transportation between activities. Use USD ($) currency for all cost estimates.`;
 }
 
-/**
- * Get persona description for better LLM understanding
- */
-function getPersonaDescription(category: string, value: string): string {
-  const descriptions: Record<string, Record<string, string>> = {
-    timePreference: {
-      'early-bird': '(prefers morning activities, sunrise experiences, early starts)',
-      'night-owl': '(prefers late starts, evening/night activities, sunset experiences)',
-      'flexible': '(adaptable to destination rhythm, balanced schedule)'
-    },
-    socialStyle: {
-      'social': '(enjoys meeting locals, group activities, social experiences)',
-      'intimate': '(prefers small groups, meaningful connections, quiet moments)',
-      'solo-friendly': '(enjoys independent exploration, peaceful activities, self-guided experiences)'
-    },
-    culturalInterest: {
-      'high': '(loves museums, historical sites, cultural immersion, learning)',
-      'moderate': '(enjoys some culture mixed with other activities)',
-      'low': '(prefers experiences over educational/cultural sites)'
-    },
-    foodAdventure: {
-      'adventurous': '(loves trying new foods, street food, local specialties, exotic dishes)',
-      'moderate': '(enjoys some local dishes but also familiar options)',
-      'familiar': '(prefers familiar cuisines, safe food choices, international options)'
-    },
-    planningStyle: {
-      'structured': '(likes detailed schedules, advance bookings, organized itineraries)',
-      'flexible': '(wants key highlights planned but room for spontaneity)',
-      'spontaneous': '(prefers minimal planning, day-by-day decisions, freedom to explore)'
-    }
-  };
-  
-  return descriptions[category]?.[value] || '';
-}
-
-/**
- * Get specific instructions based on time preference
- */
-function getTimePreferenceInstructions(timePreference: string): string {
-  switch (timePreference) {
-    case 'early-bird':
-      return 'Schedule key activities in the morning (7-11 AM), include sunrise experiences, morning markets, and peaceful temple visits. Suggest earlier dinner times (6-7 PM) and mention best morning photo opportunities.';
-    case 'night-owl':
-      return 'Plan relaxed mornings with late starts (10 AM+), focus on afternoon and evening activities, include sunset viewpoints, night markets, evening cultural shows, and vibrant nightlife options.';
-    case 'flexible':
-      return 'Create a balanced schedule that can be adapted, mention both morning and evening options for key activities, and provide timing alternatives for major attractions.';
-    default:
-      return 'Create a balanced daily schedule with activities throughout the day.';
-  }
-}
-
-/**
- * Get specific instructions based on social style
- */
-function getSocialStyleInstructions(socialStyle: string): string {
-  switch (socialStyle) {
-    case 'social':
-      return 'Include group tours, cooking classes, local meetups, community events, shared dining experiences, and opportunities to interact with locals. Suggest social accommodations like hostels or guesthouses.';
-    case 'intimate':
-      return 'Focus on small group experiences, private tours, quiet cafes, romantic restaurants, peaceful gardens, and meaningful cultural exchanges. Avoid crowded tourist traps.';
-    case 'solo-friendly':
-      return 'Emphasize self-guided activities, peaceful locations, solo-friendly restaurants with counter seating, libraries, parks, and independent exploration opportunities. Include safety tips for solo travelers.';
-    default:
-      return 'Include a mix of social and independent activities to suit different preferences.';
-  }
-}
-
-/**
- * Get specific instructions based on cultural interest level
- */
-function getCulturalInterestInstructions(culturalInterest: string): string {
-  switch (culturalInterest) {
-    case 'high':
-      return 'Prioritize museums, historical sites, cultural centers, traditional performances, heritage walks, local festivals, and educational experiences. Include detailed historical context and cultural significance for each recommendation.';
-    case 'moderate':
-      return 'Include some key cultural sites mixed with other activities. Balance museums with outdoor activities, food experiences, and entertainment. Provide cultural context but keep it engaging.';
-    case 'low':
-      return 'Focus on experiential activities over educational sites. Emphasize food, nature, entertainment, shopping, and adventure activities. Include cultural elements naturally within experiences rather than dedicated cultural visits.';
-    default:
-      return 'Include a balanced mix of cultural and experiential activities.';
-  }
-}
-
-/**
- * Get specific instructions based on food adventure level
- */
-function getFoodAdventureInstructions(foodAdventure: string): string {
-  switch (foodAdventure) {
-    case 'adventurous':
-      return 'Recommend street food, local markets, hole-in-the-wall restaurants, regional specialties, exotic dishes, food tours, cooking classes, and unique dining experiences. Include specific dishes to try and food safety tips.';
-    case 'moderate':
-      return 'Mix local specialties with familiar options. Suggest reputable local restaurants alongside international cuisine. Include some adventurous dishes but also comfort food options.';
-    case 'familiar':
-      return 'Focus on international restaurants, hotel dining, familiar cuisines, and well-known food chains. Include some mild local dishes that are similar to familiar foods. Prioritize food safety and hygiene.';
-    default:
-      return 'Include a variety of dining options from local to international cuisine.';
-  }
-}
-
-/**
- * Get specific instructions based on planning style
- */
-function getPlanningStyleInstructions(planningStyle: string): string {
-  switch (planningStyle) {
-    case 'structured':
-      return 'Provide detailed time schedules, specific addresses, booking information, advance reservation requirements, and step-by-step daily plans. Include backup options and contingency plans.';
-    case 'flexible':
-      return 'Outline key highlights and must-see attractions but leave room for spontaneous discoveries. Provide time ranges rather than specific times, and suggest optional activities for extra time.';
-    case 'spontaneous':
-      return 'Focus on general areas to explore, provide multiple options for each time period, emphasize walk-in friendly venues, and include tips for last-minute bookings and discoveries.';
-    default:
-      return 'Provide a structured framework with flexibility for personal preferences.';
-  }
-}
 /**
  * Calls ChatGPT API to generate travel itinerary
  */
@@ -241,7 +126,7 @@ export async function generateItinerary(preferences: TravelPreferences): Promise
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`,
+        'Authorization': \`Bearer ${apiKey}`,
         'HTTP-Referer': window.location.origin,
         'X-Title': 'TripCraft Travel Itinerary Generator'
       },
@@ -374,7 +259,7 @@ export async function generateItinerary(preferences: TravelPreferences): Promise
       console.log('Falling back to demo itinerary due to parsing error');
       return {
         success: false,
-        error: `API parsing failed: ${parseError instanceof Error ? parseError.message : 'Unknown error'}. Using demo itinerary.`
+        error: \`API parsing failed: ${parseError instanceof Error ? parseError.message : 'Unknown error'}. Using demo itinerary.`
       };
     }
 
@@ -397,7 +282,6 @@ export async function generateItinerary(preferences: TravelPreferences): Promise
   }
 }
 
-  console.log('Generated prompt for API:', prompt);
 /**
  * Generates a demo itinerary for testing without API calls
  * Used as fallback when API key is not available
@@ -406,11 +290,11 @@ export function generateDemoItinerary(preferences: TravelPreferences): Generated
   const duration = Math.ceil((new Date(preferences.endDate).getTime() - new Date(preferences.startDate).getTime()) / (1000 * 60 * 60 * 24));
   
   return {
-    title: `${duration}-Day Magical Discovery of ${preferences.destination}: An Unforgettable Journey from ${preferences.origin}`,
+    title: \`${duration}-Day Magical Discovery of ${preferences.destination}: An Unforgettable Journey from ${preferences.origin}`,
     destination: preferences.destination,
-    duration: `${duration} days`,
+    duration: \`${duration} days`,
     totalBudget: preferences.budget === 'budget' ? '$800-1,500' : preferences.budget === 'mid-range' ? '$1,500-3,000' : '$3,000-6,000',
-    overview: `Embark on an extraordinary ${duration}-day adventure from ${preferences.origin} to the captivating destination of ${preferences.destination}! This carefully curated journey blends the perfect mix of ${preferences.interests.join(', ')} experiences, designed specifically for your ${preferences.vacationPace} travel style. Discover hidden gems, savor authentic local flavors, and create unforgettable memories while staying within your ${preferences.budget} budget. From the moment you arrive until your reluctant departure, every detail has been thoughtfully planned to showcase the very best this incredible destination has to offer, including seamless transportation and insider access to experiences most travelers never discover.`,
+    overview: \`Embark on an extraordinary ${duration}-day adventure from ${preferences.origin} to the captivating destination of ${preferences.destination}! This carefully curated journey blends the perfect mix of ${preferences.interests.join(', ')} experiences, designed specifically for your ${preferences.vacationPace} travel style. Discover hidden gems, savor authentic local flavors, and create unforgettable memories while staying within your ${preferences.budget} budget. From the moment you arrive until your reluctant departure, every detail has been thoughtfully planned to showcase the very best this incredible destination has to offer, including seamless transportation and insider access to experiences most travelers never discover.`,
     days: Array.from({ length: duration }, (_, index) => {
       const dayDate = new Date(preferences.startDate);
       dayDate.setDate(dayDate.getDate() + index);
@@ -419,14 +303,14 @@ export function generateDemoItinerary(preferences: TravelPreferences): Generated
         day: index + 1,
         date: dayDate.toISOString().split('T')[0],
         activities: [
-          `Morning: Begin your day with an enchanting exploration of ${preferences.destination}'s most captivating ${preferences.interests[0] || 'attractions'} - discover the stories behind these remarkable places as golden morning light creates perfect photo opportunities and fewer crowds allow for intimate experiences with local culture and history.`,
-          `Afternoon: Immerse yourself in the heart of ${preferences.destination} by visiting the iconic ${preferences.interests[1] || 'landmarks'} that define this destination's character - learn fascinating historical details from knowledgeable locals, capture Instagram-worthy shots, and understand why these places have captivated travelers for generations.`,
-          `Evening: As the sun sets, dive deep into the authentic ${preferences.interests[2] || 'cultural'} scene that makes ${preferences.destination} truly special - experience the magical transformation as the destination comes alive with evening energy, local traditions, and unforgettable moments that will become your favorite travel memories.`
+          \`Morning: Begin your day with an enchanting exploration of ${preferences.destination}'s most captivating ${preferences.interests[0] || 'attractions'} - discover the stories behind these remarkable places as golden morning light creates perfect photo opportunities and fewer crowds allow for intimate experiences with local culture and history.`,
+          \`Afternoon: Immerse yourself in the heart of ${preferences.destination} by visiting the iconic ${preferences.interests[1] || 'landmarks'} that define this destination's character - learn fascinating historical details from knowledgeable locals, capture Instagram-worthy shots, and understand why these places have captivated travelers for generations.`,
+          \`Evening: As the sun sets, dive deep into the authentic ${preferences.interests[2] || 'cultural'} scene that makes ${preferences.destination} truly special - experience the magical transformation as the destination comes alive with evening energy, local traditions, and unforgettable moments that will become your favorite travel memories.`
         ],
         meals: {
-          breakfast: `Start your morning at a charming local café where the aroma of freshly brewed coffee mingles with traditional breakfast specialties - this beloved neighborhood spot offers authentic flavors and the perfect opportunity to observe daily life while fueling up for your adventures.`,
-          lunch: `Savor an unforgettable midday meal at a traditional restaurant renowned for its time-honored recipes and warm hospitality - taste signature dishes passed down through generations while enjoying the bustling atmosphere that captures the true spirit of ${preferences.destination}.`,
-          dinner: `End your day with an extraordinary dining experience at a highly-rated local establishment where innovative cuisine meets traditional flavors - indulge in carefully crafted dishes that showcase the region's finest ingredients while soaking in the romantic ambiance and creating lasting memories.`
+          breakfast: \`Start your morning at a charming local café where the aroma of freshly brewed coffee mingles with traditional breakfast specialties - this beloved neighborhood spot offers authentic flavors and the perfect opportunity to observe daily life while fueling up for your adventures.`,
+          lunch: \`Savor an unforgettable midday meal at a traditional restaurant renowned for its time-honored recipes and warm hospitality - taste signature dishes passed down through generations while enjoying the bustling atmosphere that captures the true spirit of ${preferences.destination}.`,
+          dinner: \`End your day with an extraordinary dining experience at a highly-rated local establishment where innovative cuisine meets traditional flavors - indulge in carefully crafted dishes that showcase the region's finest ingredients while soaking in the romantic ambiance and creating lasting memories.`
         },
         accommodation: preferences.accommodationType === 'hotel' ? 'Recommended hotel' : 
                      preferences.accommodationType === 'hostel' ? 'Top-rated hostel' :
