@@ -4,9 +4,21 @@
  */
 import { supabase } from './supabase';
 
-const API_BASE_URL = import.meta.env.VITE_SUPABASE_URL 
-  ? `${import.meta.env.VITE_SUPABASE_URL}/functions/v1`
-  : 'http://localhost:54321/functions/v1';
+const API_BASE_URL = (() => {
+  const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+  if (supabaseUrl) {
+    return `${supabaseUrl}/functions/v1`;
+  }
+  
+  // Fallback for local development
+  if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+    return 'http://localhost:54321/functions/v1';
+  }
+  
+  // If no VITE_SUPABASE_URL is set and not on localhost, show error
+  console.error('VITE_SUPABASE_URL environment variable is not set. Please configure your Supabase project URL.');
+  throw new Error('Supabase URL not configured. Please set VITE_SUPABASE_URL environment variable.');
+})();
 
 interface ApiResponse<T = any> {
   success: boolean;
