@@ -17,22 +17,22 @@ export function InteractiveDemo({ onStartPlanning }: InteractiveDemoProps) {
   const demoSteps = [
     {
       type: 'user',
-      message: "I want to plan a 5-day trip to Bali for 2 people",
+      message: "Hey AI buddy! Plan a romantic 5-day Bali trip for 2 people 💕",
       icon: Users
     },
     {
       type: 'ai',
-      message: "Perfect! I'll create an authentic Bali experience for you. What's your budget range?",
+      message: "Hey there! 🌴 I know the perfect hidden gems in Bali! What's your vibe - luxury resorts or authentic local stays?",
       icon: MessageCircle
     },
     {
       type: 'user',
-      message: "Mid-range budget, we love culture and food",
+      message: "Mix of both! We're foodies who love sunset dinners 🌅",
       icon: MessageCircle
     },
     {
       type: 'ai',
-      message: "Excellent! I'm crafting your personalized itinerary with local insights...",
+      message: "Perfect! I'm connecting you with my local Bali friends for insider spots... ✨",
       icon: Sparkles,
       isGenerating: true
     }
@@ -61,10 +61,10 @@ export function InteractiveDemo({ onStartPlanning }: InteractiveDemoProps) {
     <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-2xl mx-auto border border-gray-100">
       <div className="text-center mb-6">
         <h3 className="text-2xl font-bold text-gray-900 mb-2">
-          See Your AI Companion in Action
+          Chat With Your AI Travel Buddy
         </h3>
         <p className="text-gray-600">
-          Watch how TripCraft creates personalized itineraries through conversation
+          See how our AI buddy talks like a local friend who knows every destination
         </p>
       </div>
 
@@ -124,11 +124,11 @@ export function InteractiveDemo({ onStartPlanning }: InteractiveDemoProps) {
           onClick={onStartPlanning}
           className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 shadow-lg hover:shadow-xl font-medium"
         >
-          Start Your Conversation
+          Chat With AI Now
           <ArrowRight className="h-4 w-4" />
         </button>
         <p className="text-xs text-gray-500 mt-2">
-          Free to try • No credit card required • 90-second results
+          Free AI chat • No signup required • Instant local insights
         </p>
       </div>
     </div>

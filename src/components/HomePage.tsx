@@ -182,27 +182,27 @@ const FEATURES = [
   },
   {
     icon: Globe,
-    title: '247 Destinations Covered',
-    description: 'From hidden gems in Bhutan to luxury resorts in Maldives. Every corner of the world, expertly planned.',
+    title: 'AI Travel Companion Chat',
+    description: 'Ask anything about your destination. "Best sunset spots in Santorini?" Get instant local insights via chat.',
     color: 'from-blue-500 to-cyan-500',
-    metric: '247 cities',
-    badge: 'Global'
+    metric: '24/7 AI chat',
+    badge: 'Revolutionary'
   },
   {
     icon: Heart,
-    title: 'Fully Customizable',
-    description: 'Edit every detail in real-time. Add, remove, or modify activities with our intuitive drag-and-drop editor.',
+    title: 'Live Collaboration Mode',
+    description: 'Plan together in real-time. See friends\' cursors, add comments, vote on activities - like Google Docs for travel.',
     color: 'from-pink-500 to-rose-500',
-    metric: '100% flexible',
-    badge: 'Your Way'
+    metric: 'Real-time sync',
+    badge: 'World First'
   },
   {
     icon: Shield,
-    title: 'Bank-Level Security',
-    description: 'Your data is encrypted and stored securely. Access your itineraries from any device, anywhere.',
+    title: 'Smart Price Tracking',
+    description: 'AI monitors flight & hotel prices 24/7. Get alerts when prices drop. Save up to 40% with perfect timing.',
     color: 'from-green-500 to-emerald-500',
-    metric: '256-bit SSL',
-    badge: 'Secure'
+    metric: '40% savings',
+    badge: 'Money Saver'
   }
 ];
 
@@ -563,11 +563,11 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent mb-4">
-              Your Personal Travel Assistant
-              <span className="block text-blue-600 text-2xl md:text-3xl">Powered by Local Intelligence</span>
+              World's First AI Travel Buddy
+              <span className="block text-blue-600 text-2xl md:text-3xl">Chat, Collaborate, Create Together</span>
             </h2>
             <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-              Get insider recommendations and authentic experiences that guidebooks miss
+              Revolutionary features that no other travel planner offers - chat with AI, plan with friends in real-time
             </p>
           </div>
 
@@ -668,7 +668,7 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
               className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 shadow-lg hover:shadow-xl font-medium"
             >
               Explore All 247 Destinations
-              <ArrowRight className="h-4 w-4" />
+              Watch AI in Action
             </button>
           </div>
         </div>
@@ -815,18 +815,18 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
               className="group relative inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-yellow-400 to-orange-500 text-black rounded-2xl hover:from-yellow-300 hover:to-orange-400 transition-all duration-300 shadow-2xl hover:shadow-yellow-500/25 font-bold text-lg transform hover:scale-105 hover:-translate-y-1"
             >
               <Plane className="h-5 w-5 group-hover:rotate-12 transition-transform duration-300" />
-              Start Planning Free
+              Chat With Your AI Travel Buddy
               <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform duration-300" />
               
               {/* Urgency indicator */}
               <div className="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full animate-pulse">
-                Free Premium
+                Chat Free
               </div>
             </button>
 
             <div className="text-white/60 text-sm">
               <div className="flex items-center gap-4">
-                <span>✓ No credit card</span>
+              className="flex items-center gap-2 px-6 py-4 bg-white/10 backdrop-blur-sm text-white rounded-2xl hover:bg-white/20 transition-all duration-300 border border-white/20 font-medium group"
                 <span>✓ 90-sec results</span>
                 <span>✓ Free forever</span>
               </div>
