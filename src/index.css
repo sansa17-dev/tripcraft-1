@@ -85,4 +85,13 @@
   .backdrop-blur-xs {
     backdrop-filter: blur(2px);
   }
+  
+  .animate-scroll-destinations {
+    animation: scroll-destinations 30s linear infinite;
+  }
+  
+  @keyframes scroll-destinations {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
 }

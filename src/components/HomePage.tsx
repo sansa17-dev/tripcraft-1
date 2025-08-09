@@ -245,6 +245,94 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
 
         {/* Content */}
         <div className="relative z-10 px-4 sm:px-6 lg:px-8 text-center max-w-6xl mx-auto">
+          {/* Scrolling Destinations Banner */}
+          <div className="mb-12 overflow-hidden">
+            <div className="flex items-center justify-center mb-4">
+              <div className="bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full border border-white/20">
+                <span className="text-cyan-200 text-sm font-medium">✈️ Popular Destinations</span>
+              </div>
+            </div>
+            
+            {/* Scrolling Container */}
+            <div className="relative h-16 overflow-hidden rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10">
+              <div className="absolute inset-0 flex items-center">
+                <div className="animate-scroll-destinations flex items-center gap-8 whitespace-nowrap">
+                  {/* First Set */}
+                  <div className="flex items-center gap-2 px-4 py-2 bg-white/10 rounded-full">
+                    <span className="text-2xl">🏖️</span>
+                    <span className="text-white font-medium">Goa Beaches</span>
+                  </div>
+                  <div className="flex items-center gap-2 px-4 py-2 bg-white/10 rounded-full">
+                    <span className="text-2xl">🏰</span>
+                    <span className="text-white font-medium">Rajasthan Palaces</span>
+                  </div>
+                  <div className="flex items-center gap-2 px-4 py-2 bg-white/10 rounded-full">
+                    <span className="text-2xl">🌴</span>
+                    <span className="text-white font-medium">Kerala Backwaters</span>
+                  </div>
+                  <div className="flex items-center gap-2 px-4 py-2 bg-white/10 rounded-full">
+                    <span className="text-2xl">🏔️</span>
+                    <span className="text-white font-medium">Himachal Mountains</span>
+                  </div>
+                  <div className="flex items-center gap-2 px-4 py-2 bg-white/10 rounded-full">
+                    <span className="text-2xl">🕌</span>
+                    <span className="text-white font-medium">Agra Taj Mahal</span>
+                  </div>
+                  <div className="flex items-center gap-2 px-4 py-2 bg-white/10 rounded-full">
+                    <span className="text-2xl">🌊</span>
+                    <span className="text-white font-medium">Andaman Islands</span>
+                  </div>
+                  <div className="flex items-center gap-2 px-4 py-2 bg-white/10 rounded-full">
+                    <span className="text-2xl">🏛️</span>
+                    <span className="text-white font-medium">Hampi Ruins</span>
+                  </div>
+                  <div className="flex items-center gap-2 px-4 py-2 bg-white/10 rounded-full">
+                    <span className="text-2xl">🦌</span>
+                    <span className="text-white font-medium">Jim Corbett Safari</span>
+                  </div>
+                  
+                  {/* Duplicate Set for Seamless Loop */}
+                  <div className="flex items-center gap-2 px-4 py-2 bg-white/10 rounded-full">
+                    <span className="text-2xl">🏖️</span>
+                    <span className="text-white font-medium">Goa Beaches</span>
+                  </div>
+                  <div className="flex items-center gap-2 px-4 py-2 bg-white/10 rounded-full">
+                    <span className="text-2xl">🏰</span>
+                    <span className="text-white font-medium">Rajasthan Palaces</span>
+                  </div>
+                  <div className="flex items-center gap-2 px-4 py-2 bg-white/10 rounded-full">
+                    <span className="text-2xl">🌴</span>
+                    <span className="text-white font-medium">Kerala Backwaters</span>
+                  </div>
+                  <div className="flex items-center gap-2 px-4 py-2 bg-white/10 rounded-full">
+                    <span className="text-2xl">🏔️</span>
+                    <span className="text-white font-medium">Himachal Mountains</span>
+                  </div>
+                  <div className="flex items-center gap-2 px-4 py-2 bg-white/10 rounded-full">
+                    <span className="text-2xl">🕌</span>
+                    <span className="text-white font-medium">Agra Taj Mahal</span>
+                  </div>
+                  <div className="flex items-center gap-2 px-4 py-2 bg-white/10 rounded-full">
+                    <span className="text-2xl">🌊</span>
+                    <span className="text-white font-medium">Andaman Islands</span>
+                  </div>
+                  <div className="flex items-center gap-2 px-4 py-2 bg-white/10 rounded-full">
+                    <span className="text-2xl">🏛️</span>
+                    <span className="text-white font-medium">Hampi Ruins</span>
+                  </div>
+                  <div className="flex items-center gap-2 px-4 py-2 bg-white/10 rounded-full">
+                    <span className="text-2xl">🦌</span>
+                    <span className="text-white font-medium">Jim Corbett Safari</span>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Gradient Overlays for Fade Effect */}
+              <div className="absolute left-0 top-0 bottom-0 w-20 bg-gradient-to-r from-teal-800 to-transparent pointer-events-none"></div>
+              <div className="absolute right-0 top-0 bottom-0 w-20 bg-gradient-to-l from-teal-800 to-transparent pointer-events-none"></div>
+            </div>
+          </div>
+
           {/* Main Headline */}
           <div className="mb-8">
             <h1 className="font-display text-6xl md:text-7xl lg:text-8xl font-bold text-white mb-6 leading-tight tracking-tight">
