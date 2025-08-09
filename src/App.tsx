@@ -51,6 +51,7 @@ function App() {
   const [isEditingItinerary, setIsEditingItinerary] = useState(false);
   const [generatedPreferences, setGeneratedPreferences] = useState<TravelPreferences | null>(null);
   const [showUserProfile, setShowUserProfile] = useState(false);
+  const [userPersona, setUserPersona] = useState<TravelPersona | null>(null);
 
   /**
    * Handles form submission and itinerary generation
@@ -209,6 +210,32 @@ function App() {
     if (user) {
       handleSaveItinerary();
     }
+  };
+
+  /**
+   * Handles loading user persona from profile
+   */
+  const handlePersonaLoad = (persona: TravelPersona) => {
+    setUserPersona(persona);
+    // Update preferences with persona data
+    setPreferences(prev => ({
+      ...prev,
+      interests: persona.interests || prev.interests,
+      travelPersona: persona
+    }));
+  };
+
+  /**
+   * Handles persona changes from the travel form
+   */
+  const handlePersonaChange = (persona: TravelPersona) => {
+    setUserPersona(persona);
+    // Update preferences to keep them in sync
+    setPreferences(prev => ({
+      ...prev,
+      interests: persona.interests || prev.interests,
+      travelPersona: persona
+    }));
   };
 
   if (authLoading) {
@@ -433,6 +460,8 @@ function App() {
               <TravelForm
                 preferences={preferences}
                 onPreferencesChange={setPreferences}
+                onPersonaChange={handlePersonaChange}
+                userPersona={userPersona}
                 onSubmit={handleGenerateItinerary}
                 isGenerating={isGenerating}
                 isAuthenticated={!!user}
@@ -510,6 +539,7 @@ function App() {
       <UserProfileModal
         isOpen={showUserProfile}
         onClose={() => setShowUserProfile(false)}
+        onPersonaLoad={handlePersonaLoad}
       />
     </div>
   );

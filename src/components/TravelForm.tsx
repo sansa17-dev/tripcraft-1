@@ -13,13 +13,34 @@ import { isFeatureEnabled } from '../utils/featureFlags';
 interface TravelFormProps {
   preferences: TravelPreferences;
   onPreferencesChange: (preferences: TravelPreferences) => void;
+  onPersonaChange?: (persona: TravelPersona) => void;
+  userPersona?: TravelPersona | null;
   onSubmit: (e: React.FormEvent) => void;
   isGenerating: boolean;
   isAuthenticated: boolean;
 }
 
-export function TravelForm({ preferences, onPreferencesChange, onSubmit, isGenerating, isAuthenticated }: TravelFormProps) {
+export function TravelForm({ preferences, onPreferencesChange, onPersonaChange, userPersona, onSubmit, isGenerating, isAuthenticated }: TravelFormProps) {
   const [showPersonaQuiz, setShowPersonaQuiz] = React.useState(false);
+
+  // Initialize persona from userPersona prop or preferences
+  const [currentPersona, setCurrentPersona] = React.useState<TravelPersona>(() => {
+    return userPersona || preferences.travelPersona || {
+      timePreference: '',
+      socialStyle: '',
+      culturalInterest: '',
+      foodAdventure: '',
+      planningStyle: '',
+      interests: preferences.interests || []
+    };
+  });
+
+  // Update persona when userPersona prop changes
+  React.useEffect(() => {
+    if (userPersona) {
+      setCurrentPersona(userPersona);
+    }
+  }, [userPersona]);
 
   /**
    * Updates a single field in the preferences object
@@ -35,11 +56,16 @@ export function TravelForm({ preferences, onPreferencesChange, onSubmit, isGener
    * Updates the travel persona
    */
   const updatePersona = (persona: TravelPersona) => {
+    setCurrentPersona(persona);
     // Extract interests from persona and update main preferences
     if (persona.interests) {
       updateField('interests', persona.interests);
     }
     updateField('travelPersona', persona);
+    // Notify parent component of persona changes
+    if (onPersonaChange) {
+      onPersonaChange(persona);
+    }
   };
 
   return (
@@ -187,14 +213,7 @@ export function TravelForm({ preferences, onPreferencesChange, onSubmit, isGener
         {/* Travel Persona Quiz */}
         {isFeatureEnabled('FEATURE_TRAVEL_PERSONA') && (
           <TravelPersonaQuiz
-            persona={preferences.travelPersona || {
-              timePreference: '',
-              socialStyle: '',
-              culturalInterest: '',
-              foodAdventure: '',
-              planningStyle: '',
-              interests: preferences.interests || []
-            }}
+            persona={currentPersona}
             onPersonaChange={updatePersona}
             isExpanded={showPersonaQuiz}
             onToggleExpanded={() => setShowPersonaQuiz(!showPersonaQuiz)}

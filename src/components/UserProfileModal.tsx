@@ -13,6 +13,7 @@ import { useAuth } from '../hooks/useAuth';
 interface UserProfileModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onPersonaLoad?: (persona: TravelPersona) => void;
 }
 
 const PERSONA_LABELS = {
@@ -43,7 +44,6 @@ const PERSONA_LABELS = {
   }
 };
 
-export function UserProfileModal({ isOpen, onClose }: UserProfileModalProps) {
   const { user } = useAuth();
   const [persona, setPersona] = useState<TravelPersona>({
     timePreference: '',
