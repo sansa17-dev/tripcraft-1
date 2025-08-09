@@ -430,7 +430,7 @@ function App() {
             /* Generated Itinerary Results */
             <EditableItinerary 
               itinerary={itinerary}
-              preferences={preferences}
+              preferences={generatedPreferences || preferences}
               onSave={handleUpdateItinerary}
               isEditing={isEditingItinerary}
               onToggleEdit={() => setIsEditingItinerary(!isEditingItinerary)}
