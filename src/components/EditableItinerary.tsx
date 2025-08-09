@@ -6,9 +6,10 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { 
   Calendar, MapPin, DollarSign, Clock, Utensils, Bed, Lightbulb, 
-  Copy, Check, Edit3, Save, X, Plus, Trash2, GripVertical 
+  Copy, Check, Edit3, Save, X, Plus, Trash2, GripVertical, Download
 } from 'lucide-react';
 import { GeneratedItinerary, ItineraryDay } from '../types';
+import { downloadItineraryAsPDF } from '../services/pdfService';
 
 interface EditableItineraryProps {
   itinerary: GeneratedItinerary;
@@ -21,6 +22,7 @@ export function EditableItinerary({ itinerary, onSave, isEditing, onToggleEdit }
   const [editedItinerary, setEditedItinerary] = useState<GeneratedItinerary>(itinerary);
   const [copiedDays, setCopiedDays] = useState<Set<number>>(new Set());
   const [draggedDay, setDraggedDay] = useState<number | null>(null);
+  const [isDownloadingPDF, setIsDownloadingPDF] = useState(false);
 
   // Update edited itinerary when prop changes
   useEffect(() => {
@@ -199,6 +201,21 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
     setDraggedDay(null);
   };
 
+  /**
+   * Handles PDF download
+   */
+  const handleDownloadPDF = async () => {
+    setIsDownloadingPDF(true);
+    try {
+      await downloadItineraryAsPDF(editedItinerary);
+    } catch (error) {
+      console.error('Error downloading PDF:', error);
+      alert('Failed to download PDF. Please try again.');
+    } finally {
+      setIsDownloadingPDF(false);
+    }
+  };
+
   return (
     <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
       {/* Header */}
@@ -287,6 +304,30 @@ ${day.notes ? `Notes: ${day.notes}` : ''}
 
         {/* Edit Controls */}
         <div className="absolute top-4 right-4 flex gap-2">
+          {/* Download PDF Button */}
+          <button
+            onClick={handleDownloadPDF}
+            disabled={isDownloadingPDF}
+            className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors shadow-lg ${
+              isDownloadingPDF
+                ? 'bg-gray-400 text-white cursor-not-allowed'
+                : 'bg-green-600 text-white hover:bg-green-700'
+            }`}
+            title="Download as PDF"
+          >
+            {isDownloadingPDF ? (
+              <>
+                <div className="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                Generating...
+              </>
+            ) : (
+              <>
+                <Download className="h-4 w-4" />
+                Download PDF
+              </>
+            )}
+          </button>
+
           {isEditing ? (
             <>
               <button
