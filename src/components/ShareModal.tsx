@@ -3,7 +3,7 @@
  * Allows users to share itineraries with others for viewing or collaboration
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { X, Copy, Check, Link, Users, Eye, Settings } from 'lucide-react';
 import { shareApi } from '../lib/api';
 import { useAuth } from '../hooks/useAuth';
