@@ -124,6 +124,12 @@ export function SharedItineraryView({ shareId }: SharedItineraryViewProps) {
   const addGeneralComment = async () => {
     if (!newGeneralComment.trim() || !user) return;
 
+    // Check if Supabase is properly configured
+    if (!import.meta.env.VITE_SUPABASE_URL) {
+      alert('Comments feature requires Supabase configuration. Please set up your environment variables.');
+      return;
+    }
+
     setAddingComment(true);
     try {
       const result = await commentsApi.create(shareId, {
@@ -148,6 +154,12 @@ export function SharedItineraryView({ shareId }: SharedItineraryViewProps) {
   const addDayComment = async (dayIndex: number) => {
     const commentText = newDayComments[dayIndex];
     if (!commentText?.trim() || !user) return;
+
+    // Check if Supabase is properly configured
+    if (!import.meta.env.VITE_SUPABASE_URL) {
+      alert('Comments feature requires Supabase configuration. Please set up your environment variables.');
+      return;
+    }
 
     setAddingDayComment(dayIndex);
     try {

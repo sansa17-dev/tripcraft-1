@@ -8,6 +8,11 @@ const API_BASE_URL = import.meta.env.VITE_SUPABASE_URL
   ? `${import.meta.env.VITE_SUPABASE_URL}/functions/v1`
   : 'http://localhost:54321/functions/v1';
 
+// Validate environment configuration
+if (!import.meta.env.VITE_SUPABASE_URL) {
+  console.warn('⚠️ VITE_SUPABASE_URL not configured. Edge Functions may not work properly.');
+}
+
 interface ApiResponse<T = any> {
   success: boolean;
   data?: T;
@@ -19,6 +24,11 @@ interface ApiResponse<T = any> {
  */
 async function apiCall<T>(endpoint: string, data: any): Promise<ApiResponse<T>> {
   try {
+    // Check if Supabase URL is configured
+    if (!import.meta.env.VITE_SUPABASE_URL) {
+      throw new Error('Supabase URL not configured. Please set VITE_SUPABASE_URL in your .env file.');
+    }
+    
     console.log(`🚀 API Call: ${endpoint}`, { url: `${API_BASE_URL}/${endpoint}`, data });
     
     // Get the current session for authorization
