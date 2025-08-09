@@ -24,11 +24,6 @@ interface ApiResponse<T = any> {
  */
 async function apiCall<T>(endpoint: string, data: any): Promise<ApiResponse<T>> {
   try {
-    // Check if Supabase URL is configured
-    if (!import.meta.env.VITE_SUPABASE_URL) {
-      throw new Error('Supabase URL not configured. Please set VITE_SUPABASE_URL in your .env file.');
-    }
-    
     console.log(`🚀 API Call: ${endpoint}`, { url: `${API_BASE_URL}/${endpoint}`, data });
     
     // Get the current session for authorization
@@ -54,7 +49,15 @@ async function apiCall<T>(endpoint: string, data: any): Promise<ApiResponse<T>> 
     if (!response.ok) {
       const errorText = await response.text();
       console.error(`❌ API Error: ${endpoint}`, { status: response.status, error: errorText });
-      throw new Error(`API request failed: ${response.status} ${response.statusText}`);
+      
+      // Handle specific Edge Function deployment issues
+      if (response.status === 404) {
+        throw new Error(`Edge Function '${endpoint}' not found. Please ensure Supabase Edge Functions are deployed.`);
+      } else if (response.status === 500) {
+        throw new Error(`Edge Function '${endpoint}' error. Check Supabase dashboard for function logs.`);
+      } else {
+        throw new Error(`API request failed: ${response.status} ${response.statusText}`);
+      }
     }
     
     const result = await response.json();
@@ -62,6 +65,15 @@ async function apiCall<T>(endpoint: string, data: any): Promise<ApiResponse<T>> 
     return result;
   } catch (error) {
     console.error(`💥 API Exception: ${endpoint}`, error);
+    
+    // Handle network errors that might indicate Edge Functions aren't accessible
+    if (error instanceof TypeError && error.message === 'Failed to fetch') {
+      return {
+        success: false,
+        error: `Unable to connect to Supabase Edge Functions. Please check:\n1. Supabase project is active\n2. Edge Functions are deployed\n3. Network connectivity`
+      };
+    }
+    
     return {
       success: false,
       error: error instanceof Error ? error.message : 'Network error occurred'

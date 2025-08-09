@@ -98,8 +98,10 @@ export function SharedItineraryView({ shareId }: SharedItineraryViewProps) {
     try {
       // Load general comments
       const generalResult = await commentsApi.list(shareId, null);
-      if (generalResult.success && generalResult.data) {
+      if (generalResult.success) {
         setGeneralComments(generalResult.data);
+      } else {
+        console.warn('Failed to load general comments:', generalResult.error);
       }
       
       // Load day-specific comments for each day
@@ -109,8 +111,10 @@ export function SharedItineraryView({ shareId }: SharedItineraryViewProps) {
         for (let i = 0; i < sharedItinerary.itineraries.days.length; i++) {
           const dayIndex = i + 1;
           const dayResult = await commentsApi.list(shareId, dayIndex);
-          if (dayResult.success && dayResult.data) {
+          if (dayResult.success) {
             dayCommentsMap[dayIndex] = dayResult.data;
+          } else {
+            console.warn(`Failed to load comments for day ${dayIndex}:`, dayResult.error);
           }
         }
         
@@ -123,12 +127,6 @@ export function SharedItineraryView({ shareId }: SharedItineraryViewProps) {
 
   const addGeneralComment = async () => {
     if (!newGeneralComment.trim() || !user) return;
-
-    // Check if Supabase is properly configured
-    if (!import.meta.env.VITE_SUPABASE_URL) {
-      alert('Comments feature requires Supabase configuration. Please set up your environment variables.');
-      return;
-    }
 
     setAddingComment(true);
     try {
@@ -145,7 +143,7 @@ export function SharedItineraryView({ shareId }: SharedItineraryViewProps) {
       }
     } catch (err) {
       console.error('Error adding comment:', err);
-      alert('Failed to add comment: ' + (err instanceof Error ? err.message : 'Unknown error'));
+      alert('Failed to add comment. Please check your connection and try again.');
     } finally {
       setAddingComment(false);
     }
@@ -154,12 +152,6 @@ export function SharedItineraryView({ shareId }: SharedItineraryViewProps) {
   const addDayComment = async (dayIndex: number) => {
     const commentText = newDayComments[dayIndex];
     if (!commentText?.trim() || !user) return;
-
-    // Check if Supabase is properly configured
-    if (!import.meta.env.VITE_SUPABASE_URL) {
-      alert('Comments feature requires Supabase configuration. Please set up your environment variables.');
-      return;
-    }
 
     setAddingDayComment(dayIndex);
     try {
@@ -176,7 +168,7 @@ export function SharedItineraryView({ shareId }: SharedItineraryViewProps) {
       }
     } catch (err) {
       console.error('Error adding day comment:', err);
-      alert('Failed to add comment: ' + (err instanceof Error ? err.message : 'Unknown error'));
+      alert('Failed to add comment. Please check your connection and try again.');
     } finally {
       setAddingDayComment(null);
     }

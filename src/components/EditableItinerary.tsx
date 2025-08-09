@@ -57,16 +57,18 @@ export function EditableItinerary({
   }, [shareId, showComments]);
 
   const loadComments = async () => {
-    if (!shareId || !import.meta.env.VITE_SUPABASE_URL) {
-      console.warn('⚠️ Comments feature requires Supabase configuration');
+    if (!shareId) {
       return;
     }
     
     try {
       // Load general comments
       const generalResult = await commentsApi.list(shareId, null);
-      if (generalResult.success && generalResult.data) {
+      if (generalResult.success) {
         setGeneralComments(generalResult.data);
+      } else {
+        console.warn('Failed to load general comments:', generalResult.error);
+        // Don't show error to user for comments loading failure
       }
       
       // Load day-specific comments
@@ -74,8 +76,10 @@ export function EditableItinerary({
       for (let i = 0; i < editedItinerary.days.length; i++) {
         const dayIndex = i + 1; // Day numbers start from 1
         const dayResult = await commentsApi.list(shareId, dayIndex);
-        if (dayResult.success && dayResult.data) {
+        if (dayResult.success) {
           dayCommentsMap[dayIndex] = dayResult.data;
+        } else {
+          console.warn(`Failed to load comments for day ${dayIndex}:`, dayResult.error);
         }
       }
       setDayComments(dayCommentsMap);
