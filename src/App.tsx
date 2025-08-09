@@ -218,7 +218,7 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-teal-50 via-cyan-50 to-teal-100 font-body">
+    <div className="min-h-screen bg-gradient-to-br from-teal-600 via-cyan-700 to-teal-800 font-body">
       {/* Header */}
       <header className="bg-gradient-to-r from-teal-600/95 via-cyan-700/95 to-teal-800/95 backdrop-blur-sm border-b border-white/20 sticky top-0 z-40">
         <div className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-6">
@@ -332,7 +332,7 @@ function App() {
       <main className="max-w-content mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Save Itinerary Button */}
         {user && itinerary && currentView === 'results' && !isEditingItinerary && (
-          <div className="mb-8">
+          <div className="mb-8 bg-white rounded-2xl p-8 shadow-lg">
             <button
               onClick={handleSaveItinerary}
               disabled={savingItinerary}
@@ -359,7 +359,7 @@ function App() {
 
         {/* API Key Notice */}
         {showApiKeyNotice && (
-          <div className="mb-6 bg-amber-50 border border-amber-200 rounded-xl p-4 shadow-sm">
+          <div className="mb-6 bg-white/95 backdrop-blur-sm border border-amber-200 rounded-xl p-4 shadow-sm">
             <div className="flex gap-3">
               <AlertTriangle className="h-5 w-5 text-amber-600 flex-shrink-0 mt-0.5" />
               <div>
@@ -378,7 +378,7 @@ function App() {
 
         {/* Error Display */}
         {error && (
-          <div className="mb-6 bg-red-50 border border-red-200 rounded-xl p-4 shadow-sm">
+          <div className="mb-6 bg-white/95 backdrop-blur-sm border border-red-200 rounded-xl p-4 shadow-sm">
             <div className="flex gap-3">
               <AlertTriangle className="h-5 w-5 text-red-600 flex-shrink-0 mt-0.5" />
               <div>
@@ -390,7 +390,7 @@ function App() {
         )}
 
         {/* Main Content */}
-        <div className="space-y-12">
+        <div className="space-y-12 bg-white/95 backdrop-blur-sm rounded-3xl p-8 shadow-2xl">
           {currentView === 'home' ? (
             <HomePage 
               onGetStarted={() => {
@@ -409,7 +409,7 @@ function App() {
             />
           ) : currentView === 'planner' ? (
             <div>
-              <div className="text-center mb-12 max-w-content-narrow mx-auto">
+              <div className="text-center mb-12 max-w-content-narrow mx-auto bg-white/90 backdrop-blur-sm rounded-2xl p-8 shadow-lg">
                 <h2 className="font-display text-3xl font-bold text-gray-900 mb-6">
                   Create Your Perfect Travel Itinerary
                 </h2>
@@ -454,7 +454,7 @@ function App() {
 
           {/* Auth Prompt for Non-Users */}
           {!user && itinerary && (
-            <div className="bg-gradient-to-r from-primary-50 to-primary-50 border border-primary-100 rounded-2xl p-8 shadow-sm">
+            <div className="bg-white/95 backdrop-blur-sm border border-primary-100 rounded-2xl p-8 shadow-lg">
               <div className="text-center">
                 <User className="h-8 w-8 text-primary-600 mx-auto mb-4" />
                 <h3 className="font-display text-lg font-semibold text-gray-900 mb-3">Save Your Itinerary</h3>
@@ -477,7 +477,7 @@ function App() {
 
         {/* Footer Info */}
         {currentView === 'planner' && !itinerary && (
-          <div className="mt-18 text-center text-sm text-gray-500 max-w-2xl mx-auto">
+          <div className="mt-18 text-center text-sm text-white/80 max-w-2xl mx-auto bg-white/10 backdrop-blur-sm rounded-xl p-4">
             <p>
               TripCraft uses AI to create personalized travel itineraries based on your preferences. 
               Generated suggestions should be verified for accuracy and availability.

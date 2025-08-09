@@ -307,7 +307,11 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
                 </div>
               </div>
               
-              <ArrowRight className="h-6 w-6 group-hover:translate-x-2 transition-transform flex-shrink-0" />
+              <div className="flex items-center gap-1 flex-shrink-0">
+                <div className="w-2 h-2 bg-white/80 rounded-full animate-pulse"></div>
+                <div className="w-2 h-2 bg-white/80 rounded-full animate-pulse" style={{ animationDelay: '0.5s' }}></div>
+                <div className="w-2 h-2 bg-white/80 rounded-full animate-pulse" style={{ animationDelay: '1s' }}></div>
+              </div>
             </button>
 
             {/* Voice Chat CTA */}
@@ -326,9 +330,9 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
               </div>
               
               <div className="flex items-center gap-1 flex-shrink-0">
-                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" style={{ animationDelay: '0.5s' }}></div>
-                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" style={{ animationDelay: '1s' }}></div>
+                <div className="w-2 h-2 bg-white/80 rounded-full animate-pulse"></div>
+                <div className="w-2 h-2 bg-white/80 rounded-full animate-pulse" style={{ animationDelay: '0.5s' }}></div>
+                <div className="w-2 h-2 bg-white/80 rounded-full animate-pulse" style={{ animationDelay: '1s' }}></div>
               </div>
             </button>
           </div>
