@@ -363,7 +363,10 @@ function App() {
             </div>
           ) : currentView === 'results' && itinerary ? (
             /* Generated Itinerary Results */
-            <ItineraryResults itinerary={itinerary} />
+            <ItineraryResults 
+              itinerary={itinerary} 
+              onItineraryUpdate={setItinerary}
+            />
           ) : currentView === 'saved' ? (
             /* Saved Itineraries */
             <SavedItineraries onSelectItinerary={handleSelectSavedItinerary} />
