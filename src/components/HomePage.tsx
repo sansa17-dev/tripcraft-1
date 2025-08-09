@@ -276,14 +276,26 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
             </div>
 
             {/* Press Mentions */}
+            {/* Trust Indicators */}
             <div className="mb-8">
-              <p className="text-white/60 text-sm mb-4">Featured in</p>
-              <div className="flex items-center justify-center gap-8">
-                {TRUST_LOGOS.map((logo, index) => (
-                  <div key={index} className="bg-white/10 backdrop-blur-sm rounded-lg px-4 py-2 border border-white/20">
-                    <span className="text-white/80 font-bold text-sm">{logo.logo}</span>
-                  </div>
-                ))}
+              <p className="text-white/60 text-sm mb-4">Trusted by travelers worldwide</p>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-2xl mx-auto">
+                <div className="bg-white/10 backdrop-blur-sm rounded-lg px-4 py-3 border border-white/20 text-center">
+                  <div className="text-white font-bold text-lg">256-bit</div>
+                  <div className="text-white/70 text-xs">SSL Security</div>
+                </div>
+                <div className="bg-white/10 backdrop-blur-sm rounded-lg px-4 py-3 border border-white/20 text-center">
+                  <div className="text-white font-bold text-lg">4.9★</div>
+                  <div className="text-white/70 text-xs">App Store</div>
+                </div>
+                <div className="bg-white/10 backdrop-blur-sm rounded-lg px-4 py-3 border border-white/20 text-center">
+                  <div className="text-white font-bold text-lg">24/7</div>
+                  <div className="text-white/70 text-xs">Support</div>
+                </div>
+                <div className="bg-white/10 backdrop-blur-sm rounded-lg px-4 py-3 border border-white/20 text-center">
+                  <div className="text-white font-bold text-lg">Free</div>
+                  <div className="text-white/70 text-xs">Forever</div>
+                </div>
               </div>
             </div>
           </div>
@@ -585,23 +597,45 @@ export function HomePage({ onGetStarted, onSignIn, isAuthenticated }: HomePagePr
 
           {/* Social Proof Numbers */}
           <div className="mt-16 text-center">
-            <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
+            <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-100 relative overflow-hidden">
+              {/* Trust Badge */}
+              <div className="absolute top-4 right-4">
+                <div className="bg-green-100 text-green-800 text-xs px-3 py-1 rounded-full flex items-center gap-1">
+                  <Shield className="h-3 w-3" />
+                  Verified Reviews
+                </div>
+              </div>
+              
               <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
                 <div>
-                  <div className="text-3xl font-bold text-blue-600 mb-2">4.9/5</div>
-                  <div className="text-gray-600 text-sm">Average Rating</div>
+                  <div className="text-3xl font-bold text-blue-600 mb-2 flex items-center justify-center gap-1">
+                    4.9/5 <Star className="h-5 w-5 text-yellow-400 fill-current" />
+                  </div>
+                  <div className="text-gray-600 text-sm">User Rating</div>
+                  <div className="text-gray-400 text-xs mt-1">2,847 reviews</div>
                 </div>
                 <div>
                   <div className="text-3xl font-bold text-green-600 mb-2">₹35K</div>
                   <div className="text-gray-600 text-sm">Avg. Savings</div>
+                  <div className="text-gray-400 text-xs mt-1">Per trip</div>
                 </div>
                 <div>
                   <div className="text-3xl font-bold text-purple-600 mb-2">20hrs</div>
                   <div className="text-gray-600 text-sm">Time Saved</div>
+                  <div className="text-gray-400 text-xs mt-1">Research time</div>
                 </div>
                 <div>
                   <div className="text-3xl font-bold text-orange-600 mb-2">98%</div>
                   <div className="text-gray-600 text-sm">Would Recommend</div>
+                  <div className="text-gray-400 text-xs mt-1">To friends</div>
+                </div>
+              </div>
+              
+              {/* Money-back guarantee */}
+              <div className="mt-6 pt-6 border-t border-gray-200">
+                <div className="flex items-center justify-center gap-2 text-green-600">
+                  <CheckCircle className="h-4 w-4" />
+                  <span className="text-sm font-medium">100% Satisfaction Guarantee - Free unlimited revisions</span>
                 </div>
               </div>
             </div>
