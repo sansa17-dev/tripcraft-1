@@ -117,7 +117,7 @@ export async function refineItineraryWithAI(request: ItineraryRefinementRequest)
         'X-Title': 'TripCraft Itinerary Refinement'
       },
       body: JSON.stringify({
-        model: 'openai/gpt-4o-mini',
+        model: 'openai/gpt-4o',
         messages: [
           {
             role: 'system',
@@ -129,7 +129,7 @@ export async function refineItineraryWithAI(request: ItineraryRefinementRequest)
           }
         ],
         temperature: 0.7,
-        max_tokens: 3000
+        max_tokens: 4000
       })
     });
 
