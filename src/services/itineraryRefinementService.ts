@@ -117,7 +117,7 @@ export async function refineItineraryWithAI(request: ItineraryRefinementRequest)
         'X-Title': 'TripCraft Itinerary Refinement'
       },
       body: JSON.stringify({
-        model: 'openai/gpt-4o',
+        model: 'openai/gpt-4o-mini',
         messages: [
           {
             role: 'system',
