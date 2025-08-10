@@ -97,7 +97,6 @@ WRITING STYLE REQUIREMENTS:
 - Mention local customs, traditions, and etiquette
 - Include insider tips and hidden gems
 - Describe unique photo opportunities and Instagram-worthy moments
-- Explain the "why\" behind each recommendation
 - Use vivid adjectives and engaging storytelling
 - Make travelers feel like they're getting exclusive, expert advice
 
