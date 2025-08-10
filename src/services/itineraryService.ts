@@ -245,7 +245,7 @@ export async function generateItinerary(preferences: TravelPreferences): Promise
         'X-Title': 'TripCraft Travel Itinerary Generator'
       },
       body: JSON.stringify({
-        model: 'openai/gpt-4o',
+        model: 'openai/gpt-4o-mini',
         messages: [
           {
             role: 'system',
