@@ -102,6 +102,9 @@ export function LocationAutocomplete({
           script.async = true;
           script.defer = true;
 
+          // Add referrer policy for cross-origin requests
+          script.referrerPolicy = 'no-referrer-when-downgrade';
+
           // Set up callback
           window.initGooglePlaces = () => {
             isGoogleMapsLoaded = true;
